@@ -13,8 +13,10 @@ use Filament\Tables\Table;
 class BarangMasukResource extends Resource
 {
     protected static ?string $model = BarangMasuk::class;
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
+
     protected static ?string $navigationGroup = 'Transaksi';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
+    protected static ?string $navigationLabel = 'Barang Masuk';
 
     public static function form(Form $form): Form
     {
@@ -22,14 +24,18 @@ class BarangMasukResource extends Resource
             ->schema([
                 Forms\Components\Select::make('barang_id')
                     ->relationship('barang', 'nama_barang')
-                    ->required(),
-                Forms\Components\DatePicker::make('tanggal_masuk')
-                    ->required(),
+                    ->required()
+                    ->label('Barang'),
+
                 Forms\Components\TextInput::make('jumlah')
                     ->numeric()
-                    ->required(),
-                Forms\Components\Textarea::make('keterangan')
-                    ->maxLength(500),
+                    ->required()
+                    ->label('Jumlah'),
+
+                Forms\Components\DatePicker::make('tanggal')
+                    ->required()
+                    ->default(now()) // ✅ otomatis isi hari ini
+                    ->label('Tanggal'),
             ]);
     }
 
@@ -37,12 +43,20 @@ class BarangMasukResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('barang.nama_barang')->label('Barang'),
-                Tables\Columns\TextColumn::make('tanggal_masuk')->date(),
-                Tables\Columns\TextColumn::make('jumlah'),
-                Tables\Columns\TextColumn::make('keterangan')->limit(30),
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('barang.nama_barang')
+                    ->label('Barang')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('jumlah')
+                    ->label('Jumlah'),
+
+                Tables\Columns\TextColumn::make('tanggal')
+                    ->date()
+                    ->label('Tanggal'),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('d M Y H:i')
+                    ->label('Dibuat'),
             ])
             ->filters([])
             ->actions([
@@ -50,15 +64,8 @@ class BarangMasukResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [];
     }
 
     public static function getPages(): array

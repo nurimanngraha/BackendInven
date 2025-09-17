@@ -16,4 +16,13 @@ class Aset extends Model
         'kategori',
         'jumlah',
     ];
+
+    /**
+     * Relasi ke tabel peminjaman_asets
+     * Satu aset bisa punya banyak peminjaman
+     */
+    public function peminjamanAsets()
+    {
+        return $this->hasMany(PeminjamanAset::class, 'aset_id');
+    }
 }
