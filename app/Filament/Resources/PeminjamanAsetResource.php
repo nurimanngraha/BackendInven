@@ -2,13 +2,14 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PeminjamanAsetResource\Pages;
-use App\Models\PeminjamanAset;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\PeminjamanAset;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\DatePicker;
+use App\Filament\Resources\PeminjamanAsetResource\Pages;
 
 class PeminjamanAsetResource extends Resource
 {
@@ -34,7 +35,11 @@ class PeminjamanAsetResource extends Resource
                 Forms\Components\DatePicker::make('tanggal_pinjam')
                     ->required(),
 
-                Forms\Components\DatePicker::make('tanggal_kembali'),
+                DatePicker::make('tanggal_kembali')
+                        ->label('Tanggal Kembali')
+                        ->required(fn ($get) => $get('status') == 'kembalikan') // Wajib jika sudah dikembalikan
+                        ->disabled(fn ($get) => !$get('status')) // Disable jika status kosong
+                        ->placeholder('dd/mm/yyyy'),
 
                 Forms\Components\Select::make('status')
                     ->options([
