@@ -8,8 +8,8 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\PeminjamanAset;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\DatePicker;
 use App\Filament\Resources\PeminjamanAsetResource\Pages;
+use Illuminate\Database\Eloquent\Collection;
 
 class PeminjamanAsetResource extends Resource
 {
@@ -35,18 +35,16 @@ class PeminjamanAsetResource extends Resource
                 Forms\Components\DatePicker::make('tanggal_pinjam')
                     ->required(),
 
-                DatePicker::make('tanggal_kembali')
-                        ->label('Tanggal Kembali')
-                        ->required(fn ($get) => $get('status') == 'kembalikan') // Wajib jika sudah dikembalikan
-                        ->disabled(fn ($get) => !$get('status')) // Disable jika status kosong
-                        ->placeholder('dd/mm/yyyy'),
+                // tanggal_kembali tidak ditampilkan / diisi manual
+                Forms\Components\Hidden::make('tanggal_kembali'),
 
                 Forms\Components\Select::make('status')
                     ->options([
                         'Dipinjam' => 'Dipinjam',
                         'Dikembalikan' => 'Dikembalikan',
                     ])
-                    ->default('Dipinjam'),
+                    ->default('Dipinjam')
+                    ->disabled(), // status juga dikontrol lewat aksi, bukan form
             ]);
     }
 
@@ -57,7 +55,10 @@ class PeminjamanAsetResource extends Resource
                 Tables\Columns\TextColumn::make('aset.nama_aset')->label('Aset')->searchable(),
                 Tables\Columns\TextColumn::make('peminjam')->searchable(),
                 Tables\Columns\TextColumn::make('tanggal_pinjam')->date(),
-                Tables\Columns\TextColumn::make('tanggal_kembali')->date(),
+                Tables\Columns\TextColumn::make('tanggal_kembali')
+                    ->date()
+                    ->label('Tanggal Kembali')
+                    ->placeholder('-'),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'warning' => 'Dipinjam',
@@ -70,6 +71,38 @@ class PeminjamanAsetResource extends Resource
                         'Dipinjam' => 'Dipinjam',
                         'Dikembalikan' => 'Dikembalikan',
                     ]),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('kembalikan')
+                    ->label('Kembalikan')
+                    ->icon('heroicon-o-arrow-uturn-left')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->visible(fn ($record) => $record->status === 'Dipinjam')
+                    ->action(function ($record) {
+                        $record->update([
+                            'status' => 'Dikembalikan',
+                            'tanggal_kembali' => now(),
+                        ]);
+                    }),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkAction::make('kembalikan')
+                    ->label('Kembalikan')
+                    ->icon('heroicon-o-arrow-uturn-left')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (Collection $records) {
+                        foreach ($records as $record) {
+                            if ($record->status === 'Dipinjam') {
+                                $record->update([
+                                    'status' => 'Dikembalikan',
+                                    'tanggal_kembali' => now(),
+                                ]);
+                            }
+                        }
+                    }),
             ]);
     }
 

@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PeminjamanAset extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'aset_id',
         'peminjam',
+        'bagian',
         'tanggal_pinjam',
         'tanggal_kembali',
-        'status',
+        'jumlah',
+        'sisa_stok',
     ];
 
     public function aset()
