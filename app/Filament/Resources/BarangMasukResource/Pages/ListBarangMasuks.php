@@ -4,6 +4,7 @@ namespace App\Filament\Resources\BarangMasukResource\Pages;
 
 use App\Filament\Resources\BarangMasukResource;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 
 class ListBarangMasuks extends ListRecords
@@ -13,7 +14,9 @@ class ListBarangMasuks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Tambah')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

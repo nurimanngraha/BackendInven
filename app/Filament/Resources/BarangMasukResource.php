@@ -22,20 +22,55 @@ class BarangMasukResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('barang_id')
-                    ->relationship('barang', 'nama_barang')
-                    ->required()
-                    ->label('Barang'),
-
-                Forms\Components\TextInput::make('jumlah')
-                    ->numeric()
-                    ->required()
-                    ->label('Jumlah'),
+                Forms\Components\TextInput::make('no_transaksi')
+                    ->label('No Transaksi')
+                    ->default(fn() => 'T-BK-' . now()->format('Ymd') . rand(1000, 9999))
+                    ->disabled()
+                    ->columnSpanFull(),
 
                 Forms\Components\DatePicker::make('tanggal')
+                    ->label('Tanggal Masuk')
+                    ->default(now())
                     ->required()
-                    ->default(now()) // ✅ otomatis isi hari ini
-                    ->label('Tanggal'),
+                    ->columnSpanFull(),
+                    
+                Forms\Components\Select::make('barang_id')
+                    ->label('Nama Barang')
+                    ->relationship('barang', 'nama_barang')
+                    ->searchable()
+                    ->required()
+                    ->columnSpanFull(),
+
+                Forms\Components\TextInput::make('jumlah')
+                    ->label('Jumlah Masuk')
+                    ->numeric()
+                    ->required()
+                    ->columnSpanFull(),
+
+                // Perbaikan: Menambahkan email placeholder saat membuat user baru
+                Forms\Components\TextInput::make('user_baru')
+                    ->label('User')
+                    ->required()
+                    ->autocomplete(false)
+                    ->afterStateUpdated(function ($state, $set) {
+                        $user = \App\Models\User::firstOrCreate(
+                            ['name' => $state],
+                            ['email' => strtolower(str_replace(' ', '', $state)) . '@example.com', 'password' => 'password']
+                        );
+                        $set('user_id', $user->id);
+                    })
+                    ->columnSpanFull(),
+                
+                // Kolom user_id yang tersembunyi untuk menyimpan ID user
+                Forms\Components\Hidden::make('user_id'),
+
+                Forms\Components\TextInput::make('kategori_baru')
+                    ->label('Kategori')
+                    ->required()
+                    ->autocomplete(false)
+                    ->columnSpanFull(),
+                
+                Forms\Components\Hidden::make('kategori_id'),
             ]);
     }
 
@@ -43,20 +78,13 @@ class BarangMasukResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('barang.nama_barang')
-                    ->label('Barang')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('jumlah')
-                    ->label('Jumlah'),
-
-                Tables\Columns\TextColumn::make('tanggal')
-                    ->date()
-                    ->label('Tanggal'),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d M Y H:i')
-                    ->label('Dibuat'),
+                Tables\Columns\TextColumn::make('no_transaksi')->label('No Transaksi'),
+                Tables\Columns\TextColumn::make('barang.nama_barang')->label('Barang')->searchable(),
+                Tables\Columns\TextColumn::make('kategori.nama_kategori')->label('Kategori')->searchable(),
+                Tables\Columns\TextColumn::make('jumlah')->label('Jumlah'),
+                Tables\Columns\TextColumn::make('user.name')->label('User'),
+                Tables\Columns\TextColumn::make('tanggal')->date()->label('Tanggal Masuk'),
+                Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y H:i')->label('Dibuat'),
             ])
             ->filters([])
             ->actions([
@@ -64,7 +92,9 @@ class BarangMasukResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
