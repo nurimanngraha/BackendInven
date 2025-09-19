@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Barang extends Model
+class Kategori extends Model
 {
     use HasFactory;
 
@@ -17,6 +17,6 @@ class Barang extends Model
      */
     public function barangMasuks(): HasMany
     {
-        return $this->hasMany(BarangMasuk::class, 'barang_id');
+        return $this->hasMany(BarangMasuk::class, 'kategori_id');
     }
 }
