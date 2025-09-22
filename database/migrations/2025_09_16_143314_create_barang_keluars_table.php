@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('barang_keluars', function (Blueprint $table) {
             $table->id();
 
-            // Nomor transaksi unik
+            // Nomor transaksi unik, auto-generate di model
             $table->string('no_transaksi', 50)->unique();
 
             // Relasi ke tabel barangs
@@ -21,8 +21,7 @@ return new class extends Migration
                   ->cascadeOnDelete();
 
             // Tanggal keluar default hari ini
-            $table->date('tanggal_keluar')
-                  ->default(DB::raw('CURRENT_DATE'));
+            $table->date('tanggal_keluar')->default(DB::raw('CURRENT_DATE'));
 
             // Jumlah barang keluar
             $table->integer('jumlah');
@@ -34,6 +33,7 @@ return new class extends Migration
 
             $table->timestamps();
 
+            // Gunakan InnoDB untuk FK
             $table->engine = 'InnoDB';
         });
     }

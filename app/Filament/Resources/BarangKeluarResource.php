@@ -20,11 +20,11 @@ class BarangKeluarResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('no_transaksi')
-                    ->label('No. Transaksi')
-                    ->unique(ignoreRecord: true)
-                    ->required()
-                    ->maxLength(50),
+            Forms\Components\TextInput::make('no_transaksi')
+                ->label('No. Transaksi')
+                ->default(fn () => 'Auto Generate')
+                ->disabled()
+                ->dehydrated(true),
 
                 Forms\Components\Select::make('barang_id')
                     ->label('Barang')
