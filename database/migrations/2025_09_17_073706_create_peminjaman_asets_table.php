@@ -10,11 +10,12 @@ return new class extends Migration
     {
         Schema::create('peminjaman_asets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('aset_id')->constrained()->cascadeOnDelete();
-            $table->string('peminjam'); // nama orang/instansi
+            $table->foreignId('aset_id')->constrained('asets')->onDelete('cascade');
+            $table->string('peminjam');
             $table->date('tanggal_pinjam');
             $table->date('tanggal_kembali')->nullable();
-            $table->enum('status', ['Dipinjam', 'Dikembalikan'])->default('Dipinjam');
+            $table->string('status')->default('Dipinjam');
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

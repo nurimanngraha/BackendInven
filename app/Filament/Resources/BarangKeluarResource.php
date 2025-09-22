@@ -20,16 +20,41 @@ class BarangKeluarResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('no_transaksi')
+                    ->label('No. Transaksi')
+                    ->unique(ignoreRecord: true)
+                    ->required()
+                    ->maxLength(50),
+
                 Forms\Components\Select::make('barang_id')
+                    ->label('Barang')
                     ->relationship('barang', 'nama_barang')
-                    ->required(),
+                    ->required()
+                    ->searchable(),
+
                 Forms\Components\DatePicker::make('tanggal_keluar')
+                    ->label('Tanggal Keluar')
+                    ->default(now()) // ✅ otomatis isi hari ini
                     ->required(),
+
                 Forms\Components\TextInput::make('jumlah')
+                    ->label('Jumlah')
                     ->numeric()
                     ->required(),
+
                 Forms\Components\TextInput::make('penerima')
+                    ->label('Penerima')
                     ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('bagian')
+                    ->label('Bagian')
+                    ->nullable()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('petugas')
+                    ->label('Petugas')
+                    ->nullable()
                     ->maxLength(255),
             ]);
     }
@@ -38,12 +63,14 @@ class BarangKeluarResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
+                Tables\Columns\TextColumn::make('no_transaksi')->label('No. Transaksi')->sortable(),
                 Tables\Columns\TextColumn::make('barang.nama_barang')->label('Barang'),
                 Tables\Columns\TextColumn::make('tanggal_keluar')->date(),
                 Tables\Columns\TextColumn::make('jumlah'),
                 Tables\Columns\TextColumn::make('penerima'),
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('bagian')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('petugas')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->since()->sortable(),
             ])
             ->filters([])
             ->actions([

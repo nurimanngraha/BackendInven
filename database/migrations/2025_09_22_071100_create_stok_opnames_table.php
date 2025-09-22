@@ -11,23 +11,24 @@ return new class extends Migration
         Schema::create('stok_opnames', function (Blueprint $table) {
             $table->id();
 
-            // nama atau deskripsi barang langsung
-            $table->string('nama_barang');
+            // Relasi ke barangs
+            $table->foreignId('barang_id')
+                  ->constrained('barangs')
+                  ->cascadeOnDelete();
 
-            // barcode opsional
-            $table->string('barcode')->nullable()->unique();
-
-            // stok sistem dan stok fisik
+            // Stok sistem default 0
             $table->integer('stok_sistem')->default(0);
-            $table->integer('stok_fisik')->default(0);
 
-            // selisih stok = stok_fisik - stok_sistem
-            $table->integer('selisih')->default(0);
+            // Stok fisik yang dicek saat opname
+            $table->integer('stok_fisik');
 
-            // status kondisi barang
-            $table->enum('status', ['ok', 'rusak'])->default('ok');
+            // Tanggal opname (boleh kosong)
+            $table->date('tanggal')->nullable();
 
             $table->timestamps();
+
+            // Engine database
+            $table->engine = 'InnoDB';
         });
     }
 

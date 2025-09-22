@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -20,8 +19,10 @@ return new class extends Migration
                   ->constrained('barangs')
                   ->cascadeOnDelete();
 
-            // ✅ kategori manual (string)
-            $table->string('kategori');
+            // Relasi ke tabel kategoris
+            $table->foreignId('kategori_id')
+                  ->constrained('kategoris')
+                  ->cascadeOnDelete();
 
             // Relasi ke tabel users
             $table->foreignId('user_id')
@@ -31,12 +32,12 @@ return new class extends Migration
             // Jumlah barang masuk
             $table->integer('jumlah');
 
-            // Default tanggal hari ini
-            $table->date('tanggal')->default(DB::raw('CURRENT_DATE'));
+            // Default tanggal hari ini (lebih aman pakai nullable + default set via model)
+            $table->date('tanggal')->nullable();
 
             $table->timestamps();
 
-            // Pastikan pakai InnoDB biar FK jalan
+            // Pastikan engine InnoDB
             $table->engine = 'InnoDB';
         });
     }

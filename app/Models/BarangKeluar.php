@@ -9,12 +9,17 @@ class BarangKeluar extends Model
 {
     use HasFactory;
 
-    protected $table = 'barang_keluar';
+    // pakai default naming convention Laravel → otomatis "barang_keluars"
+    // jadi $table tidak perlu di-set, hapus saja
 
     protected $fillable = [
+        'no_transaksi',
         'barang_id',
         'jumlah',
-        'tanggal',
+        'tanggal_keluar',
+        'penerima',
+        'bagian',
+        'petugas',
     ];
 
     public function barang()
