@@ -20,18 +20,43 @@ class BarangResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('kode_barang')
+                    ->label('ID Barang')
+                    ->disabled()
+                    ->dehydrated(false), // tidak dikirim ke database
+
                 Forms\Components\TextInput::make('nama_barang')
+                    ->label('Nama Barang')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('jenis_barang')
-                    ->required()
-                    ->maxLength(255),
+
+                Forms\Components\Select::make('jenis_barang')
+                    ->label('Jenis Barang')
+                    ->options([
+                        'Elektronik' => 'Elektronik',
+                        'Furniture' => 'Furniture',
+                        'Perlengkapan Kantor' => 'Perlengkapan Kantor',
+                        'Aksesoris' => 'Aksesoris',
+                        'Alat' => 'Alat',
+                        'Bahan' => 'Bahan',
+                        'Lainnya' => 'Lainnya',
+                    ])
+                    ->required(),
+
+                Forms\Components\Select::make('satuan')
+                    ->label('Satuan')
+                    ->options([
+                        'Unit' => 'Unit',
+                        'Pcs' => 'Pcs',
+                        'Box' => 'Box',
+                        'Kg' => 'Kg',
+                    ])
+                    ->required(),
+
                 Forms\Components\TextInput::make('stok')
+                    ->label('Stok')
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('satuan')
-                    ->required()
-                    ->maxLength(50),
             ]);
     }
 
@@ -39,14 +64,32 @@ class BarangResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('nama_barang')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('jenis_barang'),
-                Tables\Columns\TextColumn::make('stok'),
-                Tables\Columns\TextColumn::make('satuan'),
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('No')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('kode_barang')
+                    ->label('ID Barang')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('nama_barang')
+                    ->label('Nama Barang')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('jenis_barang')
+                    ->label('Jenis Barang'),
+
+                Tables\Columns\TextColumn::make('stok')
+                    ->label('Stok'),
+
+                Tables\Columns\TextColumn::make('satuan')
+                    ->label('Satuan'),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Tanggal Input')
+                    ->dateTime('d/m/Y H:i'),
             ])
-            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -70,5 +113,16 @@ class BarangResource extends Resource
             'create' => Pages\CreateBarang::route('/create'),
             'edit' => Pages\EditBarang::route('/{record}/edit'),
         ];
+    }
+
+    // 🔹 Auto generate kode_barang setiap create
+    public static function mutateFormDataBeforeCreate(array $data): array
+    {
+        $lastBarang = Barang::latest('id')->first();
+        $lastNumber = $lastBarang ? intval(substr($lastBarang->kode_barang, 1)) : 0;
+
+        $data['kode_barang'] = 'B' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+
+        return $data;
     }
 }

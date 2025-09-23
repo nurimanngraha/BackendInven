@@ -4,19 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Barang extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $table = 'barangs';
 
-    /**
-     * Relasi ke BarangMasuk
-     */
-    public function barangMasuks(): HasMany
-    {
-        return $this->hasMany(BarangMasuk::class, 'barang_id');
-    }
+    protected $fillable = [
+        'kode_barang',
+        'nama_barang',
+        'jenis_barang',
+        'satuan',
+        'stok',
+    ];
 }

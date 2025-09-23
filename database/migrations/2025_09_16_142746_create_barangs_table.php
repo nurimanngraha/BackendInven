@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('barangs', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_barang', 100);
-            $table->string('jenis_barang', 50)->nullable(); // contoh: aset / barang habis pakai
+            $table->string('kode_barang')->unique(); // contoh: B000001
+            $table->string('nama_barang');
+            $table->string('jenis_barang'); // Elektronik, Furniture, dll
+            $table->string('satuan', 50);   // Unit, Pcs, Box, Kg
             $table->integer('stok')->default(0);
-            $table->string('satuan', 20)->default('unit');
             $table->timestamps();
         });
     }
