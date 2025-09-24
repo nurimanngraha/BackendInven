@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\BarangMasukResource\Pages;
 
 use App\Filament\Resources\BarangMasukResource;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Actions;
 
 class EditBarangMasuk extends EditRecord
 {

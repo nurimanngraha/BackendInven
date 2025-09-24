@@ -15,15 +15,22 @@ class BarangResource extends Resource
     protected static ?string $model = Barang::class;
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
     protected static ?string $navigationGroup = 'Manajemen Data';
+    protected static ?string $navigationLabel = 'Data Barang';
+    protected static ?string $pluralLabel = 'Data Barang';
 
+    // Form create/edit
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('kode_barang')
                     ->label('ID Barang')
-                    ->disabled()
-                    ->dehydrated(false), // tidak dikirim ke database
+                    ->disabled() // tampil tapi tidak bisa diubah
+                    ->default(function () {
+                        $lastBarang = Barang::latest('id')->first();
+                        $lastNumber = $lastBarang ? intval(substr($lastBarang->kode_barang, 1)) : 0;
+                        return 'B' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+                    }),
 
                 Forms\Components\TextInput::make('nama_barang')
                     ->label('Nama Barang')
@@ -60,35 +67,18 @@ class BarangResource extends Resource
             ]);
     }
 
+    // Table index
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('No')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('kode_barang')
-                    ->label('ID Barang')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('nama_barang')
-                    ->label('Nama Barang')
-                    ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('jenis_barang')
-                    ->label('Jenis Barang'),
-
-                Tables\Columns\TextColumn::make('stok')
-                    ->label('Stok'),
-
-                Tables\Columns\TextColumn::make('satuan')
-                    ->label('Satuan'),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal Input')
-                    ->dateTime('d/m/Y H:i'),
+                Tables\Columns\TextColumn::make('id')->label('No')->sortable(),
+                Tables\Columns\TextColumn::make('kode_barang')->label('ID Barang')->sortable(),
+                Tables\Columns\TextColumn::make('nama_barang')->label('Nama Barang')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('jenis_barang')->label('Jenis Barang'),
+                Tables\Columns\TextColumn::make('stok')->label('Stok'),
+                Tables\Columns\TextColumn::make('satuan')->label('Satuan'),
+                Tables\Columns\TextColumn::make('created_at')->label('Tanggal Input')->dateTime('d/m/Y H:i'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -101,21 +91,23 @@ class BarangResource extends Resource
             ]);
     }
 
+    // Relations
     public static function getRelations(): array
     {
         return [];
     }
 
+    // Pages
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBarangs::route('/'),
+            'index' => Pages\ListBarang::route('/'),
             'create' => Pages\CreateBarang::route('/create'),
             'edit' => Pages\EditBarang::route('/{record}/edit'),
         ];
     }
 
-    // 🔹 Auto generate kode_barang setiap create
+    // Auto-generate kode_barang sebelum create
     public static function mutateFormDataBeforeCreate(array $data): array
     {
         $lastBarang = Barang::latest('id')->first();

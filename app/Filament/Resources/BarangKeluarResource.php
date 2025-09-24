@@ -16,15 +16,26 @@ class BarangKeluarResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
     protected static ?string $navigationGroup = 'Transaksi';
 
+    // ✅ fix typo 's' di sidebar
+    public static function getLabel(): string
+    {
+        return 'Barang Keluar';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Barang Keluar';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-            Forms\Components\TextInput::make('no_transaksi')
-                ->label('No. Transaksi')
-                ->default(fn () => 'Auto Generate')
-                ->disabled()
-                ->dehydrated(true),
+                Forms\Components\TextInput::make('no_transaksi')
+                    ->label('No. Transaksi')
+                    ->default(fn () => 'Auto Generate')
+                    ->disabled()
+                    ->dehydrated(true),
 
                 Forms\Components\Select::make('barang_id')
                     ->label('Barang')
@@ -34,7 +45,7 @@ class BarangKeluarResource extends Resource
 
                 Forms\Components\DatePicker::make('tanggal_keluar')
                     ->label('Tanggal Keluar')
-                    ->default(now()) // ✅ otomatis isi hari ini
+                    ->default(now())
                     ->required(),
 
                 Forms\Components\TextInput::make('jumlah')
@@ -92,7 +103,7 @@ class BarangKeluarResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBarangKeluars::route('/'),
+            'index' => Pages\ListBarangKeluar::route('/'),
             'create' => Pages\CreateBarangKeluar::route('/create'),
             'edit' => Pages\EditBarangKeluar::route('/{record}/edit'),
         ];

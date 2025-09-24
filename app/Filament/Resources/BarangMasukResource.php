@@ -16,13 +16,22 @@ class BarangMasukResource extends Resource
 
     protected static ?string $navigationGroup = 'Transaksi';
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
-    protected static ?string $navigationLabel = 'Barang Masuk';
+
+    // Label
+    public static function getLabel(): string
+    {
+        return 'Barang Masuk';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Barang Masuk';
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // No Transaksi otomatis
                 Forms\Components\TextInput::make('no_transaksi')
                     ->label('No Transaksi')
                     ->default(fn() => 'T-BK-' . now()->format('Ymd') . rand(1000, 9999))
@@ -30,14 +39,12 @@ class BarangMasukResource extends Resource
                     ->dehydrated(true)
                     ->columnSpanFull(),
 
-                // Tanggal Masuk
                 Forms\Components\DatePicker::make('tanggal')
                     ->label('Tanggal Masuk')
                     ->default(now())
                     ->required()
                     ->columnSpanFull(),
                 
-                // Barang (relasi)
                 Forms\Components\Select::make('barang_id')
                     ->label('Nama Barang')
                     ->relationship('barang', 'nama_barang')
@@ -45,14 +52,12 @@ class BarangMasukResource extends Resource
                     ->required()
                     ->columnSpanFull(),
 
-                // Jumlah
                 Forms\Components\TextInput::make('jumlah')
                     ->label('Jumlah Masuk')
                     ->numeric()
                     ->required()
                     ->columnSpanFull(),
 
-                // ✅ Kategori manual (dropdown statis, string biasa)
                 Forms\Components\Select::make('kategori')
                     ->label('Kategori')
                     ->options([
@@ -65,7 +70,6 @@ class BarangMasukResource extends Resource
                     ->required()
                     ->columnSpanFull(),
 
-                // User (relasi)
                 Forms\Components\Select::make('user_id')
                     ->label('User')
                     ->relationship('user', 'name')
@@ -80,35 +84,14 @@ class BarangMasukResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('no_transaksi')
-                    ->label('No Transaksi')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('barang.nama_barang')
-                    ->label('Barang')
-                    ->searchable(),
-
-                // ✅ kategori langsung dari kolom string
-                Tables\Columns\TextColumn::make('kategori')
-                    ->label('Kategori')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('jumlah')
-                    ->label('Jumlah'),
-
-                Tables\Columns\TextColumn::make('user.name')
-                    ->label('User')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('tanggal')
-                    ->date()
-                    ->label('Tanggal Masuk'),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d M Y H:i')
-                    ->label('Dibuat'),
+                Tables\Columns\TextColumn::make('no_transaksi')->label('No Transaksi')->searchable(),
+                Tables\Columns\TextColumn::make('barang.nama_barang')->label('Barang')->searchable(),
+                Tables\Columns\TextColumn::make('kategori')->label('Kategori')->searchable(),
+                Tables\Columns\TextColumn::make('jumlah')->label('Jumlah'),
+                Tables\Columns\TextColumn::make('user.name')->label('User')->searchable(),
+                Tables\Columns\TextColumn::make('tanggal')->date()->label('Tanggal Masuk'),
+                Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y H:i')->label('Dibuat'),
             ])
-            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -123,7 +106,7 @@ class BarangMasukResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBarangMasuks::route('/'),
+            'index' => Pages\ListBarangMasuk::route('/'),
             'create' => Pages\CreateBarangMasuk::route('/create'),
             'edit' => Pages\EditBarangMasuk::route('/{record}/edit'),
         ];

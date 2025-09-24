@@ -3,20 +3,19 @@
 namespace App\Filament\Resources\BarangMasukResource\Pages;
 
 use App\Filament\Resources\BarangMasukResource;
-use Filament\Actions;
-use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
 
-class ListBarangMasuks extends ListRecords
+class ListBarangMasuk extends ListRecords
 {
     protected static string $resource = BarangMasukResource::class;
 
-    protected function getHeaderActions(): array
+    protected function getTableActions(): array
     {
         return [
-            Actions\CreateAction::make()
-                ->label('Tambah')
-                ->icon('heroicon-o-plus'),
+            Tables\Actions\EditAction::make(),
+            DeleteAction::make(),
         ];
     }
 }
