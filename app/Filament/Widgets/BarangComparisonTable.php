@@ -2,37 +2,49 @@
 
 namespace App\Filament\Widgets;
 
+use Filament\Tables;
+use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\BarangMasuk;
 use App\Models\BarangKeluar;
-use Filament\Widgets\TableWidget as BaseWidget;
-use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class BarangComparisonTable extends BaseWidget
 {
-    protected static ?string $heading = 'Tabel Perbandingan Barang Masuk & Keluar';
+    protected static ?string $heading = 'Perbandingan Barang Masuk & Keluar per Bulan';
 
-    // Lebarnya setengah layar, biar tidak full
-    protected int|string|array $columnSpan = 6;
+    protected int|string|array $columnSpan = 'full';
 
-    public function table(Tables\Table $table): Tables\Table
+    /**
+     * Gunakan Eloquent Builder dari model BarangMasuk.
+     */
+    protected function getTableQuery(): Builder
     {
-        $data = collect([
-            ['jenis' => 'Barang Masuk', 'total' => BarangMasuk::count()],
-            ['jenis' => 'Barang Keluar', 'total' => BarangKeluar::count()],
-        ]);
+        return BarangMasuk::query()
+            ->selectRaw("DATE_FORMAT(created_at, '%M %Y') as bulan")
+            ->groupByRaw("DATE_FORMAT(created_at, '%M %Y')")
+            ->orderByRaw("MIN(created_at)");
+    }
 
-        return $table
-            ->query(
-                fn () => \App\Models\BarangMasuk::query()->limit(0) // dummy query biar tidak error
-            )
-            ->columns([
-                Tables\Columns\TextColumn::make('jenis')
-                    ->label('Jenis')
-                    ->getStateUsing(fn ($record, $state, $rowLoop) => $data[$rowLoop->index]['jenis'] ?? ''),
-                Tables\Columns\TextColumn::make('total')
-                    ->label('Total')
-                    ->getStateUsing(fn ($record, $state, $rowLoop) => $data[$rowLoop->index]['total'] ?? 0),
-            ])
-            ->paginated(false); // biar tidak ada pagination
+    /**
+     * Definisikan kolom tabel.
+     */
+    protected function getTableColumns(): array
+    {
+        return [
+            Tables\Columns\TextColumn::make('bulan')
+                ->label('Bulan'),
+
+            Tables\Columns\TextColumn::make('total_masuk')
+                ->label('Barang Masuk')
+                ->getStateUsing(fn ($record) =>
+                    BarangMasuk::whereRaw("DATE_FORMAT(created_at, '%M %Y') = ?", [$record->bulan])->count()
+                ),
+
+            Tables\Columns\TextColumn::make('total_keluar')
+                ->label('Barang Keluar')
+                ->getStateUsing(fn ($record) =>
+                    BarangKeluar::whereRaw("DATE_FORMAT(created_at, '%M %Y') = ?", [$record->bulan])->count()
+                ),
+        ];
     }
 }
