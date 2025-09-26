@@ -10,9 +10,11 @@ return new class extends Migration
     {
         Schema::create('asets', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_aset', 100);
-            $table->string('kategori', 50)->nullable(); // contoh: elektronik, kendaraan, dll
-            $table->integer('jumlah')->default(0);
+            $table->string('nama_aset', 255);
+            $table->string('merk_kode', 150)->nullable();
+            $table->string('kategori', 100);
+            $table->string('status', 50);
+            $table->date('log_pembaruan_barcode')->nullable();
             $table->timestamps();
         });
     }
