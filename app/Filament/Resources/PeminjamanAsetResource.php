@@ -115,8 +115,7 @@ class PeminjamanAsetResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-
+                // 🔹 hanya sisakan tombol "Kembalikan"
                 Tables\Actions\Action::make('kembalikan')
                     ->label('Kembalikan')
                     ->icon('heroicon-o-arrow-uturn-left')
