@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PeminjamanAset extends Model
 {
+    use HasFactory;
+
+    protected $table = 'peminjaman_aset';
+
     protected $fillable = [
         'aset_id',
         'peminjam',
@@ -14,10 +19,11 @@ class PeminjamanAset extends Model
         'tanggal_kembali',
         'jumlah',
         'sisa_stok',
+        'status',
     ];
 
     public function aset()
     {
-        return $this->belongsTo(Aset::class);
+        return $this->belongsTo(Aset::class, 'aset_id');
     }
 }

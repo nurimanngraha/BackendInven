@@ -6,7 +6,7 @@ use App\Filament\Resources\PeminjamanAsetResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListPeminjamanAsets extends ListRecords
+class ListPeminjamanAset extends ListRecords
 {
     protected static string $resource = PeminjamanAsetResource::class;
 

@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Models\PeminjamanAset;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use App\Filament\Resources\PeminjamanAsetResource\Pages;
 use Illuminate\Database\Eloquent\Collection;
+use App\Filament\Resources\PeminjamanAsetResource\Pages;
 
 class PeminjamanAsetResource extends Resource
 {
@@ -19,47 +19,89 @@ class PeminjamanAsetResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
     protected static ?string $navigationLabel = 'Peminjaman Aset';
 
+    // 🔹 Atur label agar tidak typo jadi "Asets"
+    public static function getModelLabel(): string
+    {
+        return 'Peminjaman Aset';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Peminjaman Aset';
+    }
+
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('aset_id')
-                    ->relationship('aset', 'nama_aset')
-                    ->required()
-                    ->label('Aset'),
+        return $form->schema([
+            Forms\Components\Select::make('aset_id')
+                ->relationship('aset', 'nama_aset')
+                ->required()
+                ->label('Nama Barang'),
 
-                Forms\Components\TextInput::make('peminjam')
-                    ->required()
-                    ->label('Nama Peminjam'),
+            Forms\Components\TextInput::make('peminjam')
+                ->required()
+                ->label('Peminjam'),
 
-                Forms\Components\DatePicker::make('tanggal_pinjam')
-                    ->required(),
+            Forms\Components\TextInput::make('bagian')
+                ->label('Bagian / Divisi'),
 
-                // tanggal_kembali tidak ditampilkan / diisi manual
-                Forms\Components\Hidden::make('tanggal_kembali'),
+            Forms\Components\DatePicker::make('tanggal_pinjam')
+                ->required()
+                ->label('Tanggal Pinjam'),
 
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'Dipinjam' => 'Dipinjam',
-                        'Dikembalikan' => 'Dikembalikan',
-                    ])
-                    ->default('Dipinjam')
-                    ->disabled(), // status juga dikontrol lewat aksi, bukan form
-            ]);
+            Forms\Components\DatePicker::make('tanggal_kembali')
+                ->label('Tanggal Kembali'),
+
+            Forms\Components\TextInput::make('jumlah')
+                ->numeric()
+                ->required()
+                ->label('Jumlah'),
+
+            Forms\Components\TextInput::make('sisa_stok')
+                ->numeric()
+                ->label('Sisa Stok'),
+
+            Forms\Components\Hidden::make('status')
+                ->default('Dipinjam'),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('aset.nama_aset')->label('Aset')->searchable(),
-                Tables\Columns\TextColumn::make('peminjam')->searchable(),
-                Tables\Columns\TextColumn::make('tanggal_pinjam')->date(),
+                Tables\Columns\TextColumn::make('aset.nama_aset')
+                    ->label('Aset')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('peminjam')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('bagian')
+                    ->label('Bagian')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('tanggal_pinjam')
+                    ->date()
+                    ->label('Tanggal Pinjam')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('tanggal_kembali')
                     ->date()
                     ->label('Tanggal Kembali')
-                    ->placeholder('-'),
+                    ->placeholder('-')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('jumlah')
+                    ->label('Jumlah'),
+
+                Tables\Columns\TextColumn::make('sisa_stok')
+                    ->label('Sisa Stok'),
+
                 Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
                     ->colors([
                         'warning' => 'Dipinjam',
                         'success' => 'Dikembalikan',
@@ -74,18 +116,17 @@ class PeminjamanAsetResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
                 Tables\Actions\Action::make('kembalikan')
                     ->label('Kembalikan')
                     ->icon('heroicon-o-arrow-uturn-left')
                     ->color('success')
                     ->requiresConfirmation()
                     ->visible(fn ($record) => $record->status === 'Dipinjam')
-                    ->action(function ($record) {
-                        $record->update([
-                            'status' => 'Dikembalikan',
-                            'tanggal_kembali' => now(),
-                        ]);
-                    }),
+                    ->action(fn ($record) => $record->update([
+                        'status' => 'Dikembalikan',
+                        'tanggal_kembali' => now(),
+                    ])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('kembalikan')
@@ -94,14 +135,14 @@ class PeminjamanAsetResource extends Resource
                     ->color('success')
                     ->requiresConfirmation()
                     ->action(function (Collection $records) {
-                        foreach ($records as $record) {
+                        $records->each(function ($record) {
                             if ($record->status === 'Dipinjam') {
                                 $record->update([
                                     'status' => 'Dikembalikan',
                                     'tanggal_kembali' => now(),
                                 ]);
                             }
-                        }
+                        });
                     }),
             ]);
     }
@@ -109,9 +150,9 @@ class PeminjamanAsetResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPeminjamanAsets::route('/'),
+            'index'  => Pages\ListPeminjamanAset::route('/'),
             'create' => Pages\CreatePeminjamanAset::route('/create'),
-            'edit' => Pages\EditPeminjamanAset::route('/{record}/edit'),
+            'edit'   => Pages\EditPeminjamanAset::route('/{record}/edit'),
         ];
     }
 }
