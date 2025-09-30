@@ -42,101 +42,44 @@ class PeminjamanAsetResource extends Resource
                 ->required()
                 ->label('Peminjam'),
 
-<<<<<<< HEAD
-                Forms\Components\TextInput::make('bagian')
-                    ->label('Bagian / Departemen'),
-
-                Forms\Components\DatePicker::make('tanggal_pinjam')
-                    ->required()
-                    ->label('Tanggal Pinjam'),
-
-                Forms\Components\DatePicker::make('tanggal_kembali')
-                    ->label('Tanggal Kembali')
-                    ->nullable(),
-
-                Forms\Components\TextInput::make('jumlah')
-                    ->numeric()
-                    ->default(1)
-                    ->required()
-                    ->label('Jumlah'),
-
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'Dipinjam' => 'Dipinjam',
-                        'Dikembalikan' => 'Dikembalikan',
-                    ])
-                    ->default('Dipinjam')
-                    ->label('Status'),
-            ]);
-=======
             Forms\Components\TextInput::make('bagian')
-                ->label('Bagian / Divisi'),
+                ->label('Bagian / Departemen'),
 
             Forms\Components\DatePicker::make('tanggal_pinjam')
                 ->required()
                 ->label('Tanggal Pinjam'),
 
             Forms\Components\DatePicker::make('tanggal_kembali')
-                ->label('Tanggal Kembali'),
+                ->label('Tanggal Kembali')
+                ->nullable(),
 
             Forms\Components\TextInput::make('jumlah')
                 ->numeric()
+                ->default(1)
                 ->required()
                 ->label('Jumlah'),
 
-            Forms\Components\TextInput::make('sisa_stok')
-                ->numeric()
-                ->label('Sisa Stok'),
-
-            Forms\Components\Hidden::make('status')
-                ->default('Dipinjam'),
+            Forms\Components\Select::make('status')
+                ->options([
+                    'Dipinjam' => 'Dipinjam',
+                    'Dikembalikan' => 'Dikembalikan',
+                ])
+                ->default('Dipinjam')
+                ->label('Status'),
         ]);
->>>>>>> c202b07e3377b8859f4600ac81b9c790d64ed67a
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-<<<<<<< HEAD
                 Tables\Columns\TextColumn::make('aset.nama_aset')->label('Aset')->searchable(),
                 Tables\Columns\TextColumn::make('peminjam')->searchable(),
                 Tables\Columns\TextColumn::make('bagian')->label('Bagian'),
                 Tables\Columns\TextColumn::make('jumlah'),
                 Tables\Columns\TextColumn::make('tanggal_pinjam')->date(),
                 Tables\Columns\TextColumn::make('tanggal_kembali')->date()->label('Tanggal Kembali')->placeholder('-'),
-=======
-                Tables\Columns\TextColumn::make('aset.nama_aset')
-                    ->label('Aset')
-                    ->sortable()
-                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('peminjam')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('bagian')
-                    ->label('Bagian')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('tanggal_pinjam')
-                    ->date()
-                    ->label('Tanggal Pinjam')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('tanggal_kembali')
-                    ->date()
-                    ->label('Tanggal Kembali')
-                    ->placeholder('-')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('jumlah')
-                    ->label('Jumlah'),
-
-                Tables\Columns\TextColumn::make('sisa_stok')
-                    ->label('Sisa Stok'),
-
->>>>>>> c202b07e3377b8859f4600ac81b9c790d64ed67a
                 Tables\Columns\BadgeColumn::make('status')
                     ->label('Status')
                     ->colors([
