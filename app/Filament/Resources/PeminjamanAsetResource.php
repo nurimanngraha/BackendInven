@@ -32,11 +32,22 @@ class PeminjamanAsetResource extends Resource
                     ->required()
                     ->label('Nama Peminjam'),
 
-                Forms\Components\DatePicker::make('tanggal_pinjam')
-                    ->required(),
+                Forms\Components\TextInput::make('bagian')
+                    ->label('Bagian / Departemen'),
 
-                // tanggal_kembali tidak ditampilkan / diisi manual
-                Forms\Components\Hidden::make('tanggal_kembali'),
+                Forms\Components\DatePicker::make('tanggal_pinjam')
+                    ->required()
+                    ->label('Tanggal Pinjam'),
+
+                Forms\Components\DatePicker::make('tanggal_kembali')
+                    ->label('Tanggal Kembali')
+                    ->nullable(),
+
+                Forms\Components\TextInput::make('jumlah')
+                    ->numeric()
+                    ->default(1)
+                    ->required()
+                    ->label('Jumlah'),
 
                 Forms\Components\Select::make('status')
                     ->options([
@@ -44,7 +55,7 @@ class PeminjamanAsetResource extends Resource
                         'Dikembalikan' => 'Dikembalikan',
                     ])
                     ->default('Dipinjam')
-                    ->disabled(), // status juga dikontrol lewat aksi, bukan form
+                    ->label('Status'),
             ]);
     }
 
@@ -54,11 +65,10 @@ class PeminjamanAsetResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('aset.nama_aset')->label('Aset')->searchable(),
                 Tables\Columns\TextColumn::make('peminjam')->searchable(),
+                Tables\Columns\TextColumn::make('bagian')->label('Bagian'),
+                Tables\Columns\TextColumn::make('jumlah'),
                 Tables\Columns\TextColumn::make('tanggal_pinjam')->date(),
-                Tables\Columns\TextColumn::make('tanggal_kembali')
-                    ->date()
-                    ->label('Tanggal Kembali')
-                    ->placeholder('-'),
+                Tables\Columns\TextColumn::make('tanggal_kembali')->date()->label('Tanggal Kembali')->placeholder('-'),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'warning' => 'Dipinjam',

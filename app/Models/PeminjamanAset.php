@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PeminjamanAset extends Model
 {
+    protected $table = 'peminjaman_aset'; // singular
+
     protected $fillable = [
         'aset_id',
         'peminjam',
@@ -14,6 +16,8 @@ class PeminjamanAset extends Model
         'tanggal_kembali',
         'jumlah',
         'sisa_stok',
+        'status',
+        'keterangan',
     ];
 
     public function aset()
