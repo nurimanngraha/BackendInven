@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PeminjamanAset extends Model
 {
-    protected $table = 'peminjaman_aset'; // singular
+    use HasFactory;
 
+    // Nama tabel
+    protected $table = 'peminjaman_aset';
+
+    // Kolom yang bisa diisi secara massal
     protected $fillable = [
         'aset_id',
         'peminjam',
@@ -20,8 +25,9 @@ class PeminjamanAset extends Model
         'keterangan',
     ];
 
+    // Relasi ke model Aset
     public function aset()
     {
-        return $this->belongsTo(Aset::class);
+        return $this->belongsTo(Aset::class, 'aset_id');
     }
 }

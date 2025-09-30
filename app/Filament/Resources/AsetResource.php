@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 class AsetResource extends Resource
 {
     protected static ?string $model = Aset::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-building-library';
     protected static ?string $navigationGroup = 'Manajemen Data';
 
@@ -21,17 +22,35 @@ class AsetResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nama_aset')
+                    ->label('Nama Aset')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('kategori')
-                    ->required()
-                    ->maxLength(100),
-                Forms\Components\TextInput::make('lokasi')
-                    ->required()
+
+                Forms\Components\TextInput::make('merk_kode')
+                    ->label('Merk/Kode')
                     ->maxLength(150),
-                Forms\Components\TextInput::make('nilai')
-                    ->numeric()
+
+                Forms\Components\Select::make('kategori')
+                    ->label('Kategori')
+                    ->options([
+                        'Elektronik' => 'Elektronik',
+                        'Furniture'  => 'Furniture',
+                        'Lainnya'    => 'Lainnya',
+                    ])
                     ->required(),
+
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'Aktif'    => 'Aktif',
+                        'Rusak'    => 'Rusak',
+                        'Dipinjam' => 'Dipinjam',
+                        'Hilang'   => 'Hilang',
+                    ])
+                    ->required(),
+
+                Forms\Components\DatePicker::make('log_pembaruan_barcode')
+                    ->label('Log Pembaruan Barcode'),
             ]);
     }
 
@@ -41,9 +60,10 @@ class AsetResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('nama_aset')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('merk_kode'),
                 Tables\Columns\TextColumn::make('kategori'),
-                Tables\Columns\TextColumn::make('lokasi'),
-                Tables\Columns\TextColumn::make('nilai')->money('idr', true),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('log_pembaruan_barcode')->date(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime(),
             ])
             ->filters([])
@@ -66,9 +86,20 @@ class AsetResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAsets::route('/'),
+            'index'  => Pages\ListAset::route('/'),
             'create' => Pages\CreateAset::route('/create'),
-            'edit' => Pages\EditAset::route('/{record}/edit'),
+            'edit'   => Pages\EditAset::route('/{record}/edit'),
         ];
+    }
+
+    // 🔹 Tambahan biar singular di sidebar
+    public static function getPluralLabel(): string
+    {
+        return 'Aset';
+    }
+
+    public static function getLabel(): string
+    {
+        return 'Aset';
     }
 }

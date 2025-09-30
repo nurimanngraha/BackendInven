@@ -2,27 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Aset extends Model
 {
     use HasFactory;
 
-    protected $table = 'asets';
-
     protected $fillable = [
         'nama_aset',
+        'merk_kode',
         'kategori',
-        'jumlah',
+        'status',
+        'log_pembaruan_barcode',
     ];
-
-    /**
-     * Relasi ke tabel peminjaman_asets
-     * Satu aset bisa punya banyak peminjaman
-     */
-    public function peminjamanAsets()
-    {
-        return $this->hasMany(PeminjamanAset::class, 'aset_id');
-    }
 }
