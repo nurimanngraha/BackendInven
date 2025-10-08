@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class AsetResource extends Resource
@@ -69,6 +70,17 @@ class AsetResource extends Resource
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                            // 🟧 Tombol BARCODE (di tengah, antara Edit dan Delete)
+            Tables\Actions\Action::make('barcode')
+                ->label('Barcode')
+                ->icon('heroicon-o-qr-code')   // ikon heroicons
+                ->button()                     // render sebagai button (bukan link tipis)
+                ->color('warning')             // bebas ganti: primary / info / success / etc
+                // opsi A: buka halaman label (siap cetak) di tab baru
+                ->url(fn (Aset $record) => route('assets.print', $record))
+                ->openUrlInNewTab(),
+                // kalau mau selalu tampil, biarkan. Kalau mau sembunyikan saat belum ada file:
+                // ->visible(fn (Aset $record) => filled($record->qr_path))
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
