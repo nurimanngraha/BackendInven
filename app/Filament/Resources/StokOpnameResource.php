@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StokOpnameResource\Pages;
 use App\Models\StokOpname;
+use App\Models\Aset;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Resources\Resource;
@@ -11,7 +12,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BadgeColumn;
 
 class StokOpnameResource extends Resource
 {
@@ -80,11 +80,12 @@ class StokOpnameResource extends Resource
                 TextColumn::make('stok_sistem')->label('Stok Sistem')->sortable(),
                 TextColumn::make('stok_fisik')->label('Stok Fisik')->sortable(),
                 TextColumn::make('selisih')->label('Selisih')->sortable(),
-                BadgeColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
+                    ->badge()
                     ->colors([
-                        'success' => fn ($state): bool => $state === 'ok',
-                        'danger' => fn ($state): bool => $state === 'rusak',
+                        'warning' => ['Rusak'],
+                        'success' => ['Ok'],
                     ])
                     ->sortable(),
                 TextColumn::make('created_at')->label('Dibuat')->dateTime()->sortable(),
@@ -98,6 +99,14 @@ class StokOpnameResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                
+            Tables\Actions\Action::make('barcode')
+                ->label('Barcode')
+                ->icon('heroicon-o-qr-code')
+                ->button()
+                ->color('warning')
+                ->url(fn (Aset $record) => rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/').'/labels/'.$record->id)
+                ->openUrlInNewTab(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
