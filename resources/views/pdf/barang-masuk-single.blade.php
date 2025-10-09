@@ -2,43 +2,65 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Barang Masuk - {{ \->no_transaksi }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Barang Masuk</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; margin: 30px; color: #333; }
-        h2 { text-align: center; margin-bottom: 20px; }
-        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .info-table td { padding: 8px; border-bottom: 1px solid #ddd; }
-        .info-table td:first-child { font-weight: bold; width: 30%; }
-        .footer { text-align: center; font-size: 12px; margin-top: 30px; }
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            margin: 40px;
+            color: #333;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #f2f2f2;
+        }
+        .footer {
+            text-align: right;
+            font-size: 12px;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
-    <h2>DATA BARANG MASUK</h2>
-    
-    <table class="info-table">
+    <h2>Laporan Barang Masuk</h2>
+
+    <div class="info">
+        <p><strong>No Transaksi:</strong> {{ $record->no_transaksi }}</p>
+        <p><strong>Tanggal Masuk:</strong> {{ \Carbon\Carbon::parse($record->tanggal)->format('d M Y') }}</p>
+    </div>
+
+    <table>
         <tr>
-            <td>No Transaksi</td>
-            <td>{{ \->no_transaksi }}</td>
+            <th>Nama Barang</th>
+            <td>{{ $record->barang->nama_barang ?? '-' }}</td>
         </tr>
         <tr>
-            <td>Tanggal Masuk</td>
-            <td>{{ \Carbon\Carbon::parse(\->tanggal)->format('d F Y') }}</td>
+            <th>Kategori</th>
+            <td>{{ $record->kategori ?? '-' }}</td>
         </tr>
         <tr>
-            <td>Nama Barang</td>
-            <td>{{ \->barang->nama_barang ?? '-' }}</td>
+            <th>Jumlah</th>
+            <td>{{ number_format($record->jumlah, 0, ',', '.') }} unit</td>
         </tr>
         <tr>
-            <td>Kategori</td>
-            <td>{{ \->kategori->nama_kategori ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td>Jumlah Masuk</td>
-            <td>{{ number_format(\->jumlah, 0, ',', '.') }} unit</td>
-        </tr>
-        <tr>
-            <td>User</td>
-            <td>{{ \->user->name ?? '-' }}</td>
+            <th>User</th>
+            <td>{{ $record->user->name ?? '-' }}</td>
         </tr>
     </table>
 

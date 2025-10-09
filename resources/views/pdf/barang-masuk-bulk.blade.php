@@ -26,14 +26,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (\ as \)
+            @foreach ($records as $item)
                 <tr>
-                    <td>{{ \->no_transaksi }}</td>
-                    <td>{{ \->barang->nama_barang ?? '-' }}</td>
-                    <td>{{ \->kategori->nama_kategori ?? '-' }}</td>
-                    <td>{{ number_format(\->jumlah, 0, ',', '.') }}</td>
-                    <td>{{ \Carbon\Carbon::parse(\->tanggal)->format('d M Y') }}</td>
-                    <td>{{ \->user->name ?? '-' }}</td>
+                    <td>{{ $item->no_transaksi }}</td>
+                    <td>{{ $item->barang->nama_barang ?? '-' }}</td>
+                    <td>{{ $item->kategori ?? '-' }}</td>
+                    <td>{{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
+                    <td>{{ $item->user->name ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>
