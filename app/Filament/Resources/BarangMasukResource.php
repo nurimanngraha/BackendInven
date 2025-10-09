@@ -15,6 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class BarangMasukResource extends Resource
 {
     protected static ?string $model = BarangMasuk::class;
+
     protected static ?string $navigationGroup = 'Transaksi';
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
 
@@ -30,62 +31,59 @@ class BarangMasukResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Informasi Transaksi')
-                    ->schema([
-                        Forms\Components\TextInput::make('no_transaksi')
-                            ->label('No Transaksi')
-                            ->default(fn () => 'T-BK-' . now()->format('Ymd') . rand(1000, 9999))
-                            ->disabled()
-                            ->dehydrated()
-                            ->columnSpanFull(),
+        return $form->schema([
+            Forms\Components\Section::make('Informasi Transaksi')
+                ->schema([
+                    Forms\Components\TextInput::make('no_transaksi')
+                        ->label('No Transaksi')
+                        ->default(fn() => 'T-BK-' . now()->format('Ymd') . rand(1000, 9999))
+                        ->disabled()
+                        ->dehydrated()
+                        ->columnSpanFull(),
 
-                        Forms\Components\DatePicker::make('tanggal')
-                            ->label('Tanggal Masuk')
-                            ->default(now())
-                            ->required()
-                            ->columnSpanFull(),
-                    ]),
+                    Forms\Components\DatePicker::make('tanggal')
+                        ->label('Tanggal Masuk')
+                        ->default(now())
+                        ->required()
+                        ->columnSpanFull(),
+                ]),
 
-                Forms\Components\Section::make('Detail Barang')
-                    ->schema([
-                        Forms\Components\Select::make('barang_id')
-                            ->label('Nama Barang')
-                            ->relationship('barang', 'nama_barang')
-                            ->searchable()
-                            ->required()
-                            ->columnSpanFull(),
+            Forms\Components\Section::make('Detail Barang')
+                ->schema([
+                    Forms\Components\Select::make('barang_id')
+                        ->label('Nama Barang')
+                        ->relationship('barang', 'nama_barang')
+                        ->searchable()
+                        ->required()
+                        ->columnSpanFull(),
 
-                        Forms\Components\TextInput::make('jumlah')
-                            ->label('Jumlah Masuk')
-                            ->numeric()
-                            ->required()
-                            ->minValue(1)
-                            ->columnSpanFull(),
+                    Forms\Components\TextInput::make('jumlah')
+                        ->label('Jumlah Masuk')
+                        ->numeric()
+                        ->required()
+                        ->minValue(1)
+                        ->columnSpanFull(),
 
-                        Forms\Components\Select::make('kategori')
-                            ->label('Kategori')
-                            ->options([
-                                'Elektronik' => 'Elektronik',
-                                'Alat Tulis' => 'Alat Tulis',
-                            ])
-                            ->searchable()
-                            ->required()
-                            ->columnSpanFull(),
-                    ]),
+                    // ✅ Ubah dari relasi ke input manual
+                    Forms\Components\TextInput::make('kategori')
+                        ->label('Kategori')
+                        ->placeholder('Contoh: Elektronik, Alat Tulis, dll')
+                        ->required()
+                        ->maxLength(100)
+                        ->columnSpanFull(),
+                ]),
 
-                Forms\Components\Section::make('Informasi User')
-                    ->schema([
-                        Forms\Components\Select::make('user_id')
-                            ->label('User')
-                            ->relationship('user', 'name')
-                            ->default(auth()->id())
-                            ->searchable()
-                            ->required()
-                            ->columnSpanFull(),
-                    ]),
-            ]);
+            Forms\Components\Section::make('Informasi User')
+                ->schema([
+                    Forms\Components\Select::make('user_id')
+                        ->label('User')
+                        ->relationship('user', 'name')
+                        ->default(fn() => auth()->id())
+                        ->searchable()
+                        ->required()
+                        ->columnSpanFull(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -98,7 +96,7 @@ class BarangMasukResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('barang.nama_barang')
-                    ->label('Barang')
+                    ->label('Nama Barang')
                     ->searchable()
                     ->sortable(),
 
@@ -110,7 +108,7 @@ class BarangMasukResource extends Resource
                 Tables\Columns\TextColumn::make('jumlah')
                     ->label('Jumlah')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => number_format($state, 0, ',', '.') . ' unit'),
+                    ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.') . ' unit'),
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
@@ -121,80 +119,60 @@ class BarangMasukResource extends Resource
                     ->label('Tanggal Masuk')
                     ->date('d M Y')
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Dibuat')
-                    ->dateTime('d M Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori')
-                    ->options([
-                        'Elektronik' => 'Elektronik',
-                        'Alat Tulis' => 'Alat Tulis',
-                    ])
-                    ->label('Filter Kategori'),
-
-                Tables\Filters\Filter::make('tanggal')
-                    ->form([
-                        Forms\Components\DatePicker::make('dari_tanggal')
-                            ->label('Dari Tanggal'),
-                        Forms\Components\DatePicker::make('sampai_tanggal')
-                            ->label('Sampai Tanggal'),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query
-                            ->when($data['dari_tanggal'], fn ($q) => $q->whereDate('tanggal', '>=', $data['dari_tanggal']))
-                            ->when($data['sampai_tanggal'], fn ($q) => $q->whereDate('tanggal', '<=', $data['sampai_tanggal']));
+                    ->label('Filter Kategori')
+                    ->options(function () {
+                        // Ambil daftar kategori unik dari data barang masuk
+                        return BarangMasuk::query()
+                            ->select('kategori')
+                            ->distinct()
+                            ->pluck('kategori', 'kategori')
+                            ->toArray();
                     }),
             ])
+
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                    
-                    // Print Single Record
-                    Tables\Actions\Action::make('print')
-                        ->label('Cetak')
-                        ->icon('heroicon-o-printer')
-                        ->color('success')
-                        ->action(function (BarangMasuk $record) {
-                            $pdf = Pdf::loadHTML(
-                                view('pdf.barang-masuk-single', ['record' => $record])
-                            );
-                            
-                            return response()->streamDownload(
-                                fn () => print($pdf->output()),
-                                "barang-masuk-{$record->no_transaksi}.pdf"
-                            );
-                        }),
-                ]),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\Action::make('print')
+                    ->label('Cetak')
+                    ->icon('heroicon-o-printer')
+                    ->color('success')
+                    ->action(function (BarangMasuk $record) {
+                        $pdf = Pdf::loadHTML(view('pdf.barang-masuk-single', [
+                            'record' => $record,
+                        ]));
+                        return response()->streamDownload(
+                            fn() => print($pdf->output()),
+                            "barang-masuk-{$record->no_transaksi}.pdf"
+                        );
+                    }),
             ])
+
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    
-                    // Print Multiple Records
-                    Tables\Actions\BulkAction::make('print')
-                        ->label('Cetak Selected')
-                        ->icon('heroicon-o-printer')
-                        ->action(function (Collection $records) {
-                            $pdf = Pdf::loadHTML(
-                                view('pdf.barang-masuk-bulk', [
-                                    'records' => $records,
-                                    'tanggal' => now()->format('d F Y')
-                                ])
-                            );
-                            
-                            return response()->streamDownload(
-                                fn () => print($pdf->output()),
-                                'laporan-barang-masuk.pdf'
-                            );
-                        }),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
+
+                Tables\Actions\BulkAction::make('print')
+                    ->label('Cetak Terpilih')
+                    ->icon('heroicon-o-printer')
+                    ->color('success')
+                    ->action(function (Collection $records) {
+                        $pdf = Pdf::loadHTML(view('pdf.barang-masuk-bulk', [
+                            'records' => $records,
+                            'tanggal' => now()->format('d F Y'),
+                        ]));
+                        return response()->streamDownload(
+                            fn() => print($pdf->output()),
+                            'laporan-barang-masuk.pdf'
+                        );
+                    }),
             ])
+
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
             ]);

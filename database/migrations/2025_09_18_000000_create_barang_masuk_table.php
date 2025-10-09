@@ -19,10 +19,8 @@ return new class extends Migration
                   ->constrained('barangs')
                   ->cascadeOnDelete();
 
-            // Relasi ke tabel kategoris
-            $table->foreignId('kategori_id')
-                  ->constrained('kategoris')
-                  ->cascadeOnDelete();
+            // ✅ Kategori manual (bukan foreign key)
+            $table->string('kategori');
 
             // Relasi ke tabel users
             $table->foreignId('user_id')
@@ -32,7 +30,7 @@ return new class extends Migration
             // Jumlah barang masuk
             $table->integer('jumlah');
 
-            // Default tanggal hari ini (lebih aman pakai nullable + default set via model)
+            // Default tanggal hari ini
             $table->date('tanggal')->nullable();
 
             $table->timestamps();
