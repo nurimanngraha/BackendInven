@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BarangKeluarResource extends Resource
 {
@@ -16,7 +18,6 @@ class BarangKeluarResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
     protected static ?string $navigationGroup = 'Transaksi';
 
-    // ✅ fix typo 's' di sidebar
     public static function getLabel(): string
     {
         return 'Barang Keluar';
@@ -31,67 +32,218 @@ class BarangKeluarResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('no_transaksi')
-                    ->label('No. Transaksi')
-                    ->default(fn () => 'Auto Generate')
-                    ->disabled()
-                    ->dehydrated(true),
+                Forms\Components\Section::make('Informasi Transaksi')
+                    ->schema([
+                        Forms\Components\TextInput::make('no_transaksi')
+                            ->label('No Transaksi')
+                            ->default(fn () => 'T-BK-' . now()->format('ymd') . sprintf('%04d', (BarangKeluar::whereDate('created_at', today())->count() + 1)))
+                            ->disabled()
+                            ->dehydrated(true)
+                            ->columnSpanFull(),
 
-                Forms\Components\Select::make('barang_id')
-                    ->label('Barang')
-                    ->relationship('barang', 'nama_barang')
-                    ->required()
-                    ->searchable(),
+                        Forms\Components\DatePicker::make('tanggal_keluar')
+                            ->label('Tanggal Keluar')
+                            ->default(now())
+                            ->required()
+                            ->columnSpanFull(),
+                    ]),
+                
+                Forms\Components\Section::make('Data Barang')
+                    ->schema([
+                        Forms\Components\Select::make('barang_id')
+                            ->label('Nama Barang')
+                            ->relationship('barang', 'nama_barang')
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->columnSpanFull()
+                            ->placeholder('Masukkan nama barang'),
 
-                Forms\Components\DatePicker::make('tanggal_keluar')
-                    ->label('Tanggal Keluar')
-                    ->default(now())
-                    ->required(),
+                        Forms\Components\TextInput::make('jumlah')
+                            ->label('Total Keluar')
+                            ->numeric()
+                            ->required()
+                            ->minValue(1)
+                            ->columnSpanFull()
+                            ->placeholder('Masukkan jumlah barang keluar'),
+                    ]),
+                
+                Forms\Components\Section::make('Informasi Penerima')
+                    ->schema([
+                        Forms\Components\TextInput::make('penerima')
+                            ->label('Nama Penerima')
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull()
+                            ->placeholder('Masukkan nama penerima'),
 
-                Forms\Components\TextInput::make('jumlah')
-                    ->label('Jumlah')
-                    ->numeric()
-                    ->required(),
-
-                Forms\Components\TextInput::make('penerima')
-                    ->label('Penerima')
-                    ->required()
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('bagian')
-                    ->label('Bagian')
-                    ->nullable()
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('petugas')
-                    ->label('Petugas')
-                    ->nullable()
-                    ->maxLength(255),
+                        Forms\Components\TextInput::make('bagian')
+                            ->label('Bagian')
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull()
+                            ->placeholder('Masukkan bagian penerima'),
+                    ]),
+                
+                Forms\Components\Section::make('Petugas')
+                    ->schema([
+                        Forms\Components\TextInput::make('petugas')
+                            ->label('Petugas')
+                            ->required()
+                            ->maxLength(255)
+                            ->default(auth()->user()->name ?? 'Administrator')
+                            ->columnSpanFull()
+                            ->placeholder('Masukkan nama petugas'),
+                    ]),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('no_transaksi')->label('No. Transaksi')->sortable(),
-                Tables\Columns\TextColumn::make('barang.nama_barang')->label('Barang'),
-                Tables\Columns\TextColumn::make('tanggal_keluar')->date(),
-                Tables\Columns\TextColumn::make('jumlah'),
-                Tables\Columns\TextColumn::make('penerima'),
-                Tables\Columns\TextColumn::make('bagian')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('petugas')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->since()->sortable(),
+            ->headerActions([
+                Tables\Actions\Action::make('totalKeluar')
+                    ->label(fn () => 'Total Keluar: ' . number_format(BarangKeluar::sum('jumlah'), 0, ',', '.') . ' Unit')
+                    ->color('gray')
+                    ->disabled()
+                    ->extraAttributes(['class' => 'bg-gray-100 px-4 py-2 rounded-lg']),
             ])
-            ->filters([])
+            ->columns([
+                Tables\Columns\TextColumn::make('no_transaksi')
+                    ->label('No Transaksi')
+                    ->searchable()
+                    ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('tanggal_keluar')
+                    ->label('Tgl Keluar')
+                    ->date('Y-m-d')
+                    ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('barang.nama_barang')
+                    ->label('Nama Barang')
+                    ->searchable()
+                    ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('jumlah')
+                    ->label('Jumlah')
+                    ->formatStateUsing(fn ($state, $record) => number_format($state, 0, ',', '.') . ' ' . ($record->barang->satuan ?? 'Unit'))
+                    ->sortable()
+                    ->summarize([
+                        Tables\Columns\Summarizers\Sum::make()
+                            ->label('Total Keluar')
+                            ->formatStateUsing(fn ($state) => number_format($state, 0, ',', '.') . ' Unit')
+                    ]),
+                    
+                Tables\Columns\TextColumn::make('penerima')
+                    ->label('Penerima')
+                    ->searchable()
+                    ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('bagian')
+                    ->label('Bagian')
+                    ->searchable()
+                    ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('petugas')
+                    ->label('Petugas')
+                    ->searchable()
+                    ->sortable(),
+            ])
+            ->filters([
+                Tables\Filters\Filter::make('tanggal_keluar')
+                    ->form([
+                        Forms\Components\DatePicker::make('dari_tanggal')
+                            ->label('Dari Tanggal'),
+                        Forms\Components\DatePicker::make('sampai_tanggal')
+                            ->label('Sampai Tanggal'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['dari_tanggal'], fn ($q) => $q->whereDate('tanggal_keluar', '>=', $data['dari_tanggal']))
+                            ->when($data['sampai_tanggal'], fn ($q) => $q->whereDate('tanggal_keluar', '<=', $data['sampai_tanggal']));
+                    }),
+            ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    
+                    Tables\Actions\Action::make('print')
+                        ->label('Cetak')
+                        ->icon('heroicon-o-printer')
+                        ->color('success')
+                        ->action(function (BarangKeluar $record) {
+                            // Handle jika tanggal_keluar adalah string
+                            $tanggal_keluar = $record->tanggal_keluar;
+                            if (is_string($tanggal_keluar)) {
+                                $tanggal_keluar = \Carbon\Carbon::parse($tanggal_keluar)->format('Y-m-d');
+                            } else {
+                                $tanggal_keluar = $record->tanggal_keluar->format('Y-m-d');
+                            }
+                            
+                            $data = [
+                                'no_transaksi' => $record->no_transaksi,
+                                'tanggal_keluar' => $tanggal_keluar,
+                                'nama_barang' => $record->barang->nama_barang,
+                                'jumlah' => number_format($record->jumlah, 0, ',', '.') . ' ' . ($record->barang->satuan ?? 'Unit'),
+                                'penerima' => $record->penerima,
+                                'bagian' => $record->bagian,
+                                'petugas' => $record->petugas,
+                            ];
+                            
+                            $pdf = Pdf::loadView('pdf.barang-keluar-single', $data);
+                            return response()->streamDownload(
+                                fn () => print($pdf->output()),
+                                "barang-keluar-{$record->no_transaksi}.pdf"
+                            );
+                        }),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    
+                    Tables\Actions\BulkAction::make('print')
+                        ->label('Cetak Selected')
+                        ->icon('heroicon-o-printer')
+                        ->action(function (Collection $records) {
+                            $totalKeluar = $records->sum('jumlah');
+                            
+                            $data = [
+                                'records' => $records->map(function ($record) {
+                                    // Handle jika tanggal_keluar adalah string
+                                    $tanggal_keluar = $record->tanggal_keluar;
+                                    if (is_string($tanggal_keluar)) {
+                                        $tanggal_keluar = \Carbon\Carbon::parse($tanggal_keluar)->format('Y-m-d');
+                                    } else {
+                                        $tanggal_keluar = $record->tanggal_keluar->format('Y-m-d');
+                                    }
+                                    
+                                    return [
+                                        'no_transaksi' => $record->no_transaksi,
+                                        'tanggal_keluar' => $tanggal_keluar,
+                                        'nama_barang' => $record->barang->nama_barang,
+                                        'jumlah' => number_format($record->jumlah, 0, ',', '.') . ' ' . ($record->barang->satuan ?? 'Unit'),
+                                        'penerima' => $record->penerima,
+                                        'bagian' => $record->bagian,
+                                        'petugas' => $record->petugas,
+                                    ];
+                                }),
+                                'total_keluar' => number_format($totalKeluar, 0, ',', '.') . ' Unit',
+                                'tanggal_cetak' => now()->format('Y-m-d H:i'),
+                            ];
+                            
+                            $pdf = Pdf::loadView('pdf.barang-keluar-bulk', $data);
+                            return response()->streamDownload(
+                                fn () => print($pdf->output()),
+                                'laporan-barang-keluar.pdf'
+                            );
+                        }),
                 ]),
+            ])
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 
@@ -107,5 +259,10 @@ class BarangKeluarResource extends Resource
             'create' => Pages\CreateBarangKeluar::route('/create'),
             'edit' => Pages\EditBarangKeluar::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }
