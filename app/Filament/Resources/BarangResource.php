@@ -9,6 +9,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class BarangResource extends Resource
 {
@@ -25,7 +29,7 @@ class BarangResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('kode_barang')
                     ->label('ID Barang')
-                    ->disabled() // tampil tapi tidak bisa diubah
+                    ->disabled()
                     ->default(function () {
                         $lastBarang = Barang::latest('id')->first();
                         $lastNumber = $lastBarang ? intval(substr($lastBarang->kode_barang, 1)) : 0;
@@ -83,11 +87,37 @@ class BarangResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                // Action untuk export single barang ke PDF
+                Tables\Actions\Action::make('exportPdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->action(function (Barang $record) {
+                        return static::exportSingleBarangToPdf($record);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    // Bulk action untuk export multiple barang ke PDF
+                    Tables\Actions\BulkAction::make('exportPdf')
+                        ->label('Export Selected to PDF')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('success')
+                        ->action(function ($records) {
+                            return static::exportMultipleBarangToPdf($records);
+                        }),
                 ]),
+            ])
+            ->headerActions([
+                // Action untuk export semua data ke PDF
+                Tables\Actions\Action::make('exportAllPdf')
+                    ->label('Export All to PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('danger')
+                    ->action(function () {
+                        return static::exportAllBarangToPdf();
+                    }),
             ]);
     }
 
@@ -116,5 +146,88 @@ class BarangResource extends Resource
         $data['kode_barang'] = 'B' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
 
         return $data;
+    }
+
+    /**
+     * Export single barang to PDF
+     */
+    public static function exportSingleBarangToPdf(Barang $barang)
+    {
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        
+        $dompdf = new Dompdf($options);
+        
+        $html = view('pdf.barang-single', compact('barang'))->render();
+        
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        
+        $filename = "barang_{$barang->kode_barang}_" . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return response()->streamDownload(
+            function () use ($dompdf) {
+                echo $dompdf->output();
+            },
+            $filename
+        );
+    }
+
+    /**
+     * Export multiple barang to PDF
+     */
+    public static function exportMultipleBarangToPdf($records)
+    {
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        
+        $dompdf = new Dompdf($options);
+        
+        $barang = $records;
+        $html = view('pdf.barang-multiple', compact('barang'))->render();
+        
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        
+        $filename = "barang_multiple_" . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return response()->streamDownload(
+            function () use ($dompdf) {
+                echo $dompdf->output();
+            },
+            $filename
+        );
+    }
+
+    /**
+     * Export all barang to PDF
+     */
+    public static function exportAllBarangToPdf()
+    {
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        
+        $dompdf = new Dompdf($options);
+        
+        $barang = Barang::all();
+        $html = view('pdf.barang-all', compact('barang'))->render();
+        
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        
+        $filename = "semua_data_barang_" . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return response()->streamDownload(
+            function () use ($dompdf) {
+                echo $dompdf->output();
+            },
+            $filename
+        );
     }
 }
