@@ -70,17 +70,17 @@ class AsetResource extends Resource
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                            // 🟧 Tombol BARCODE (di tengah, antara Edit dan Delete)
-            Tables\Actions\Action::make('barcode')
-                ->label('Barcode')
-                ->icon('heroicon-o-qr-code')   // ikon heroicons
-                ->button()                     // render sebagai button (bukan link tipis)
-                ->color('warning')             // bebas ganti: primary / info / success / etc
-                // opsi A: buka halaman label (siap cetak) di tab baru
-                ->url(fn (Aset $record) => route('assets.print', $record))
-                ->openUrlInNewTab(),
-                // kalau mau selalu tampil, biarkan. Kalau mau sembunyikan saat belum ada file:
-                // ->visible(fn (Aset $record) => filled($record->qr_path))
+                
+                // 🟧 Tombol BARCODE yang diperbaiki
+                Tables\Actions\Action::make('barcode')
+                    ->label('QR Code')
+                    ->icon('heroicon-o-qr-code')
+                    ->button()
+                    ->color('warning')
+                    // OPSI 1: Jika ingin menggunakan URL langsung ke test-qr
+                    ->url(fn (Aset $record): string => 'http://127.0.0.1:8000/test-qr?aset_id=' . $record->id . '&nama=' . urlencode($record->nama_aset))
+                    ->openUrlInNewTab(),
+                
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
