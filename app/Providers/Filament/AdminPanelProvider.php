@@ -26,7 +26,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->authGuard('web') // gunakan guard web saja, jangan admin
+            ->login(false) // ✅ Nonaktifkan login bawaan Filament sepenuhnya
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -39,8 +40,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
-                \App\Filament\Widgets\StatsOverview::class, // ✅ perbaikan
-                \App\Filament\Widgets\BarangChart::class,   // ✅ kalau chart ada
+                \App\Filament\Widgets\StatsOverview::class,
+                \App\Filament\Widgets\BarangChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -54,7 +55,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                 \App\Http\Middleware\Authenticate::class, // gunakan middleware milik Laravel, bukan Filament
             ]);
     }
 }
