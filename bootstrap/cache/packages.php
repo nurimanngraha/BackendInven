@@ -1,4 +1,11 @@
 <?php return array (
+  'anourvalar/eloquent-serialize' => 
+  array (
+    'aliases' => 
+    array (
+      'EloquentSerialize' => 'AnourValar\\EloquentSerialize\\Facades\\EloquentSerializeFacade',
+    ),
+  ),
   'barryvdh/laravel-dompdf' => 
   array (
     'aliases' => 
@@ -150,6 +157,17 @@
     'providers' => 
     array (
       0 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
+    ),
+  ),
+  'simplesoftwareio/simple-qrcode' => 
+  array (
+    'aliases' => 
+    array (
+      'QrCode' => 'SimpleSoftwareIO\\QrCode\\Facades\\QrCode',
+    ),
+    'providers' => 
+    array (
+      0 => 'SimpleSoftwareIO\\QrCode\\QrCodeServiceProvider',
     ),
   ),
   'spatie/laravel-ignition' => 
