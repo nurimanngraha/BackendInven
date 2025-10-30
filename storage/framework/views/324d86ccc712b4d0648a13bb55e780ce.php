@@ -1,26 +1,29 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
 <?php foreach($attributes->onlyProps([
-    'disabled' => false,
+    'error' => false,
+    'isDisabled' => false,
+    'isMarkedAsRequired' => true,
     'prefix' => null,
     'required' => false,
     'suffix' => null,
-    'tag' => 'label',
 ]) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
 <?php $attributes = $attributes->exceptProps([
-    'disabled' => false,
+    'error' => false,
+    'isDisabled' => false,
+    'isMarkedAsRequired' => true,
     'prefix' => null,
     'required' => false,
     'suffix' => null,
-    'tag' => 'label',
 ]); ?>
 <?php foreach (array_filter(([
-    'disabled' => false,
+    'error' => false,
+    'isDisabled' => false,
+    'isMarkedAsRequired' => true,
     'prefix' => null,
     'required' => false,
     'suffix' => null,
-    'tag' => 'label',
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
@@ -30,8 +33,7 @@
 } ?>
 <?php unset($__defined_vars); ?>
 
-<<?php echo e($tag); ?>
-
+<label
     <?php echo e($attributes->class(['fi-fo-field-wrp-label inline-flex items-center gap-x-3'])); ?>
 
 >
@@ -40,11 +42,11 @@
 
     <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
         
-        <?php echo e($slot); ?><!--[if BLOCK]><![endif]--><?php if($required && (! $disabled)): ?><sup class="text-danger-600 dark:text-danger-400 font-medium">*</sup>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <?php echo e($slot); ?><?php if($required && $isMarkedAsRequired && ! $isDisabled): ?><sup class="text-danger-600 dark:text-danger-400 font-medium">*</sup>
+        <?php endif; ?>
     </span>
 
     <?php echo e($suffix); ?>
 
-</<?php echo e($tag); ?>>
+</label>
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\forms\resources\views/components/field-wrapper/label.blade.php ENDPATH**/ ?>

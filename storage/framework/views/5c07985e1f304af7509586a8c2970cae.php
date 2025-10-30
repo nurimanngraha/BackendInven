@@ -1,16 +1,13 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
 <?php foreach($attributes->onlyProps([
-    'applyAction',
     'form',
 ]) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
 <?php $attributes = $attributes->exceptProps([
-    'applyAction',
     'form',
 ]); ?>
 <?php foreach (array_filter(([
-    'applyAction',
     'form',
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
@@ -30,40 +27,19 @@
 
         </h4>
 
-        <div>
-            <?php if (isset($component)) { $__componentOriginal549c94d872270b69c72bdf48cb183bc9 = $component; } ?>
+        <?php if (isset($component)) { $__componentOriginal549c94d872270b69c72bdf48cb183bc9 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal549c94d872270b69c72bdf48cb183bc9 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.link','data' => ['attributes' => 
-                    \Filament\Support\prepare_inherited_attributes(
-                        new \Illuminate\View\ComponentAttributeBag([
-                            'color' => 'danger',
-                            'tag' => 'button',
-                            'wire:click' => 'resetTableFiltersForm',
-                            'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => '',
-                            'wire:target' => 'resetTableFiltersForm',
-                        ])
-                    )
-                ]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.link','data' => ['color' => 'danger','tag' => 'button','wire:click' => 'resetTableFiltersForm','wire:loading.remove.delay' => '','wire:target' => 'tableFilters,resetTableFiltersForm']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(
-                    \Filament\Support\prepare_inherited_attributes(
-                        new \Illuminate\View\ComponentAttributeBag([
-                            'color' => 'danger',
-                            'tag' => 'button',
-                            'wire:click' => 'resetTableFiltersForm',
-                            'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => '',
-                            'wire:target' => 'resetTableFiltersForm',
-                        ])
-                    )
-                )]); ?>
-                <?php echo e(__('filament-tables::table.filters.actions.reset.label')); ?>
+<?php $component->withAttributes(['color' => 'danger','tag' => 'button','wire:click' => 'resetTableFiltersForm','wire:loading.remove.delay' => '','wire:target' => 'tableFilters,resetTableFiltersForm']); ?>
+            <?php echo e(__('filament-tables::table.filters.actions.reset.label')); ?>
 
-             <?php echo $__env->renderComponent(); ?>
+         <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal549c94d872270b69c72bdf48cb183bc9)): ?>
 <?php $attributes = $__attributesOriginal549c94d872270b69c72bdf48cb183bc9; ?>
@@ -74,30 +50,16 @@
 <?php unset($__componentOriginal549c94d872270b69c72bdf48cb183bc9); ?>
 <?php endif; ?>
 
-            <?php if (isset($component)) { $__componentOriginalbef7c2371a870b1887ec3741fe311a10 = $component; } ?>
+        <?php if (isset($component)) { $__componentOriginalbef7c2371a870b1887ec3741fe311a10 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalbef7c2371a870b1887ec3741fe311a10 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.loading-indicator','data' => ['attributes' => 
-                    \Filament\Support\prepare_inherited_attributes(
-                        new \Illuminate\View\ComponentAttributeBag([
-                            'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
-                            'wire:target' => 'tableFilters,applyTableFilters,resetTableFiltersForm',
-                        ])
-                    )->class(['h-5 w-5 text-gray-400 dark:text-gray-500'])
-                ]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.loading-indicator','data' => ['wire:loading.delay' => '','wire:target' => 'tableFilters,resetTableFiltersForm','class' => 'h-5 w-5 text-gray-400 dark:text-gray-500']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::loading-indicator'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(
-                    \Filament\Support\prepare_inherited_attributes(
-                        new \Illuminate\View\ComponentAttributeBag([
-                            'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
-                            'wire:target' => 'tableFilters,applyTableFilters,resetTableFiltersForm',
-                        ])
-                    )->class(['h-5 w-5 text-gray-400 dark:text-gray-500'])
-                )]); ?>
+<?php $component->withAttributes(['wire:loading.delay' => '','wire:target' => 'tableFilters,resetTableFiltersForm','class' => 'h-5 w-5 text-gray-400 dark:text-gray-500']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalbef7c2371a870b1887ec3741fe311a10)): ?>
@@ -108,17 +70,9 @@
 <?php $component = $__componentOriginalbef7c2371a870b1887ec3741fe311a10; ?>
 <?php unset($__componentOriginalbef7c2371a870b1887ec3741fe311a10); ?>
 <?php endif; ?>
-        </div>
     </div>
 
     <?php echo e($form); ?>
 
-
-    <!--[if BLOCK]><![endif]--><?php if($applyAction->isVisible()): ?>
-        <div>
-            <?php echo e($applyAction); ?>
-
-        </div>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 </div>
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\tables\resources\views/components/filters/index.blade.php ENDPATH**/ ?>

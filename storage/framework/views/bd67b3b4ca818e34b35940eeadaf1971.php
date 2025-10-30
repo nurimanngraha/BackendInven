@@ -1,6 +1,5 @@
 <?php
     use Filament\Support\Enums\Alignment;
-    use Filament\Tables\Actions\HeaderActionsPosition;
 ?>
 
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
@@ -34,50 +33,44 @@
 
 <div
     <?php echo e($attributes->class([
-            'fi-ta-header flex flex-col gap-3 p-4 sm:px-6',
-            'sm:flex-row sm:items-center' => $actionsPosition === HeaderActionsPosition::Adaptive,
+            'fi-ta-header flex flex-col justify-start gap-3 p-4 sm:px-6',
+            'sm:flex-row sm:items-center sm:justify-between' => $actionsPosition === \Filament\Tables\Actions\HeaderActionsPosition::Adaptive,
         ])); ?>
 
 >
-    <!--[if BLOCK]><![endif]--><?php if($heading || $description): ?>
+    <?php if($heading || $description): ?>
         <div class="grid gap-y-1">
-            <!--[if BLOCK]><![endif]--><?php if($heading): ?>
+            <?php if($heading): ?>
                 <h3
-                    class="fi-ta-header-heading text-base font-semibold leading-6 text-gray-950 dark:text-white"
+                    class="fi-ta-header-heading text-base font-semibold leading-6"
                 >
                     <?php echo e($heading); ?>
 
                 </h3>
-            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <?php endif; ?>
 
-            <!--[if BLOCK]><![endif]--><?php if($description): ?>
+            <?php if($description): ?>
                 <p
                     class="fi-ta-header-description text-sm text-gray-600 dark:text-gray-400"
                 >
                     <?php echo e($description); ?>
 
                 </p>
-            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <?php endif; ?>
         </div>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php endif; ?>
 
-    <!--[if BLOCK]><![endif]--><?php if($actions): ?>
+    <?php if($actions): ?>
         <?php if (isset($component)) { $__componentOriginal32a2358b99de73a2a27625c392d6fe38 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal32a2358b99de73a2a27625c392d6fe38 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-tables::components.actions','data' => ['actions' => $actions,'alignment' => Alignment::Start,'wrap' => true,'class' => \Illuminate\Support\Arr::toCssClasses([
-                'ms-auto' => $actionsPosition === HeaderActionsPosition::Adaptive && ! ($heading || $description),
-                'sm:ms-auto' => $actionsPosition === HeaderActionsPosition::Adaptive,
-            ])]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-tables::components.actions','data' => ['actions' => $actions,'alignment' => Alignment::Start,'wrap' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament-tables::actions'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['actions' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($actions),'alignment' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(Alignment::Start),'wrap' => true,'class' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Illuminate\Support\Arr::toCssClasses([
-                'ms-auto' => $actionsPosition === HeaderActionsPosition::Adaptive && ! ($heading || $description),
-                'sm:ms-auto' => $actionsPosition === HeaderActionsPosition::Adaptive,
-            ]))]); ?>
+<?php $component->withAttributes(['actions' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($actions),'alignment' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(Alignment::Start),'wrap' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal32a2358b99de73a2a27625c392d6fe38)): ?>
@@ -88,6 +81,6 @@
 <?php $component = $__componentOriginal32a2358b99de73a2a27625c392d6fe38; ?>
 <?php unset($__componentOriginal32a2358b99de73a2a27625c392d6fe38); ?>
 <?php endif; ?>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php endif; ?>
 </div>
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\tables\resources\views/components/header.blade.php ENDPATH**/ ?>

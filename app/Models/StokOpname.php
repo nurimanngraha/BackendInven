@@ -3,56 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StokOpname extends Model
 {
     protected $fillable = [
         'aset_id',
-        'barcode',
-        'stok_sistem',
-        'stok_fisik',
-        'selisih',
-        'status',
+        'status_fisik',
+        'catatan',
+        'checked_at',
+        'checked_by',
     ];
 
-    // Relasi ke aset
-    public function aset()
+    protected $casts = [
+        'checked_at' => 'datetime',
+    ];
+
+    public function aset(): BelongsTo
     {
-        return $this->belongsTo(Aset::class);
+        return $this->belongsTo(Aset::class, 'aset_id');
     }
 
-    // Booted: hitung selisih hanya jika stok_fisik berubah
-    protected static function booted()
+    public function checker(): BelongsTo
     {
-        static::saving(function ($stokOpname) {
-            if ($stokOpname->isDirty('stok_fisik')) {
-                $stokOpname->selisih = $stokOpname->stok_fisik - $stokOpname->stok_sistem;
-            }
-        });
-    }
-
-    // Mutator: barcode selalu uppercase
-    public function setBarcodeAttribute($value)
-    {
-        $this->attributes['barcode'] = strtoupper($value);
-    }
-
-    // Accessor: selisih dengan tanda + / -
-    public function getSelisihFormattedAttribute()
-    {
-        $selisih = $this->selisih;
-        return ($selisih >= 0 ? '+' : '') . $selisih;
-    }
-
-    // Helper cek status OK
-    public function isOk(): bool
-    {
-        return $this->status === 'ok';
-    }
-
-    // Helper cek status Rusak
-    public function isRusak(): bool
-    {
-        return $this->status === 'rusak';
+        return $this->belongsTo(User::class, 'checked_by');
     }
 }

@@ -1,12 +1,17 @@
 <div
-    x-data="{ theme: null }"
-    x-init="
-        $watch('theme', () => {
-            $dispatch('theme-changed', theme)
-        })
+    x-data="{
+        theme: null,
 
-        theme = localStorage.getItem('theme') || <?php echo \Illuminate\Support\Js::from(filament()->getDefaultThemeMode()->value)->toHtml() ?>
-    "
+        init: function () {
+            this.theme = localStorage.getItem('theme') || 'system'
+
+            $dispatch('theme-changed', theme)
+
+            $watch('theme', (theme) => {
+                $dispatch('theme-changed', theme)
+            })
+        },
+    }"
     class="fi-theme-switcher grid grid-flow-col gap-x-1"
 >
     <?php if (isset($component)) { $__componentOriginalad1f400c934be44fb66b397d4f7989b8 = $component; } ?>

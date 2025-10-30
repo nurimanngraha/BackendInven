@@ -1,6 +1,4 @@
 <?php
-    use Filament\Support\Facades\FilamentView;
-
     $canSelectPlaceholder = $canSelectPlaceholder();
     $isDisabled = $isDisabled();
     $isPrefixInline = $isPrefixInline();
@@ -23,27 +21,21 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\DynamicComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['field' => $field,'inline-label-vertical-alignment' => \Filament\Support\Enums\VerticalAlignment::Center]); ?>
+<?php $component->withAttributes(['field' => $field]); ?>
     <?php if (isset($component)) { $__componentOriginal505efd9768415fdb4543e8c564dad437 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal505efd9768415fdb4543e8c564dad437 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.input.wrapper','data' => ['disabled' => $isDisabled,'inlinePrefix' => $isPrefixInline,'inlineSuffix' => $isSuffixInline,'prefix' => $prefixLabel,'prefixActions' => $prefixActions,'prefixIcon' => $prefixIcon,'prefixIconColor' => $getPrefixIconColor(),'suffix' => $suffixLabel,'suffixActions' => $suffixActions,'suffixIcon' => $suffixIcon,'suffixIconColor' => $getSuffixIconColor(),'valid' => ! $errors->has($statePath),'attributes' => 
-            \Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())
-                ->class(['fi-fo-select'])
-        ]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.input.wrapper','data' => ['disabled' => $isDisabled,'inlinePrefix' => $isPrefixInline,'inlineSuffix' => $isSuffixInline,'prefix' => $prefixLabel,'prefixActions' => $prefixActions,'prefixIcon' => $prefixIcon,'suffix' => $suffixLabel,'suffixActions' => $suffixActions,'suffixIcon' => $suffixIcon,'valid' => ! $errors->has($statePath),'class' => 'fi-fo-select','attributes' => \Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::input.wrapper'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['disabled' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isDisabled),'inline-prefix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isPrefixInline),'inline-suffix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isSuffixInline),'prefix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($prefixLabel),'prefix-actions' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($prefixActions),'prefix-icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($prefixIcon),'prefix-icon-color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($getPrefixIconColor()),'suffix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suffixLabel),'suffix-actions' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suffixActions),'suffix-icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suffixIcon),'suffix-icon-color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($getSuffixIconColor()),'valid' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(! $errors->has($statePath)),'attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(
-            \Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())
-                ->class(['fi-fo-select'])
-        )]); ?>
-        <!--[if BLOCK]><![endif]--><?php if((! ($isSearchable() || $isMultiple()) && $isNative())): ?>
+<?php $component->withAttributes(['disabled' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isDisabled),'inline-prefix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isPrefixInline),'inline-suffix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isSuffixInline),'prefix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($prefixLabel),'prefix-actions' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($prefixActions),'prefix-icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($prefixIcon),'suffix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suffixLabel),'suffix-actions' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suffixActions),'suffix-icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suffixIcon),'valid' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(! $errors->has($statePath)),'class' => 'fi-fo-select','attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag()))]); ?>
+        <?php if((! ($isSearchable() || $isMultiple()) && $isNative())): ?>
             <?php if (isset($component)) { $__componentOriginal97dc683fe4ff7acce9e296503563dd85 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal97dc683fe4ff7acce9e296503563dd85 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.input.select','data' => ['autofocus' => $isAutofocused(),'disabled' => $isDisabled,'id' => $getId(),'inlinePrefix' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),'inlineSuffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),'required' => $isRequired() && (! $isConcealed()),'attributes' => 
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.input.select','data' => ['autofocus' => $isAutofocused(),'disabled' => $isDisabled,'id' => $getId(),'inlinePrefix' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),'inlineSuffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),'required' => $isRequired() && ((bool) $isConcealed()),'attributes' => 
                     $getExtraInputAttributeBag()
                         ->merge([
                             $applyStateBindingModifiers('wire:model') => $statePath,
@@ -55,7 +47,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['autofocus' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isAutofocused()),'disabled' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isDisabled),'id' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($getId()),'inline-prefix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel))),'inline-suffix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel))),'required' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isRequired() && (! $isConcealed())),'attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(
+<?php $component->withAttributes(['autofocus' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isAutofocused()),'disabled' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isDisabled),'id' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($getId()),'inline-prefix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel))),'inline-suffix' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel))),'required' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isRequired() && ((bool) $isConcealed())),'attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(
                     $getExtraInputAttributeBag()
                         ->merge([
                             $applyStateBindingModifiers('wire:model') => $statePath,
@@ -65,48 +57,48 @@
                     $isHtmlAllowed = $isHtmlAllowed();
                 ?>
 
-                <!--[if BLOCK]><![endif]--><?php if($canSelectPlaceholder): ?>
+                <?php if($canSelectPlaceholder): ?>
                     <option value="">
-                        <!--[if BLOCK]><![endif]--><?php if(! $isDisabled): ?>
+                        <?php if(! $isDisabled): ?>
                             <?php echo e($getPlaceholder()); ?>
 
-                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                        <?php endif; ?>
                     </option>
-                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                <?php endif; ?>
 
-                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $getOptions(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <!--[if BLOCK]><![endif]--><?php if(is_array($label)): ?>
+                <?php $__currentLoopData = $getOptions(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if(is_array($label)): ?>
                         <optgroup label="<?php echo e($value); ?>">
-                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $label; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $groupedValue => $groupedLabel): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php $__currentLoopData = $label; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $groupedValue => $groupedLabel): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option
                                     <?php if($isOptionDisabled($groupedValue, $groupedLabel)): echo 'disabled'; endif; ?>
                                     value="<?php echo e($groupedValue); ?>"
                                 >
-                                    <!--[if BLOCK]><![endif]--><?php if($isHtmlAllowed): ?>
+                                    <?php if($isHtmlAllowed): ?>
                                         <?php echo $groupedLabel; ?>
 
                                     <?php else: ?>
                                         <?php echo e($groupedLabel); ?>
 
-                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                    <?php endif; ?>
                                 </option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </optgroup>
                     <?php else: ?>
                         <option
                             <?php if($isOptionDisabled($value, $label)): echo 'disabled'; endif; ?>
                             value="<?php echo e($value); ?>"
                         >
-                            <!--[if BLOCK]><![endif]--><?php if($isHtmlAllowed): ?>
+                            <?php if($isHtmlAllowed): ?>
                                 <?php echo $label; ?>
 
                             <?php else: ?>
                                 <?php echo e($label); ?>
 
-                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                            <?php endif; ?>
                         </option>
-                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                    <?php endif; ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
              <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal97dc683fe4ff7acce9e296503563dd85)): ?>
@@ -119,26 +111,9 @@
 <?php endif; ?>
         <?php else: ?>
             <div
-                class="hidden"
-                x-data="{
-                    isDisabled: <?php echo \Illuminate\Support\Js::from($isDisabled)->toHtml() ?>,
-                    init: function () {
-                        const container = $el.nextElementSibling
-                        container.dispatchEvent(
-                            new CustomEvent('set-select-property', {
-                                detail: { isDisabled: this.isDisabled },
-                            }),
-                        )
-                    },
-                }"
-            ></div>
-            <div
-                <?php if(FilamentView::hasSpaMode()): ?>
-                    x-load="visible || event (ax-modal-opened)"
-                <?php else: ?>
-                    x-load
-                <?php endif; ?>
-                x-load-src="<?php echo e(\Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('select', 'filament/forms')); ?>"
+                x-ignore
+                ax-load
+                ax-load-src="<?php echo e(\Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('select', 'filament/forms')); ?>"
                 x-data="selectFormComponent({
                             canSelectPlaceholder: <?php echo \Illuminate\Support\Js::from($canSelectPlaceholder)->toHtml() ?>,
                             isHtmlAllowed: <?php echo \Illuminate\Support\Js::from($isHtmlAllowed())->toHtml() ?>,
@@ -172,20 +147,14 @@
                             searchingMessage: <?php echo \Illuminate\Support\Js::from($getSearchingMessage())->toHtml() ?>,
                             searchPrompt: <?php echo \Illuminate\Support\Js::from($getSearchPrompt())->toHtml() ?>,
                             searchableOptionFields: <?php echo \Illuminate\Support\Js::from($getSearchableOptionFields())->toHtml() ?>,
-                            state: $wire.<?php echo e($applyStateBindingModifiers("\$entangle('{$statePath}')")); ?>,
+                            state: $wire.<?php echo e($applyStateBindingModifiers("entangle('{$statePath}')")); ?>,
                             statePath: <?php echo \Illuminate\Support\Js::from($statePath)->toHtml() ?>,
                         })"
                 wire:ignore
-                wire:key="<?php echo e($this->getId()); ?>.<?php echo e($statePath); ?>.<?php echo e($field::class); ?>.<?php echo e(substr(md5(serialize([
-                        $isDisabled,
-                    ])), 0, 64)); ?>"
                 x-on:keydown.esc="select.dropdown.isActive && $event.stopPropagation()"
-                x-on:set-select-property="$event.detail.isDisabled ? select.disable() : select.enable()"
                 <?php echo e($attributes
-                        ->merge($getExtraAlpineAttributes(), escape: false)
-                        ->class([
-                            '[&_.choices\_\_inner]:ps-0' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
-                        ])); ?>
+                        ->merge($getExtraAttributes(), escape: false)
+                        ->merge($getExtraAlpineAttributes(), escape: false)); ?>
 
             >
                 <select
@@ -195,14 +164,11 @@
                                 'disabled' => $isDisabled,
                                 'id' => $getId(),
                                 'multiple' => $isMultiple(),
-                            ], escape: false)
-                            ->class([
-                                'h-9 w-full rounded-lg border-none bg-transparent !bg-none',
-                            ])); ?>
+                            ], escape: false)); ?>
 
                 ></select>
             </div>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <?php endif; ?>
      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal505efd9768415fdb4543e8c564dad437)): ?>

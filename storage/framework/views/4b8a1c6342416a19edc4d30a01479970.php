@@ -5,14 +5,14 @@
     $profileItem = $items['profile'] ?? $items['account'] ?? null;
     $profileItemUrl = $profileItem?->getUrl();
     $profilePage = filament()->getProfilePage();
-    $hasProfileItem = filament()->hasProfile() || filled($profileItemUrl);
+    $hasProfile = filament()->hasProfile() || filled($profileItemUrl);
 
     $logoutItem = $items['logout'] ?? null;
 
     $items = \Illuminate\Support\Arr::except($items, ['account', 'logout', 'profile']);
 ?>
 
-<?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_BEFORE)); ?>
+<?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::user-menu.before')); ?>
 
 
 <?php if (isset($component)) { $__componentOriginal22ab0dbc2c6619d5954111bba06f01db = $component; } ?>
@@ -35,7 +35,6 @@
         <button
             aria-label="<?php echo e(__('filament-panels::layout.actions.open_user_menu.label')); ?>"
             type="button"
-            class="shrink-0"
         >
             <?php if (isset($component)) { $__componentOriginalceea4679a368984135244eacf4aafeca = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalceea4679a368984135244eacf4aafeca = $attributes; } ?>
@@ -60,12 +59,11 @@
         </button>
      <?php $__env->endSlot(); ?>
 
-    <?php if($profileItem?->isVisible() ?? true): ?>
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_PROFILE_BEFORE)); ?>
+    <?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::user-menu.profile.before')); ?>
 
 
-        <?php if($hasProfileItem): ?>
-            <?php if (isset($component)) { $__componentOriginal66687bf0670b9e16f61e667468dc8983 = $component; } ?>
+    <?php if($hasProfile): ?>
+        <?php if (isset($component)) { $__componentOriginal66687bf0670b9e16f61e667468dc8983 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal66687bf0670b9e16f61e667468dc8983 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.index','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown.list'); ?>
@@ -75,19 +73,19 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-                <?php if (isset($component)) { $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $component; } ?>
+            <?php if (isset($component)) { $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['color' => $profileItem?->getColor(),'icon' => $profileItem?->getIcon() ?? \Filament\Support\Facades\FilamentIcon::resolve('panels::user-menu.profile-item') ?? 'heroicon-m-user-circle','href' => $profileItemUrl ?? filament()->getProfileUrl(),'target' => ($profileItem?->shouldOpenUrlInNewTab() ?? false) ? '_blank' : null,'tag' => 'a']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['color' => $profileItem?->getColor(),'icon' => $profileItem?->getIcon() ?? 'heroicon-m-user-circle','href' => $profileItemUrl ?? filament()->getProfileUrl(),'iconAlias' => 'panels::user-menu.profile-item','tag' => 'a']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown.list.item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getColor()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getIcon() ?? \Filament\Support\Facades\FilamentIcon::resolve('panels::user-menu.profile-item') ?? 'heroicon-m-user-circle'),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItemUrl ?? filament()->getProfileUrl()),'target' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(($profileItem?->shouldOpenUrlInNewTab() ?? false) ? '_blank' : null),'tag' => 'a']); ?>
-                    <?php echo e($profileItem?->getLabel() ?? ($profilePage ? $profilePage::getLabel() : null) ?? filament()->getUserName($user)); ?>
+<?php $component->withAttributes(['color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getColor()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getIcon() ?? 'heroicon-m-user-circle'),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItemUrl ?? filament()->getProfileUrl()),'icon-alias' => 'panels::user-menu.profile-item','tag' => 'a']); ?>
+                <?php echo e($profileItem?->getLabel() ?? ($profilePage ? $profilePage::getLabel() : null) ?? filament()->getUserName($user)); ?>
 
-                 <?php echo $__env->renderComponent(); ?>
+             <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78)): ?>
 <?php $attributes = $__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78; ?>
@@ -97,7 +95,7 @@
 <?php $component = $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78; ?>
 <?php unset($__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78); ?>
 <?php endif; ?>
-             <?php echo $__env->renderComponent(); ?>
+         <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal66687bf0670b9e16f61e667468dc8983)): ?>
 <?php $attributes = $__attributesOriginal66687bf0670b9e16f61e667468dc8983; ?>
@@ -107,20 +105,20 @@
 <?php $component = $__componentOriginal66687bf0670b9e16f61e667468dc8983; ?>
 <?php unset($__componentOriginal66687bf0670b9e16f61e667468dc8983); ?>
 <?php endif; ?>
-        <?php else: ?>
-            <?php if (isset($component)) { $__componentOriginal7a83b62094aac4ed8d85f403cf23f250 = $component; } ?>
+    <?php else: ?>
+        <?php if (isset($component)) { $__componentOriginal7a83b62094aac4ed8d85f403cf23f250 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7a83b62094aac4ed8d85f403cf23f250 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.header','data' => ['color' => $profileItem?->getColor(),'icon' => $profileItem?->getIcon() ?? \Filament\Support\Facades\FilamentIcon::resolve('panels::user-menu.profile-item') ?? 'heroicon-m-user-circle']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.header','data' => ['color' => $profileItem?->getColor(),'icon' => $profileItem?->getIcon() ?? 'heroicon-m-user-circle','iconAlias' => 'panels::user-menu.profile-item']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown.header'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getColor()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getIcon() ?? \Filament\Support\Facades\FilamentIcon::resolve('panels::user-menu.profile-item') ?? 'heroicon-m-user-circle')]); ?>
-                <?php echo e($profileItem?->getLabel() ?? filament()->getUserName($user)); ?>
+<?php $component->withAttributes(['color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getColor()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($profileItem?->getIcon() ?? 'heroicon-m-user-circle'),'icon-alias' => 'panels::user-menu.profile-item']); ?>
+            <?php echo e($profileItem?->getLabel() ?? filament()->getUserName($user)); ?>
 
-             <?php echo $__env->renderComponent(); ?>
+         <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7a83b62094aac4ed8d85f403cf23f250)): ?>
 <?php $attributes = $__attributesOriginal7a83b62094aac4ed8d85f403cf23f250; ?>
@@ -130,11 +128,10 @@
 <?php $component = $__componentOriginal7a83b62094aac4ed8d85f403cf23f250; ?>
 <?php unset($__componentOriginal7a83b62094aac4ed8d85f403cf23f250); ?>
 <?php endif; ?>
-        <?php endif; ?>
-
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_PROFILE_AFTER)); ?>
-
     <?php endif; ?>
+
+    <?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::user-menu.profile.after')); ?>
+
 
     <?php if(filament()->hasDarkMode() && (! filament()->hasDarkModeForced())): ?>
         <?php if (isset($component)) { $__componentOriginal66687bf0670b9e16f61e667468dc8983 = $component; } ?>
@@ -190,20 +187,16 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
         <?php $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php
-                $itemPostAction = $item->getPostAction();
-            ?>
-
             <?php if (isset($component)) { $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['action' => $itemPostAction,'color' => $item->getColor(),'href' => $item->getUrl(),'icon' => $item->getIcon(),'method' => filled($itemPostAction) ? 'post' : null,'tag' => filled($itemPostAction) ? 'form' : 'a','target' => $item->shouldOpenUrlInNewTab() ? '_blank' : null]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['color' => $item->getColor(),'href' => $item->getUrl(),'icon' => $item->getIcon(),'tag' => 'a']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown.list.item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['action' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($itemPostAction),'color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getColor()),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getUrl()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getIcon()),'method' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(filled($itemPostAction) ? 'post' : null),'tag' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(filled($itemPostAction) ? 'form' : 'a'),'target' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->shouldOpenUrlInNewTab() ? '_blank' : null)]); ?>
+<?php $component->withAttributes(['color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getColor()),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getUrl()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getIcon()),'tag' => 'a']); ?>
                 <?php echo e($item->getLabel()); ?>
 
              <?php echo $__env->renderComponent(); ?>
@@ -220,14 +213,14 @@
 
         <?php if (isset($component)) { $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['action' => $logoutItem?->getUrl() ?? filament()->getLogoutUrl(),'color' => $logoutItem?->getColor(),'icon' => $logoutItem?->getIcon() ?? \Filament\Support\Facades\FilamentIcon::resolve('panels::user-menu.logout-button') ?? 'heroicon-m-arrow-left-on-rectangle','method' => 'post','tag' => 'form']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['action' => $logoutItem?->getUrl() ?? filament()->getLogoutUrl(),'color' => $logoutItem?->getColor(),'icon' => $logoutItem?->getIcon() ?? 'heroicon-m-arrow-left-on-rectangle','iconAlias' => 'panels::user-menu.logout-button','method' => 'post','tag' => 'form']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown.list.item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['action' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($logoutItem?->getUrl() ?? filament()->getLogoutUrl()),'color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($logoutItem?->getColor()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($logoutItem?->getIcon() ?? \Filament\Support\Facades\FilamentIcon::resolve('panels::user-menu.logout-button') ?? 'heroicon-m-arrow-left-on-rectangle'),'method' => 'post','tag' => 'form']); ?>
+<?php $component->withAttributes(['action' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($logoutItem?->getUrl() ?? filament()->getLogoutUrl()),'color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($logoutItem?->getColor()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($logoutItem?->getIcon() ?? 'heroicon-m-arrow-left-on-rectangle'),'icon-alias' => 'panels::user-menu.logout-button','method' => 'post','tag' => 'form']); ?>
             <?php echo e($logoutItem?->getLabel() ?? __('filament-panels::layout.actions.logout.label')); ?>
 
          <?php echo $__env->renderComponent(); ?>
@@ -261,6 +254,6 @@
 <?php unset($__componentOriginal22ab0dbc2c6619d5954111bba06f01db); ?>
 <?php endif; ?>
 
-<?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_AFTER)); ?>
+<?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::user-menu.after')); ?>
 
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\filament\resources\views/components/user-menu.blade.php ENDPATH**/ ?>

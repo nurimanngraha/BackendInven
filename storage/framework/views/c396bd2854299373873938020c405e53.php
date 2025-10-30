@@ -8,13 +8,7 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['class' => 'fi-wi-table']); ?>
-    <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\Widgets\View\WidgetsRenderHook::TABLE_WIDGET_START, scopes: static::class)); ?>
-
-
     <?php echo e($this->table); ?>
-
-
-    <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\Widgets\View\WidgetsRenderHook::TABLE_WIDGET_END, scopes: static::class)); ?>
 
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>

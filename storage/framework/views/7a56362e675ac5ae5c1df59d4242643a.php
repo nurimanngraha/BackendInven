@@ -36,13 +36,17 @@
     <?php echo e($attributes
             ->class([
                 'fi-dropdown-header flex w-full gap-2 p-3 text-sm',
-                match ($color) {
-                    'gray' => null,
-                    default => 'fi-color-custom',
-                },
-                // @deprecated `fi-dropdown-header-color-*` has been replaced by `fi-color-*` and `fi-color-custom`.
                 is_string($color) ? "fi-dropdown-header-color-{$color}" : null,
-                is_string($color) ? "fi-color-{$color}" : null,
+            ])
+            ->style([
+                \Filament\Support\get_color_css_variables(
+                    $color,
+                    shades: [
+                        400,
+                        ...(filled($icon) ? [500] : []),
+                        600,
+                    ],
+                ) => $color !== 'gray',
             ])); ?>
 
 >
@@ -61,12 +65,6 @@
                     'gray' => 'text-gray-400 dark:text-gray-500',
                     default => 'text-custom-500 dark:text-custom-400',
                 },
-            ]),'style' => \Illuminate\Support\Arr::toCssStyles([
-                \Filament\Support\get_color_css_variables(
-                    $color,
-                    shades: [400, 500],
-                    alias: 'dropdown.header.icon',
-                ) => $color !== 'gray',
             ])]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::icon'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -86,12 +84,6 @@
                     'gray' => 'text-gray-400 dark:text-gray-500',
                     default => 'text-custom-500 dark:text-custom-400',
                 },
-            ])),'style' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Illuminate\Support\Arr::toCssStyles([
-                \Filament\Support\get_color_css_variables(
-                    $color,
-                    shades: [400, 500],
-                    alias: 'dropdown.header.icon',
-                ) => $color !== 'gray',
             ]))]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
@@ -113,13 +105,6 @@
                 default => 'text-custom-600 dark:text-custom-400',
             },
         ]); ?>"
-        style="<?php echo \Illuminate\Support\Arr::toCssStyles([
-            \Filament\Support\get_color_css_variables(
-                $color,
-                shades: [400, 600],
-                alias: 'dropdown.header.label',
-            ) => $color !== 'gray',
-        ]) ?>"
     >
         <?php echo e($slot); ?>
 

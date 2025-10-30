@@ -1,14 +1,9 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
 <?php foreach($attributes->onlyProps([
-    'availableHeight' => null,
-    'availableWidth' => null,
-    'flip' => true,
     'maxHeight' => null,
     'offset' => 8,
     'placement' => null,
     'shift' => false,
-    'size' => false,
-    'sizePadding' => 16,
     'teleport' => false,
     'trigger' => null,
     'width' => null,
@@ -16,29 +11,19 @@
     $$__key = $$__key ?? $__value;
 } ?>
 <?php $attributes = $attributes->exceptProps([
-    'availableHeight' => null,
-    'availableWidth' => null,
-    'flip' => true,
     'maxHeight' => null,
     'offset' => 8,
     'placement' => null,
     'shift' => false,
-    'size' => false,
-    'sizePadding' => 16,
     'teleport' => false,
     'trigger' => null,
     'width' => null,
 ]); ?>
 <?php foreach (array_filter(([
-    'availableHeight' => null,
-    'availableWidth' => null,
-    'flip' => true,
     'maxHeight' => null,
     'offset' => 8,
     'placement' => null,
     'shift' => false,
-    'size' => false,
-    'sizePadding' => 16,
     'teleport' => false,
     'trigger' => null,
     'width' => null,
@@ -51,28 +36,18 @@
 } ?>
 <?php unset($__defined_vars); ?>
 
-<?php
-    use Filament\Support\Enums\MaxWidth;
-
-    $sizeConfig = collect([
-        'availableHeight' => $availableHeight,
-        'availableWidth' => $availableWidth,
-        'padding' => $sizePadding,
-    ])->filter()->toJson();
-?>
-
 <div
     x-data="{
         toggle: function (event) {
-            $refs.panel?.toggle(event)
+            $refs.panel.toggle(event)
         },
 
         open: function (event) {
-            $refs.panel?.open(event)
+            $refs.panel.open(event)
         },
 
         close: function (event) {
-            $refs.panel?.close(event)
+            $refs.panel.close(event)
         },
     }"
     <?php echo e($attributes->class(['fi-dropdown'])); ?>
@@ -87,44 +62,41 @@
 
     </div>
 
-    <?php if(! \Filament\Support\is_slot_empty($slot)): ?>
-        <div
-            x-cloak
-            x-float<?php echo e($placement ? ".placement.{$placement}" : ''); ?><?php echo e($size ? '.size' : ''); ?><?php echo e($flip ? '.flip' : ''); ?><?php echo e($shift ? '.shift' : ''); ?><?php echo e($teleport ? '.teleport' : ''); ?><?php echo e($offset ? '.offset' : ''); ?>="{ offset: <?php echo e($offset); ?>, <?php echo e($size ? ('size: ' . $sizeConfig) : ''); ?> }"
-            x-ref="panel"
-            x-transition:enter-start="opacity-0"
-            x-transition:leave-end="opacity-0"
-            <?php if($attributes->has('wire:key')): ?>
-                wire:ignore.self
-                wire:key="<?php echo e($attributes->get('wire:key')); ?>.panel"
-            <?php endif; ?>
-            class="<?php echo \Illuminate\Support\Arr::toCssClasses([
-                'fi-dropdown-panel absolute z-10 w-screen divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-gray-950/5 transition dark:divide-white/5 dark:bg-gray-900 dark:ring-white/10',
-                match ($width) {
-                    // These max width classes need to be `!important` otherwise they will be usurped by the Floating UI "size" middleware.
-                    MaxWidth::ExtraSmall, 'xs' => '!max-w-xs',
-                    MaxWidth::Small, 'sm' => '!max-w-sm',
-                    MaxWidth::Medium, 'md' => '!max-w-md',
-                    MaxWidth::Large, 'lg' => '!max-w-lg',
-                    MaxWidth::ExtraLarge, 'xl' => '!max-w-xl',
-                    MaxWidth::TwoExtraLarge, '2xl' => '!max-w-2xl',
-                    MaxWidth::ThreeExtraLarge, '3xl' => '!max-w-3xl',
-                    MaxWidth::FourExtraLarge, '4xl' => '!max-w-4xl',
-                    MaxWidth::FiveExtraLarge, '5xl' => '!max-w-5xl',
-                    MaxWidth::SixExtraLarge, '6xl' => '!max-w-6xl',
-                    MaxWidth::SevenExtraLarge, '7xl' => '!max-w-7xl',
-                    null => '!max-w-[14rem]',
-                    default => $width,
-                },
-                'overflow-y-auto' => $maxHeight || $size,
-            ]); ?>"
-            style="<?php echo \Illuminate\Support\Arr::toCssStyles([
-                "max-height: {$maxHeight}" => $maxHeight,
-            ]) ?>"
-        >
-            <?php echo e($slot); ?>
+    <div
+        x-cloak
+        x-float<?php echo e($placement ? ".placement.{$placement}" : ''); ?>.flip<?php echo e($shift ? '.shift' : ''); ?><?php echo e($teleport ? '.teleport' : ''); ?><?php echo e($offset ? '.offset' : ''); ?>="{ offset: <?php echo e($offset); ?> }"
+        x-ref="panel"
+        x-transition:enter-start="opacity-0"
+        x-transition:leave-end="opacity-0"
+        <?php if($attributes->has('wire:key')): ?>
+            wire:ignore.self
+            wire:key="<?php echo e($attributes->get('wire:key')); ?>.panel"
+        <?php endif; ?>
+        class="<?php echo \Illuminate\Support\Arr::toCssClasses([
+            'fi-dropdown-panel absolute z-10 w-screen divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-gray-950/5 transition dark:divide-white/5 dark:bg-gray-900 dark:ring-white/10',
+            match ($width) {
+                'xs' => 'max-w-xs',
+                'sm' => 'max-w-sm',
+                'md' => 'max-w-md',
+                'lg' => 'max-w-lg',
+                'xl' => 'max-w-xl',
+                '2xl' => 'max-w-2xl',
+                '3xl' => 'max-w-3xl',
+                '4xl' => 'max-w-4xl',
+                '5xl' => 'max-w-5xl',
+                '6xl' => 'max-w-6xl',
+                '7xl' => 'max-w-7xl',
+                null => 'max-w-[14rem]',
+                default => $width,
+            },
+            'overflow-y-auto' => $maxHeight,
+        ]); ?>"
+        style="<?php echo \Illuminate\Support\Arr::toCssStyles([
+            "max-height: {$maxHeight}" => $maxHeight,
+        ]) ?>"
+    >
+        <?php echo e($slot); ?>
 
-        </div>
-    <?php endif; ?>
+    </div>
 </div>
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\support\resources\views/components/dropdown/index.blade.php ENDPATH**/ ?>

@@ -1,15 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Auth;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Mail; 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\QrLabelController;
-use App\Http\Controllers\Auth\RegisterController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\PublicAuthController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\AsetPrintController;
 
 // ========== ROUTE LUPA PASSWORD ==========
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -38,28 +40,32 @@ Route::any('/admin/login', function () {
 Route::get('/', fn () => 'OK ROOT');
 
 // ========== TEST QR ==========
-Route::get('/test-qr', function () {
-    if (! file_exists(public_path('storage'))) {
-        \Illuminate\Support\Facades\Artisan::call('storage:link');
-    }
+// Route::get('/test-qr', function () {
+//     if (! file_exists(public_path('storage'))) {
+//         Artisan::call('storage:link');
+//     }
 
-    Storage::disk('public')->makeDirectory('qr');
+//     Storage::disk('public')->makeDirectory('qr');
 
-    $svg = QrCode::format('svg')->size(300)->margin(1)->generate('HELLO-QR');
-    Storage::disk('public')->put('qr/test.svg', $svg);
+//     $svg = QrCode::format('svg')->size(300)->margin(1)->generate('HELLO-QR');
+//     Storage::disk('public')->put('qr/test.svg', $svg);
 
-    return '<a href="'.asset('storage/qr/test.svg').'" target="_blank">Buka QR (SVG)</a>';
-});
+//     return '<a href="'.asset('storage/qr/test.svg').'" target="_blank">Buka QR (SVG)</a>';
+// // });
 
-// ========== CETAK QR ==========
-Route::get('/assets/{aset}/label', [QrLabelController::class, 'label'])
-    ->name('assets.print');
+// // ========== CETAK QR ==========
+// Route::get('/assets/{aset}/label', [QrLabelController::class, 'label'])
+//     ->name('assets.print'); // <-- ini yang dipanggil dari Filament
 
-// ========== SCAN QR ==========
-Route::get('/scan/{code}', function (string $code) {
-    $n = request('n');
-    return "Scan OK. CODE={$code} SN11={$n}";
-})->name('assets.scan.show');
+Route::get('/admin/asets/{aset}/print-direct', [AsetPrintController::class, 'showDirect'])
+    ->name('assets.print.direct')
+    ->middleware(['auth']);
+
+Route::get('/admin/asets/print-current', [AsetPrintController::class, 'preview'])
+    ->name('assets.print')
+    ->middleware(['auth']);
+
+
 
 // ========== TEST KIRIM EMAIL ==========
 Route::get('/test-mail', function () {

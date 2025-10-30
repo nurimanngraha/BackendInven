@@ -4,122 +4,130 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StokOpnameResource\Pages;
 use App\Models\StokOpname;
-use App\Models\Aset;
 use Filament\Forms;
-use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Grid;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class StokOpnameResource extends Resource
 {
     protected static ?string $model = StokOpname::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-archive-box';
-    protected static ?string $navigationLabel = 'Stok Opname';
-    protected static ?string $pluralLabel = 'Stok Opnames';
-    protected static ?string $modelLabel = 'Stok Opname';
+    // INI PENTING:
+    // Kita matiin menu default resource ini dari sidebar
+    // supaya operator gudang tidak diarahkan ke halaman index ini.
+    protected static bool $shouldRegisterNavigation = false;
 
-    public static function form(Forms\Form $form): Forms\Form
+    protected static ?string $navigationIcon  = 'heroicon-o-clipboard-document-list';
+    protected static ?string $navigationGroup = 'Transaksi';
+    protected static ?string $navigationLabel = 'Log Stock Opname';
+    protected static ?string $pluralModelLabel = 'Stok Opnames';
+
+    public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Grid::make(2)->schema([
-                    TextInput::make('nama_barang')
-                        ->label('Nama Barang')
-                        ->required()
-                        ->maxLength(255),
+        // Form ini dipakai kalau kamu mau tambah/edit manual.
+        // Sebenernya untuk log opname kita gak perlu create/edit dari UI,
+        // karena datanya di-generate dari halaman scan. Jadi ini bisa dibiarkan basic.
 
-                    TextInput::make('barcode')
-                        ->label('Barcode')
-                        ->unique(ignoreRecord: true)
-                        ->required(),
+        return $form->schema([
+            Forms\Components\Select::make('aset_id')
+                ->relationship('aset', 'nama_aset') // atau kolom yang paling jelas buat dibaca
+                ->required()
+                ->label('Aset'),
 
-                    TextInput::make('stok_sistem')
-                        ->label('Stok Sistem')
-                        ->numeric()
-                        ->minValue(0)
-                        ->default(0)
-                        ->required(),
+            Forms\Components\TextInput::make('status_fisik')
+                ->required()
+                ->label('Status Fisik (hasil opname)'),
 
-                    TextInput::make('stok_fisik')
-                        ->label('Stok Fisik')
-                        ->numeric()
-                        ->minValue(0)
-                        ->default(0)
-                        ->required()
-                        ->afterStateUpdated(function ($state, callable $set, $get) {
-                            $set('selisih', $state - $get('stok_sistem'));
-                        }),
+            Forms\Components\Textarea::make('catatan')
+                ->rows(2)
+                ->label('Catatan'),
 
-                    TextInput::make('selisih')
-                        ->label('Selisih')
-                        ->numeric()
-                        ->disabled()
-                        ->default(0),
+            Forms\Components\DateTimePicker::make('checked_at')
+                ->required()
+                ->label('Dicek pada'),
 
-                    Select::make('status')
-                        ->options([
-                            'ok' => 'OK',
-                            'rusak' => 'Rusak',
-                        ])
-                        ->default('ok')
-                        ->required(),
-                ]),
-            ]);
+            Forms\Components\Select::make('checked_by')
+                ->relationship('checker', 'name') // sesuaikan kalau user model kamu pakai kolom 'name'
+                ->required()
+                ->label('Pengecek'),
+        ]);
     }
 
-    public static function table(Tables\Table $table): Tables\Table
+    public static function table(Table $table): Table
     {
+        // Ini tabel yang akan muncul kalau kamu buka Resource ini (mis: /admin/stok-opnames).
+        // Ini berguna banget buat audit nanti, walaupun gak kita tampilkan di sidebar untuk operator.
+
         return $table
             ->columns([
-                TextColumn::make('nama_barang')->label('Nama Barang')->sortable()->searchable(),
-                TextColumn::make('barcode')->label('Barcode')->sortable()->searchable(),
-                TextColumn::make('stok_sistem')->label('Stok Sistem')->sortable(),
-                TextColumn::make('stok_fisik')->label('Stok Fisik')->sortable(),
-                TextColumn::make('selisih')->label('Selisih')->sortable(),
-                TextColumn::make('status')
+                Tables\Columns\TextColumn::make('aset.id9')
+                    ->label('Kode Aset')
+                    ->searchable()
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('aset.nama_aset')
+                    ->label('Nama Aset')
+                    ->searchable()
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('status_fisik')
                     ->label('Status')
                     ->badge()
-                    ->colors([
-                        'warning' => ['Rusak'],
-                        'success' => ['Ok'],
-                    ])
+                    ->color(fn (string $state): string => match (strtolower($state)) {
+                        'ok'       => 'success',
+                        'rusak'    => 'danger',
+                        'hilang'   => 'warning',
+                        'dipinjam' => 'gray',
+                        default    => 'gray',
+                    })
                     ->sortable(),
-                TextColumn::make('created_at')->label('Dibuat')->dateTime()->sortable(),
-                TextColumn::make('updated_at')->label('Diubah')->dateTime()->sortable(),
+
+                Tables\Columns\TextColumn::make('catatan')
+                    ->label('Catatan')
+                    ->limit(30)
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('checked_at')
+                    ->label('Waktu Cek')
+                    ->dateTime('d M Y H:i')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('checker.name')
+                    ->label('Dicek oleh')
+                    ->sortable()
+                    ->toggleable(),
             ])
+            ->defaultSort('checked_at', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('status')->options([
-                    'ok' => 'OK',
-                    'rusak' => 'Rusak',
-                ]),
+                // Contoh filter kalau mau:
+                // Tables\Filters\SelectFilter::make('status_fisik')
+                //     ->options([
+                //         'OK'       => 'OK',
+                //         'Rusak'    => 'Rusak',
+                //         'Hilang'   => 'Hilang',
+                //         'Dipinjam' => 'Dipinjam',
+                //     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                
-            Tables\Actions\Action::make('barcode')
-                ->label('Barcode')
-                ->icon('heroicon-o-qr-code')
-                ->button()
-                ->color('warning')
-                ->url(fn (Aset $record) => rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/').'/labels/'.$record->id)
-                ->openUrlInNewTab(),
-                Tables\Actions\DeleteAction::make(),
+                // Karena ini cuma log, kita bisa matikan edit & delete di sini.
+                // Kalau mau read-only penuh, biarkan kosong.
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                // kosongin juga agar user tidak bisa bulk delete
             ]);
     }
 
     public static function getPages(): array
     {
         return [
+            // ini adalah halaman index bawaan Resource
             'index' => Pages\ListStokOpnames::route('/'),
-            'create' => Pages\CreateStokOpname::route('/create'),
-            'edit' => Pages\EditStokOpname::route('/{record}/edit'),
+            // kalau generator bikin Create / Edit, kamu boleh hapus route-nya
+            // karena log ini harusnya datang dari scanning, bukan input manual:
+            // 'create' => Pages\CreateStokOpname::route('/create'),
+            // 'edit'   => Pages\EditStokOpname::route('/{record}/edit'),
         ];
     }
 }

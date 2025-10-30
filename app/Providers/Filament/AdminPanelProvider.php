@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->authGuard('web') // gunakan guard web saja, jangan admin
             ->login(false) // ✅ Nonaktifkan login bawaan Filament sepenuhnya
+            ->renderHook('panels::body.end', fn () => view('filament.qr-dialog')) // <— inject dialog
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -38,10 +39,15 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-                \App\Filament\Widgets\StatsOverview::class,
-                \App\Filament\Widgets\BarangChart::class,
+            // TARUH STAT OVERVIEW PALING AWAL = PALING ATAS DI DASHBOARD
+            \App\Filament\Widgets\StatsOverview::class,
+            \App\Filament\Widgets\BarangChart::class,
+
+            // opsional: tampilkan/hilangkan kartu akun
+            // Widgets\AccountWidget::class,
+
+            // HAPUS FilamentInfoWidget agar kartu “filament / docs / GitHub” tidak muncul
+            // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

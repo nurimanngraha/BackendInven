@@ -1,15 +1,9 @@
-<?php
-    $locale = app()->getLocale();
-?>
-
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
 <?php foreach($attributes->onlyProps([
     'allSelectableRecordsCount',
     'deselectAllRecordsAction' => 'deselectAllRecords',
     'end' => null,
-    'page' => null,
     'selectAllRecordsAction' => 'selectAllRecords',
-    'selectCurrentPageOnly' => false,
     'selectedRecordsCount',
     'selectedRecordsPropertyName' => 'selectedRecords',
 ]) as $__key => $__value) {
@@ -19,9 +13,7 @@
     'allSelectableRecordsCount',
     'deselectAllRecordsAction' => 'deselectAllRecords',
     'end' => null,
-    'page' => null,
     'selectAllRecordsAction' => 'selectAllRecords',
-    'selectCurrentPageOnly' => false,
     'selectedRecordsCount',
     'selectedRecordsPropertyName' => 'selectedRecords',
 ]); ?>
@@ -29,9 +21,7 @@
     'allSelectableRecordsCount',
     'deselectAllRecordsAction' => 'deselectAllRecords',
     'end' => null,
-    'page' => null,
     'selectAllRecordsAction' => 'selectAllRecords',
-    'selectCurrentPageOnly' => false,
     'selectedRecordsCount',
     'selectedRecordsPropertyName' => 'selectedRecords',
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
@@ -79,9 +69,7 @@
         <span
             x-text="
                 window.pluralize(<?php echo \Illuminate\Support\Js::from(__('filament-tables::table.selection_indicator.selected_count'))->toHtml() ?>, <?php echo e($selectedRecordsPropertyName); ?>.length, {
-                    count: new Intl.NumberFormat(<?php echo \Illuminate\Support\Js::from(str_replace('_', '-', $locale))->toHtml() ?>).format(
-                        <?php echo e($selectedRecordsPropertyName); ?>.length,
-                    ),
+                    count: <?php echo e($selectedRecordsPropertyName); ?>.length,
                 })
             "
             class="text-sm font-medium leading-6 text-gray-700 dark:text-gray-200"
@@ -89,23 +77,19 @@
     </div>
 
     <div class="flex gap-x-3">
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\Tables\View\TablesRenderHook::SELECTION_INDICATOR_ACTIONS_BEFORE, scopes: static::class)); ?>
-
-
-        <div class="flex gap-x-3">
-            <?php if (isset($component)) { $__componentOriginal549c94d872270b69c72bdf48cb183bc9 = $component; } ?>
+        <?php if (isset($component)) { $__componentOriginal549c94d872270b69c72bdf48cb183bc9 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal549c94d872270b69c72bdf48cb183bc9 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.link','data' => ['color' => 'primary','tag' => 'button','xOn:click' => $selectAllRecordsAction,'xShow' => $selectCurrentPageOnly ? '! areRecordsSelected(getRecordsOnPage())' : $allSelectableRecordsCount . ' !== ' . $selectedRecordsPropertyName . '.length','wire:key' => $this->getId() . 'table.selection.indicator.actions.select-all.' . $allSelectableRecordsCount . '.' . $page]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.link','data' => ['color' => 'primary','id' => $this->getId() . '.table.selection.indicator.record-count.' . $allSelectableRecordsCount,'tag' => 'button','xOn:click' => $selectAllRecordsAction,'xShow' => $allSelectableRecordsCount . ' !== ' . $selectedRecordsPropertyName . '.length']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['color' => 'primary','tag' => 'button','x-on:click' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($selectAllRecordsAction),'x-show' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($selectCurrentPageOnly ? '! areRecordsSelected(getRecordsOnPage())' : $allSelectableRecordsCount . ' !== ' . $selectedRecordsPropertyName . '.length'),'wire:key' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->getId() . 'table.selection.indicator.actions.select-all.' . $allSelectableRecordsCount . '.' . $page)]); ?>
-                <?php echo e(trans_choice('filament-tables::table.selection_indicator.actions.select_all.label', $allSelectableRecordsCount, ['count' => \Illuminate\Support\Number::format($allSelectableRecordsCount, locale: $locale)])); ?>
+<?php $component->withAttributes(['color' => 'primary','id' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->getId() . '.table.selection.indicator.record-count.' . $allSelectableRecordsCount),'tag' => 'button','x-on:click' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($selectAllRecordsAction),'x-show' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($allSelectableRecordsCount . ' !== ' . $selectedRecordsPropertyName . '.length')]); ?>
+            <?php echo e(trans_choice('filament-tables::table.selection_indicator.actions.select_all.label', $allSelectableRecordsCount)); ?>
 
-             <?php echo $__env->renderComponent(); ?>
+         <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal549c94d872270b69c72bdf48cb183bc9)): ?>
 <?php $attributes = $__attributesOriginal549c94d872270b69c72bdf48cb183bc9; ?>
@@ -116,7 +100,7 @@
 <?php unset($__componentOriginal549c94d872270b69c72bdf48cb183bc9); ?>
 <?php endif; ?>
 
-            <?php if (isset($component)) { $__componentOriginal549c94d872270b69c72bdf48cb183bc9 = $component; } ?>
+        <?php if (isset($component)) { $__componentOriginal549c94d872270b69c72bdf48cb183bc9 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal549c94d872270b69c72bdf48cb183bc9 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.link','data' => ['color' => 'danger','tag' => 'button','xOn:click' => $deselectAllRecordsAction]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::link'); ?>
@@ -126,9 +110,9 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['color' => 'danger','tag' => 'button','x-on:click' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($deselectAllRecordsAction)]); ?>
-                <?php echo e(__('filament-tables::table.selection_indicator.actions.deselect_all.label')); ?>
+            <?php echo e(__('filament-tables::table.selection_indicator.actions.deselect_all.label')); ?>
 
-             <?php echo $__env->renderComponent(); ?>
+         <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal549c94d872270b69c72bdf48cb183bc9)): ?>
 <?php $attributes = $__attributesOriginal549c94d872270b69c72bdf48cb183bc9; ?>
@@ -138,10 +122,6 @@
 <?php $component = $__componentOriginal549c94d872270b69c72bdf48cb183bc9; ?>
 <?php unset($__componentOriginal549c94d872270b69c72bdf48cb183bc9); ?>
 <?php endif; ?>
-        </div>
-
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\Tables\View\TablesRenderHook::SELECTION_INDICATOR_ACTIONS_AFTER, scopes: static::class)); ?>
-
 
         <?php echo e($end); ?>
 

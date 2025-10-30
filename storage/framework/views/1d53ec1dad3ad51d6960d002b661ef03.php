@@ -1,17 +1,17 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
 <?php foreach($attributes->onlyProps([
-    'circular' => true,
     'size' => 'md',
+    'src',
 ]) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
 <?php $attributes = $attributes->exceptProps([
-    'circular' => true,
     'size' => 'md',
+    'src',
 ]); ?>
 <?php foreach (array_filter(([
-    'circular' => true,
     'size' => 'md',
+    'src',
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
@@ -21,19 +21,19 @@
 } ?>
 <?php unset($__defined_vars); ?>
 
-<img
+<div
     <?php echo e($attributes
             ->class([
-                'fi-avatar object-cover object-center',
-                'rounded-md' => ! $circular,
-                'fi-circular rounded-full' => $circular,
+                'fi-avatar bg-cover bg-center',
                 match ($size) {
-                    'sm' => 'h-6 w-6',
-                    'md' => 'h-8 w-8',
+                    'md' => 'h-9 w-9',
                     'lg' => 'h-10 w-10',
                     default => $size,
                 },
+            ])
+            ->style([
+                "background-image: url('{$src}')",
             ])); ?>
 
-/>
+></div>
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\support\resources\views/components/avatar.blade.php ENDPATH**/ ?>

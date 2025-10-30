@@ -21,23 +21,21 @@
 <div
     <?php echo e($attributes->class([
             'fi-topbar sticky top-0 z-20 overflow-x-clip',
-            'fi-topbar-with-navigation' => filament()->hasTopNavigation(),
         ])); ?>
 
 >
     <nav
         class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 md:px-6 lg:px-8"
     >
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_START)); ?>
+        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::topbar.start')); ?>
 
 
-        <?php if(filament()->hasNavigation()): ?>
-            <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
+        <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf0029cce6d19fd6d472097ff06a800a1 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.icon-button','data' => ['color' => 'gray','icon' => 'heroicon-o-bars-3','iconAlias' => 'panels::topbar.open-sidebar-button','iconSize' => 'lg','label' => __('filament-panels::layout.actions.sidebar.expand.label'),'xCloak' => true,'xData' => '{}','xOn:click' => '$store.sidebar.open()','xShow' => '! $store.sidebar.isOpen','class' => \Illuminate\Support\Arr::toCssClasses([
-                    'fi-topbar-open-sidebar-btn',
-                    'lg:hidden' => (! filament()->isSidebarFullyCollapsibleOnDesktop()) || filament()->isSidebarCollapsibleOnDesktop(),
-                ])]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+                '-ms-1.5',
+                'lg:hidden' => (! filament()->isSidebarFullyCollapsibleOnDesktop()) || filament()->isSidebarCollapsibleOnDesktop(),
+            ])]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::icon-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -45,9 +43,9 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['color' => 'gray','icon' => 'heroicon-o-bars-3','icon-alias' => 'panels::topbar.open-sidebar-button','icon-size' => 'lg','label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-panels::layout.actions.sidebar.expand.label')),'x-cloak' => true,'x-data' => '{}','x-on:click' => '$store.sidebar.open()','x-show' => '! $store.sidebar.isOpen','class' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Illuminate\Support\Arr::toCssClasses([
-                    'fi-topbar-open-sidebar-btn',
-                    'lg:hidden' => (! filament()->isSidebarFullyCollapsibleOnDesktop()) || filament()->isSidebarCollapsibleOnDesktop(),
-                ]))]); ?>
+                '-ms-1.5',
+                'lg:hidden' => (! filament()->isSidebarFullyCollapsibleOnDesktop()) || filament()->isSidebarCollapsibleOnDesktop(),
+            ]))]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalf0029cce6d19fd6d472097ff06a800a1)): ?>
@@ -59,16 +57,16 @@
 <?php unset($__componentOriginalf0029cce6d19fd6d472097ff06a800a1); ?>
 <?php endif; ?>
 
-            <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
+        <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf0029cce6d19fd6d472097ff06a800a1 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.icon-button','data' => ['color' => 'gray','icon' => 'heroicon-o-x-mark','iconAlias' => 'panels::topbar.close-sidebar-button','iconSize' => 'lg','label' => __('filament-panels::layout.actions.sidebar.collapse.label'),'xCloak' => true,'xData' => '{}','xOn:click' => '$store.sidebar.close()','xShow' => '$store.sidebar.isOpen','class' => 'fi-topbar-close-sidebar-btn lg:hidden']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.icon-button','data' => ['color' => 'gray','icon' => 'heroicon-o-x-mark','iconAlias' => 'panels::topbar.close-sidebar-button','iconSize' => 'lg','label' => __('filament-panels::layout.actions.sidebar.collapse.label'),'xCloak' => true,'xData' => '{}','xOn:click' => '$store.sidebar.close()','xShow' => '$store.sidebar.isOpen','class' => '-ms-1.5 lg:hidden']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::icon-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['color' => 'gray','icon' => 'heroicon-o-x-mark','icon-alias' => 'panels::topbar.close-sidebar-button','icon-size' => 'lg','label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-panels::layout.actions.sidebar.collapse.label')),'x-cloak' => true,'x-data' => '{}','x-on:click' => '$store.sidebar.close()','x-show' => '$store.sidebar.isOpen','class' => 'fi-topbar-close-sidebar-btn lg:hidden']); ?>
+<?php $component->withAttributes(['color' => 'gray','icon' => 'heroicon-o-x-mark','icon-alias' => 'panels::topbar.close-sidebar-button','icon-size' => 'lg','label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-panels::layout.actions.sidebar.collapse.label')),'x-cloak' => true,'x-data' => '{}','x-on:click' => '$store.sidebar.close()','x-show' => '$store.sidebar.isOpen','class' => '-ms-1.5 lg:hidden']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalf0029cce6d19fd6d472097ff06a800a1)): ?>
@@ -79,12 +77,14 @@
 <?php $component = $__componentOriginalf0029cce6d19fd6d472097ff06a800a1; ?>
 <?php unset($__componentOriginalf0029cce6d19fd6d472097ff06a800a1); ?>
 <?php endif; ?>
-        <?php endif; ?>
 
-        <?php if(filament()->hasTopNavigation() || (! filament()->hasNavigation())): ?>
+        <?php if(filament()->hasTopNavigation()): ?>
             <div class="me-6 hidden lg:flex">
                 <?php if($homeUrl = filament()->getHomeUrl()): ?>
-                    <a <?php echo e(\Filament\Support\generate_href_html($homeUrl)); ?>>
+                    <a
+                        href="<?php echo e($homeUrl); ?>"
+                        
+                    >
                         <?php if (isset($component)) { $__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.logo','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -130,43 +130,20 @@
                 <?php endif; ?>
             </div>
 
-            <?php if(filament()->hasTenancy() && filament()->hasTenantMenu()): ?>
-                <?php if (isset($component)) { $__componentOriginal32b9f4abfc80490155cb7c5dfaf8790d = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal32b9f4abfc80490155cb7c5dfaf8790d = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.tenant-menu','data' => ['class' => 'hidden lg:block']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('filament-panels::tenant-menu'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'hidden lg:block']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal32b9f4abfc80490155cb7c5dfaf8790d)): ?>
-<?php $attributes = $__attributesOriginal32b9f4abfc80490155cb7c5dfaf8790d; ?>
-<?php unset($__attributesOriginal32b9f4abfc80490155cb7c5dfaf8790d); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal32b9f4abfc80490155cb7c5dfaf8790d)): ?>
-<?php $component = $__componentOriginal32b9f4abfc80490155cb7c5dfaf8790d; ?>
-<?php unset($__componentOriginal32b9f4abfc80490155cb7c5dfaf8790d); ?>
-<?php endif; ?>
-            <?php endif; ?>
-
             <?php if(filament()->hasNavigation()): ?>
                 <ul class="me-4 hidden items-center gap-x-4 lg:flex">
                     <?php $__currentLoopData = $navigation; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <?php if($groupLabel = $group->getLabel()): ?>
                             <?php if (isset($component)) { $__componentOriginal22ab0dbc2c6619d5954111bba06f01db = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal22ab0dbc2c6619d5954111bba06f01db = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.index','data' => ['placement' => 'bottom-start','teleport' => true,'attributes' => \Filament\Support\prepare_inherited_attributes($group->getExtraTopbarAttributeBag())]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.index','data' => ['placement' => 'bottom-start','teleport' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['placement' => 'bottom-start','teleport' => true,'attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Filament\Support\prepare_inherited_attributes($group->getExtraTopbarAttributeBag()))]); ?>
+<?php $component->withAttributes(['placement' => 'bottom-start','teleport' => true]); ?>
                                  <?php $__env->slot('trigger', null, []); ?> 
                                     <?php if (isset($component)) { $__componentOriginal42035aa49c877d648231e14ff76681c7 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal42035aa49c877d648231e14ff76681c7 = $attributes; } ?>
@@ -192,36 +169,7 @@
 <?php endif; ?>
                                  <?php $__env->endSlot(); ?>
 
-                                <?php
-                                    $lists = [];
-
-                                    foreach ($group->getItems() as $item) {
-                                        if ($childItems = $item->getChildItems()) {
-                                            $lists[] = [
-                                                $item,
-                                                ...$childItems,
-                                            ];
-                                            $lists[] = [];
-
-                                            continue;
-                                        }
-
-                                        if (empty($lists)) {
-                                            $lists[] = [$item];
-
-                                            continue;
-                                        }
-
-                                        $lists[count($lists) - 1][] = $item;
-                                    }
-
-                                    if (empty($lists[count($lists) - 1])) {
-                                        array_pop($lists);
-                                    }
-                                ?>
-
-                                <?php $__currentLoopData = $lists; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $list): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php if (isset($component)) { $__componentOriginal66687bf0670b9e16f61e667468dc8983 = $component; } ?>
+                                <?php if (isset($component)) { $__componentOriginal66687bf0670b9e16f61e667468dc8983 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal66687bf0670b9e16f61e667468dc8983 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.index','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown.list'); ?>
@@ -231,24 +179,25 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-                                        <?php $__currentLoopData = $list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <?php
-                                                $itemIsActive = $item->isActive();
-                                            ?>
+                                    <?php $__currentLoopData = $group->getItems(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php
+                                            $icon = $item->getIcon();
+                                            $shouldOpenUrlInNewTab = $item->shouldOpenUrlInNewTab();
+                                        ?>
 
-                                            <?php if (isset($component)) { $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $component; } ?>
+                                        <?php if (isset($component)) { $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['badge' => $item->getBadge(),'badgeColor' => $item->getBadgeColor(),'badgeTooltip' => $item->getBadgeTooltip(),'color' => $itemIsActive ? 'primary' : 'gray','href' => $item->getUrl(),'icon' => $itemIsActive ? ($item->getActiveIcon() ?? $item->getIcon()) : $item->getIcon(),'tag' => 'a','target' => $item->shouldOpenUrlInNewTab() ? '_blank' : null]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.dropdown.list.item','data' => ['badge' => $item->getBadge(),'badgeColor' => $item->getBadgeColor(),'href' => $item->getUrl(),'icon' => $item->isActive() ? ($item->getActiveIcon() ?? $icon) : $icon,'tag' => 'a','target' => $shouldOpenUrlInNewTab ? '_blank' : null]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::dropdown.list.item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['badge' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadge()),'badge-color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadgeColor()),'badge-tooltip' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadgeTooltip()),'color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($itemIsActive ? 'primary' : 'gray'),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getUrl()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($itemIsActive ? ($item->getActiveIcon() ?? $item->getIcon()) : $item->getIcon()),'tag' => 'a','target' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->shouldOpenUrlInNewTab() ? '_blank' : null)]); ?>
-                                                <?php echo e($item->getLabel()); ?>
+<?php $component->withAttributes(['badge' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadge()),'badge-color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadgeColor()),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getUrl()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->isActive() ? ($item->getActiveIcon() ?? $icon) : $icon),'tag' => 'a','target' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($shouldOpenUrlInNewTab ? '_blank' : null)]); ?>
+                                            <?php echo e($item->getLabel()); ?>
 
-                                             <?php echo $__env->renderComponent(); ?>
+                                         <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78)): ?>
 <?php $attributes = $__attributesOriginal1bd4d8e254cc40cdb05bd99df3e63f78; ?>
@@ -258,8 +207,8 @@
 <?php $component = $__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78; ?>
 <?php unset($__componentOriginal1bd4d8e254cc40cdb05bd99df3e63f78); ?>
 <?php endif; ?>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                     <?php echo $__env->renderComponent(); ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal66687bf0670b9e16f61e667468dc8983)): ?>
 <?php $attributes = $__attributesOriginal66687bf0670b9e16f61e667468dc8983; ?>
@@ -269,7 +218,6 @@
 <?php $component = $__componentOriginal66687bf0670b9e16f61e667468dc8983; ?>
 <?php unset($__componentOriginal66687bf0670b9e16f61e667468dc8983); ?>
 <?php endif; ?>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                              <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal22ab0dbc2c6619d5954111bba06f01db)): ?>
@@ -284,14 +232,14 @@
                             <?php $__currentLoopData = $group->getItems(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php if (isset($component)) { $__componentOriginal42035aa49c877d648231e14ff76681c7 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal42035aa49c877d648231e14ff76681c7 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.topbar.item','data' => ['active' => $item->isActive(),'activeIcon' => $item->getActiveIcon(),'badge' => $item->getBadge(),'badgeColor' => $item->getBadgeColor(),'badgeTooltip' => $item->getBadgeTooltip(),'icon' => $item->getIcon(),'shouldOpenUrlInNewTab' => $item->shouldOpenUrlInNewTab(),'url' => $item->getUrl()]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.topbar.item','data' => ['active' => $item->isActive(),'activeIcon' => $item->getActiveIcon(),'badge' => $item->getBadge(),'badgeColor' => $item->getBadgeColor(),'icon' => $item->getIcon(),'shouldOpenUrlInNewTab' => $item->shouldOpenUrlInNewTab(),'url' => $item->getUrl()]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament-panels::topbar.item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->isActive()),'active-icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getActiveIcon()),'badge' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadge()),'badge-color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadgeColor()),'badge-tooltip' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadgeTooltip()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getIcon()),'should-open-url-in-new-tab' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->shouldOpenUrlInNewTab()),'url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getUrl())]); ?>
+<?php $component->withAttributes(['active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->isActive()),'active-icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getActiveIcon()),'badge' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadge()),'badge-color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getBadgeColor()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getIcon()),'should-open-url-in-new-tab' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->shouldOpenUrlInNewTab()),'url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($item->getUrl())]); ?>
                                     <?php echo e($item->getLabel()); ?>
 
                                  <?php echo $__env->renderComponent(); ?>
@@ -312,22 +260,15 @@
         <?php endif; ?>
 
         <div
-            <?php if(filament()->hasTenancy()): ?>
-                x-persist="topbar.end.panel-<?php echo e(filament()->getId()); ?>.tenant-<?php echo e(filament()->getTenant()?->getKey()); ?>"
-            <?php else: ?>
-                x-persist="topbar.end.panel-<?php echo e(filament()->getId()); ?>"
-            <?php endif; ?>
+            
             class="ms-auto flex items-center gap-x-4"
         >
-            <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_BEFORE)); ?>
-
-
             <?php if(filament()->isGlobalSearchEnabled()): ?>
                 <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
-[$__name, $__params] = $__split(Filament\Livewire\GlobalSearch::class);
+[$__name, $__params] = $__split(Filament\Livewire\GlobalSearch::class, ['lazy' => true]);
 
 $__html = app('livewire')->mount($__name, $__params, 'lw-594693738-0', $__slots ?? [], get_defined_vars());
 
@@ -341,18 +282,12 @@ if (isset($__slots)) unset($__slots);
 ?>
             <?php endif; ?>
 
-            <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_AFTER)); ?>
-
-
-            <?php if(filament()->auth()->check()): ?>
-                <?php if(filament()->hasDatabaseNotifications()): ?>
-                    <?php
+            <?php if(filament()->hasDatabaseNotifications()): ?>
+                <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
-[$__name, $__params] = $__split(Filament\Livewire\DatabaseNotifications::class, [
-                        'lazy' => filament()->hasLazyLoadedDatabaseNotifications(),
-                    ]);
+[$__name, $__params] = $__split(Filament\Livewire\DatabaseNotifications::class, ['lazy' => true]);
 
 $__html = app('livewire')->mount($__name, $__params, 'lw-594693738-1', $__slots ?? [], get_defined_vars());
 
@@ -364,9 +299,9 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                <?php endif; ?>
+            <?php endif; ?>
 
-                <?php if (isset($component)) { $__componentOriginalf72c4437b846e6919081d8fc29939c50 = $component; } ?>
+            <?php if (isset($component)) { $__componentOriginalf72c4437b846e6919081d8fc29939c50 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf72c4437b846e6919081d8fc29939c50 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.user-menu','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament-panels::user-menu'); ?>
@@ -386,10 +321,9 @@ if (isset($__slots)) unset($__slots);
 <?php $component = $__componentOriginalf72c4437b846e6919081d8fc29939c50; ?>
 <?php unset($__componentOriginalf72c4437b846e6919081d8fc29939c50); ?>
 <?php endif; ?>
-            <?php endif; ?>
         </div>
 
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_END)); ?>
+        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::topbar.end')); ?>
 
     </nav>
 </div>

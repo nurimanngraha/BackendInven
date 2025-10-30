@@ -11,23 +11,22 @@
                 Alignment::Start, Alignment::Left => 'items-start',
                 Alignment::Center => 'items-center',
                 Alignment::End, Alignment::Right => 'items-end',
-                default => null,
             },
             match (static::$verticalAlignment) {
                 VerticalAlignment::Start => 'flex-col-reverse justify-end',
                 VerticalAlignment::End => 'flex-col justify-end',
-                VerticalAlignment::Center => 'flex-col justify-center',
+                VerticalAlignment::Center => 'flex-col justify-center'
             },
         ]); ?>"
         role="status"
     >
-        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php $__currentLoopData = $notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <?php echo e($notification); ?>
 
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 
-    <!--[if BLOCK]><![endif]--><?php if($broadcastChannel = $this->getBroadcastChannel()): ?>
+    <?php if($broadcastChannel = $this->getBroadcastChannel()): ?>
         <?php if (isset($component)) { $__componentOriginal40a2401e895531715a66e1631dec94aa = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal40a2401e895531715a66e1631dec94aa = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-notifications::components.echo','data' => ['channel' => $broadcastChannel]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -48,6 +47,6 @@
 <?php $component = $__componentOriginal40a2401e895531715a66e1631dec94aa; ?>
 <?php unset($__componentOriginal40a2401e895531715a66e1631dec94aa); ?>
 <?php endif; ?>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php endif; ?>
 </div>
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\notifications\resources\views/notifications.blade.php ENDPATH**/ ?>

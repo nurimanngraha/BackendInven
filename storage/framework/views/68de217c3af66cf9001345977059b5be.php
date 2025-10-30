@@ -1,26 +1,13 @@
-<?php
-    use Illuminate\View\ComponentAttributeBag;
-?>
-
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
 <?php foreach($attributes->onlyProps([
-    'debounce' => '500ms',
-    'onBlur' => false,
-    'placeholder' => __('filament-tables::table.fields.search.placeholder'),
     'wireModel' => 'tableSearch',
 ]) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
 <?php $attributes = $attributes->exceptProps([
-    'debounce' => '500ms',
-    'onBlur' => false,
-    'placeholder' => __('filament-tables::table.fields.search.placeholder'),
     'wireModel' => 'tableSearch',
 ]); ?>
 <?php foreach (array_filter(([
-    'debounce' => '500ms',
-    'onBlur' => false,
-    'placeholder' => __('filament-tables::table.fields.search.placeholder'),
     'wireModel' => 'tableSearch',
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
@@ -30,10 +17,6 @@
     if (array_key_exists($__key, $__defined_vars)) unset($$__key);
 } ?>
 <?php unset($__defined_vars); ?>
-
-<?php
-    $wireModelAttribute = $onBlur ? 'wire:model.blur' : "wire:model.live.debounce.{$debounce}";
-?>
 
 <div
     x-id="['input']"
@@ -57,38 +40,14 @@
 <?php $component->withAttributes(['inline-prefix' => true,'prefix-icon' => 'heroicon-m-magnifying-glass','prefix-icon-alias' => 'tables::search-field','wire:target' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($wireModel)]); ?>
         <?php if (isset($component)) { $__componentOriginal9ad6b66c56a2379ee0ba04e1e358c61e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal9ad6b66c56a2379ee0ba04e1e358c61e = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.input.index','data' => ['attributes' => 
-                (new ComponentAttributeBag)->merge([
-                    'autocomplete' => 'off',
-                    'inlinePrefix' => true,
-                    'maxlength' => 1000,
-                    'placeholder' => $placeholder,
-                    'type' => 'search',
-                    'wire:key' => $this->getId() . '.table.' . $wireModel . '.field.input',
-                    $wireModelAttribute => $wireModel,
-                    'x-bind:id' => '$id(\'input\')',
-                    'x-on:keyup' => 'if ($event.key === \'Enter\') { $wire.$refresh() }',
-                ])
-            ]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.input.index','data' => ['autocomplete' => 'off','inlinePrefix' => true,'placeholder' => __('filament-tables::table.fields.search.placeholder'),'type' => 'search','wire:model.live.debounce.500ms' => $wireModel,'xBind:id' => '$id(\'input\')']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(
-                (new ComponentAttributeBag)->merge([
-                    'autocomplete' => 'off',
-                    'inlinePrefix' => true,
-                    'maxlength' => 1000,
-                    'placeholder' => $placeholder,
-                    'type' => 'search',
-                    'wire:key' => $this->getId() . '.table.' . $wireModel . '.field.input',
-                    $wireModelAttribute => $wireModel,
-                    'x-bind:id' => '$id(\'input\')',
-                    'x-on:keyup' => 'if ($event.key === \'Enter\') { $wire.$refresh() }',
-                ])
-            )]); ?>
+<?php $component->withAttributes(['autocomplete' => 'off','inline-prefix' => true,'placeholder' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-tables::table.fields.search.placeholder')),'type' => 'search','wire:model.live.debounce.500ms' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($wireModel),'x-bind:id' => '$id(\'input\')']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal9ad6b66c56a2379ee0ba04e1e358c61e)): ?>

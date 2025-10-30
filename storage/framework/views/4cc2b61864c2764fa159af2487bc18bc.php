@@ -8,31 +8,16 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['class' => 'fi-dashboard-page']); ?>
-    <!--[if BLOCK]><![endif]--><?php if(method_exists($this, 'filtersForm')): ?>
-        <?php echo e($this->filtersForm); ?>
-
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-
     <?php if (isset($component)) { $__componentOriginal7259e9ea993f43cfa75aaa166dfee38d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7259e9ea993f43cfa75aaa166dfee38d = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-widgets::components.widgets','data' => ['columns' => $this->getColumns(),'data' => 
-            [
-                ...(property_exists($this, 'filters') ? ['filters' => $this->filters] : []),
-                ...$this->getWidgetData(),
-            ]
-        ,'widgets' => $this->getVisibleWidgets()]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-widgets::components.widgets','data' => ['widgets' => $this->getVisibleWidgets(),'columns' => $this->getColumns()]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament-widgets::widgets'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['columns' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->getColumns()),'data' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(
-            [
-                ...(property_exists($this, 'filters') ? ['filters' => $this->filters] : []),
-                ...$this->getWidgetData(),
-            ]
-        ),'widgets' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->getVisibleWidgets())]); ?>
+<?php $component->withAttributes(['widgets' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->getVisibleWidgets()),'columns' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->getColumns())]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7259e9ea993f43cfa75aaa166dfee38d)): ?>

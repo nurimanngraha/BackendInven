@@ -14,6 +14,7 @@
         "doctrine/dbal": "^3.10",
         "filament/filament": "3.0",
         "guzzlehttp/guzzle": "^7.2",
+        "khanamiryan/qrcode-detector-decoder": "^2.0",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8"

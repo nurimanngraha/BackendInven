@@ -19,79 +19,46 @@
 <?php unset($__defined_vars); ?>
 
 <?php
-    $openSidebarClasses = 'fi-sidebar-open w-[--sidebar-width] translate-x-0 shadow-xl ring-1 ring-gray-950/5 dark:ring-white/10 rtl:-translate-x-0';
-    $isRtl = __('filament-panels::layout.direction') === 'rtl';
+    $openSidebarClasses = 'fi-sidebar-open max-w-none translate-x-0 shadow-xl ring-1 ring-gray-950/5 dark:ring-white/10';
 ?>
-
 
 <aside
     x-data="{}"
-    <?php if(filament()->isSidebarCollapsibleOnDesktop() && (! filament()->hasTopNavigation())): ?>
+    <?php if(filament()->isSidebarCollapsibleOnDesktop()): ?>
         x-cloak
         x-bind:class="
             $store.sidebar.isOpen
-                ? <?php echo \Illuminate\Support\Js::from($openSidebarClasses . ' ' . 'lg:sticky')->toHtml() ?>
-                : '-translate-x-full rtl:translate-x-full lg:sticky lg:translate-x-0 rtl:lg:-translate-x-0'
+                ? <?php echo \Illuminate\Support\Js::from($openSidebarClasses)->toHtml() ?>
+                : 'lg:max-w-[--collapsed-sidebar-width] -translate-x-full rtl:translate-x-full lg:translate-x-0'
         "
     <?php else: ?>
-        <?php if(filament()->hasTopNavigation()): ?>
+        <?php if(filament()->hasTopNavigation() || filament()->isSidebarFullyCollapsibleOnDesktop()): ?>
             x-cloak
-            x-bind:class="$store.sidebar.isOpen ? <?php echo \Illuminate\Support\Js::from($openSidebarClasses)->toHtml() ?> : '-translate-x-full rtl:translate-x-full'"
-        <?php elseif(filament()->isSidebarFullyCollapsibleOnDesktop()): ?>
-            x-cloak
-            x-bind:class="$store.sidebar.isOpen ? <?php echo \Illuminate\Support\Js::from($openSidebarClasses . ' ' . 'lg:sticky')->toHtml() ?> : '-translate-x-full rtl:translate-x-full'"
         <?php else: ?>
             x-cloak="-lg"
-            x-bind:class="
-                $store.sidebar.isOpen
-                    ? <?php echo \Illuminate\Support\Js::from($openSidebarClasses . ' ' . 'lg:sticky')->toHtml() ?>
-                    : 'w-[--sidebar-width] -translate-x-full rtl:translate-x-full lg:sticky'
-            "
         <?php endif; ?>
+        x-bind:class="$store.sidebar.isOpen ? <?php echo \Illuminate\Support\Js::from($openSidebarClasses)->toHtml() ?> : '-translate-x-full rtl:translate-x-full'"
     <?php endif; ?>
-    <?php echo e($attributes->class([
-            'fi-sidebar fixed inset-y-0 start-0 z-30 flex flex-col h-screen content-start bg-white transition-all dark:bg-gray-900 lg:z-0 lg:bg-transparent lg:shadow-none lg:ring-0 lg:transition-none dark:lg:bg-transparent',
-            'lg:translate-x-0 rtl:lg:-translate-x-0' => ! (filament()->isSidebarCollapsibleOnDesktop() || filament()->isSidebarFullyCollapsibleOnDesktop() || filament()->hasTopNavigation()),
-            'lg:-translate-x-full rtl:lg:translate-x-full' => filament()->hasTopNavigation(),
-        ])); ?>
-
+    class="<?php echo \Illuminate\Support\Arr::toCssClasses([
+        'fi-sidebar fixed inset-y-0 start-0 z-30 grid h-screen w-[--sidebar-width] content-start overflow-hidden bg-white transition-all dark:bg-gray-900 lg:z-0 lg:bg-transparent lg:shadow-none lg:ring-0 dark:lg:bg-transparent',
+        'lg:translate-x-0 rtl:lg:-translate-x-0' => ! (filament()->isSidebarCollapsibleOnDesktop() || filament()->isSidebarFullyCollapsibleOnDesktop() || filament()->hasTopNavigation()),
+        'lg:-translate-x-full rtl:lg:translate-x-full' => filament()->hasTopNavigation(),
+    ]); ?>"
 >
-    <div class="overflow-x-clip">
-        <header
-            class="fi-sidebar-header flex h-16 items-center bg-white px-6 ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 lg:shadow-sm"
+    <header
+        class="fi-sidebar-header flex h-16 items-center bg-white px-6 ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 lg:shadow-sm"
+    >
+        
+        <div
+            <?php if(filament()->isSidebarCollapsibleOnDesktop()): ?>
+                x-show="$store.sidebar.isOpen"
+                x-transition:enter="lg:transition lg:delay-100"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+            <?php endif; ?>
         >
-            <div
-                <?php if(filament()->isSidebarCollapsibleOnDesktop()): ?>
-                    x-show="$store.sidebar.isOpen"
-                    x-transition:enter="lg:transition lg:delay-100"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                <?php endif; ?>
-            >
-                <?php if($homeUrl = filament()->getHomeUrl()): ?>
-                    <a <?php echo e(\Filament\Support\generate_href_html($homeUrl)); ?>>
-                        <?php if (isset($component)) { $__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.logo','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('filament-panels::logo'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94)): ?>
-<?php $attributes = $__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94; ?>
-<?php unset($__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94)): ?>
-<?php $component = $__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94; ?>
-<?php unset($__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94); ?>
-<?php endif; ?>
-                    </a>
-                <?php else: ?>
+            <?php if($homeUrl = filament()->getHomeUrl()): ?>
+                <a href="<?php echo e($homeUrl); ?>">
                     <?php if (isset($component)) { $__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.logo','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -112,20 +79,43 @@
 <?php $component = $__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94; ?>
 <?php unset($__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94); ?>
 <?php endif; ?>
-                <?php endif; ?>
-            </div>
+                </a>
+            <?php else: ?>
+                <?php if (isset($component)) { $__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.logo','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('filament-panels::logo'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94)): ?>
+<?php $attributes = $__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94; ?>
+<?php unset($__attributesOriginalb501e8c73315a10eb0eb5fd14fda0d94); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94)): ?>
+<?php $component = $__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94; ?>
+<?php unset($__componentOriginalb501e8c73315a10eb0eb5fd14fda0d94); ?>
+<?php endif; ?>
+            <?php endif; ?>
+        </div>
+        
 
-            <?php if(filament()->isSidebarCollapsibleOnDesktop()): ?>
-                <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
+        <?php if(filament()->isSidebarCollapsibleOnDesktop()): ?>
+            <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf0029cce6d19fd6d472097ff06a800a1 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.icon-button','data' => ['color' => 'gray','icon' => $isRtl ? 'heroicon-o-chevron-left' : 'heroicon-o-chevron-right','iconAlias' => $isRtl ? ['panels::sidebar.expand-button.rtl', 'panels::sidebar.expand-button'] : 'panels::sidebar.expand-button','iconSize' => 'lg','label' => __('filament-panels::layout.actions.sidebar.expand.label'),'xCloak' => true,'xData' => '{}','xOn:click' => '$store.sidebar.open()','xShow' => '! $store.sidebar.isOpen','class' => 'mx-auto']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.icon-button','data' => ['color' => 'gray','icon' => 'heroicon-o-chevron-right','iconAlias' => 'panels::sidebar.expand-button','iconSize' => 'lg','label' => __('filament-panels::layout.actions.sidebar.expand.label'),'xCloak' => true,'xData' => '{}','xOn:click' => '$store.sidebar.open()','xShow' => '! $store.sidebar.isOpen','class' => '-mx-1.5']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::icon-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['color' => 'gray','icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isRtl ? 'heroicon-o-chevron-left' : 'heroicon-o-chevron-right'),'icon-alias' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isRtl ? ['panels::sidebar.expand-button.rtl', 'panels::sidebar.expand-button'] : 'panels::sidebar.expand-button'),'icon-size' => 'lg','label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-panels::layout.actions.sidebar.expand.label')),'x-cloak' => true,'x-data' => '{}','x-on:click' => '$store.sidebar.open()','x-show' => '! $store.sidebar.isOpen','class' => 'mx-auto']); ?>
+<?php $component->withAttributes(['color' => 'gray','icon' => 'heroicon-o-chevron-right','icon-alias' => 'panels::sidebar.expand-button','icon-size' => 'lg','label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-panels::layout.actions.sidebar.expand.label')),'x-cloak' => true,'x-data' => '{}','x-on:click' => '$store.sidebar.open()','x-show' => '! $store.sidebar.isOpen','class' => '-mx-1.5']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalf0029cce6d19fd6d472097ff06a800a1)): ?>
@@ -136,19 +126,19 @@
 <?php $component = $__componentOriginalf0029cce6d19fd6d472097ff06a800a1; ?>
 <?php unset($__componentOriginalf0029cce6d19fd6d472097ff06a800a1); ?>
 <?php endif; ?>
-            <?php endif; ?>
+        <?php endif; ?>
 
-            <?php if(filament()->isSidebarCollapsibleOnDesktop() || filament()->isSidebarFullyCollapsibleOnDesktop()): ?>
-                <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
+        <?php if(filament()->isSidebarCollapsibleOnDesktop() || filament()->isSidebarFullyCollapsibleOnDesktop()): ?>
+            <?php if (isset($component)) { $__componentOriginalf0029cce6d19fd6d472097ff06a800a1 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf0029cce6d19fd6d472097ff06a800a1 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.icon-button','data' => ['color' => 'gray','icon' => $isRtl ? 'heroicon-o-chevron-right' : 'heroicon-o-chevron-left','iconAlias' => $isRtl ? ['panels::sidebar.collapse-button.rtl', 'panels::sidebar.collapse-button'] : 'panels::sidebar.collapse-button','iconSize' => 'lg','label' => __('filament-panels::layout.actions.sidebar.collapse.label'),'xCloak' => true,'xData' => '{}','xOn:click' => '$store.sidebar.close()','xShow' => '$store.sidebar.isOpen','class' => 'ms-auto hidden lg:flex']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament::components.icon-button','data' => ['color' => 'gray','icon' => 'heroicon-o-chevron-left','iconAlias' => 'panels::sidebar.collapse-button','iconSize' => 'lg','label' => __('filament-panels::layout.actions.sidebar.collapse.label'),'xCloak' => true,'xData' => '{}','xOn:click' => '$store.sidebar.close()','xShow' => '$store.sidebar.isOpen','class' => '-mx-1.5 ms-auto hidden lg:flex']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament::icon-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['color' => 'gray','icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isRtl ? 'heroicon-o-chevron-right' : 'heroicon-o-chevron-left'),'icon-alias' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($isRtl ? ['panels::sidebar.collapse-button.rtl', 'panels::sidebar.collapse-button'] : 'panels::sidebar.collapse-button'),'icon-size' => 'lg','label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-panels::layout.actions.sidebar.collapse.label')),'x-cloak' => true,'x-data' => '{}','x-on:click' => '$store.sidebar.close()','x-show' => '$store.sidebar.isOpen','class' => 'ms-auto hidden lg:flex']); ?>
+<?php $component->withAttributes(['color' => 'gray','icon' => 'heroicon-o-chevron-left','icon-alias' => 'panels::sidebar.collapse-button','icon-size' => 'lg','label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('filament-panels::layout.actions.sidebar.collapse.label')),'x-cloak' => true,'x-data' => '{}','x-on:click' => '$store.sidebar.close()','x-show' => '$store.sidebar.isOpen','class' => '-mx-1.5 ms-auto hidden lg:flex']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalf0029cce6d19fd6d472097ff06a800a1)): ?>
@@ -159,23 +149,17 @@
 <?php $component = $__componentOriginalf0029cce6d19fd6d472097ff06a800a1; ?>
 <?php unset($__componentOriginalf0029cce6d19fd6d472097ff06a800a1); ?>
 <?php endif; ?>
-            <?php endif; ?>
-        </header>
-    </div>
+        <?php endif; ?>
+    </header>
 
     <nav
-        class="fi-sidebar-nav flex-grow flex flex-col gap-y-7 overflow-y-auto overflow-x-hidden px-6 py-8"
-        style="scrollbar-gutter: stable"
+        class="fi-sidebar-nav grid gap-y-7 overflow-y-auto overflow-x-hidden px-6 py-8"
     >
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_NAV_START)); ?>
+        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::sidebar.nav.start')); ?>
 
 
-        <?php if(filament()->hasTenancy() && filament()->hasTenantMenu()): ?>
+        <?php if(filament()->hasTenancy()): ?>
             <div
-                class="<?php echo \Illuminate\Support\Arr::toCssClasses([
-                    'fi-sidebar-nav-tenant-menu-ctn',
-                    '-mx-2' => ! filament()->isSidebarCollapsibleOnDesktop(),
-                ]); ?>"
                 <?php if(filament()->isSidebarCollapsibleOnDesktop()): ?>
                     x-bind:class="$store.sidebar.isOpen ? '-mx-2' : '-mx-4'"
                 <?php endif; ?>
@@ -203,18 +187,24 @@
             </div>
         <?php endif; ?>
 
-        <ul class="fi-sidebar-nav-groups -mx-2 flex flex-col gap-y-7">
-            <?php $__currentLoopData = $navigation; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php if (isset($component)) { $__componentOriginal59b772cc9788bdb14bf9872624b4f33a = $component; } ?>
+        <?php if(filament()->hasNavigation()): ?>
+            <ul
+                class="-mx-2 grid gap-y-7"
+                <?php if(filament()->isSidebarCollapsibleOnDesktop()): ?>
+                    x-bind:class="{ 'auto-cols-min': ! $store.sidebar.isOpen }"
+                <?php endif; ?>
+            >
+                <?php $__currentLoopData = $navigation; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if (isset($component)) { $__componentOriginal59b772cc9788bdb14bf9872624b4f33a = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal59b772cc9788bdb14bf9872624b4f33a = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.sidebar.group','data' => ['active' => $group->isActive(),'collapsible' => $group->isCollapsible(),'icon' => $group->getIcon(),'items' => $group->getItems(),'label' => $group->getLabel(),'attributes' => \Filament\Support\prepare_inherited_attributes($group->getExtraSidebarAttributeBag())]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.sidebar.group','data' => ['collapsible' => $group->isCollapsible(),'icon' => $group->getIcon(),'items' => $group->getItems(),'label' => $group->getLabel()]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('filament-panels::sidebar.group'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->isActive()),'collapsible' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->isCollapsible()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->getIcon()),'items' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->getItems()),'label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->getLabel()),'attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Filament\Support\prepare_inherited_attributes($group->getExtraSidebarAttributeBag()))]); ?>
+<?php $component->withAttributes(['collapsible' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->isCollapsible()),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->getIcon()),'items' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->getItems()),'label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group->getLabel())]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal59b772cc9788bdb14bf9872624b4f33a)): ?>
@@ -225,57 +215,58 @@
 <?php $component = $__componentOriginal59b772cc9788bdb14bf9872624b4f33a; ?>
 <?php unset($__componentOriginal59b772cc9788bdb14bf9872624b4f33a); ?>
 <?php endif; ?>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </ul>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </ul>
 
-        <script>
-            var collapsedGroups = JSON.parse(
-                localStorage.getItem('collapsedGroups'),
-            )
+            <?php
+                $collapsedNavigationGroupLabels = collect($navigation)
+                    ->filter(fn (\Filament\Navigation\NavigationGroup $group): bool => $group->isCollapsed())
+                    ->map(fn (\Filament\Navigation\NavigationGroup $group): string => $group->getLabel())
+                    ->values();
+            ?>
 
-            if (collapsedGroups === null || collapsedGroups === 'null') {
-                localStorage.setItem(
-                    'collapsedGroups',
-                    JSON.stringify(<?php echo \Illuminate\Support\Js::from(
-                        collect($navigation)
-                            ->filter(fn (\Filament\Navigation\NavigationGroup $group): bool => $group->isCollapsed())
-                            ->map(fn (\Filament\Navigation\NavigationGroup $group): string => $group->getLabel())
-                            ->values()
-                            ->all()
-                    )->toHtml() ?>),
+            <script>
+                let collapsedGroups = JSON.parse(
+                    localStorage.getItem('collapsedGroups'),
                 )
-            }
 
-            collapsedGroups = JSON.parse(
-                localStorage.getItem('collapsedGroups'),
-            )
+                if (collapsedGroups === null || collapsedGroups === 'null') {
+                    localStorage.setItem(
+                        'collapsedGroups',
+                        JSON.stringify(<?php echo \Illuminate\Support\Js::from($collapsedNavigationGroupLabels)->toHtml() ?>),
+                    )
+                }
 
-            document
-                .querySelectorAll('.fi-sidebar-group')
-                .forEach((group) => {
-                    if (
-                        !collapsedGroups.includes(group.dataset.groupLabel)
-                    ) {
-                        return
-                    }
+                collapsedGroups = JSON.parse(
+                    localStorage.getItem('collapsedGroups'),
+                )
 
-                    // Alpine.js loads too slow, so attempt to hide a
-                    // collapsed sidebar group earlier.
-                    group.querySelector(
-                        '.fi-sidebar-group-items',
-                    ).style.display = 'none'
-                    group
-                        .querySelector('.fi-sidebar-group-collapse-button')
-                        .classList.add('-rotate-180')
-                })
-        </script>
+                document
+                    .querySelectorAll('.fi-sidebar-group')
+                    .forEach((group) => {
+                        if (
+                            !collapsedGroups.includes(group.dataset.groupLabel)
+                        ) {
+                            return
+                        }
 
-        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_NAV_END)); ?>
+                        // Alpine.js loads too slow, so attempt to hide a
+                        // collapsed sidebar group earlier.
+                        group.querySelector(
+                            '.fi-sidebar-group-items',
+                        ).style.display = 'none'
+                        group
+                            .querySelector('.fi-sidebar-group-collapse-button')
+                            .classList.add('rotate-180')
+                    })
+            </script>
+        <?php endif; ?>
+
+        <?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::sidebar.nav.end')); ?>
 
     </nav>
 
-    <?php echo e(\Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_FOOTER)); ?>
+    <?php echo e(\Filament\Support\Facades\FilamentView::renderHook('panels::sidebar.footer')); ?>
 
 </aside>
-
 <?php /**PATH C:\xampp\htdocs\BackendInven\vendor\filament\filament\resources\views/components/sidebar/index.blade.php ENDPATH**/ ?>
