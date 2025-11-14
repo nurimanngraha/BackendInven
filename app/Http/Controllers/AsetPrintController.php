@@ -41,23 +41,23 @@ class AsetPrintController extends Controller
      * tapi TIDAK langsung print. Print akan dipicu oleh tombol di halaman.
      */
     private function renderPreviewView(Aset $aset)
-    {
-        // tentukan kode aset yg mau dimasukkan ke QR
-        // kalau sebenarnya kode fisik asetmu ada di kolom id9, pakai id9
-        $payload = (string) ($aset->id9 ?? $aset->id ?? '');
+{
+    // gunakan kode_scan (prioritas). kalau tidak ada, fallback ke id.
+    $payload = (string) ($aset->kode_scan ?? $aset->id ?? '');
 
-        // generate QR default size (misal 200px) untuk pertama kali load halaman preview
-        $defaultSize = 200;
+    // generate QR default size (misal 200px) untuk pertama kali load halaman preview
+    $defaultSize = 200;
 
-        $svg = $this->generateQrSvg($payload, $defaultSize);
+    $svg = $this->generateQrSvg($payload, $defaultSize);
 
-        return view('print.preview', [
-            'aset'        => $aset,
-            'payload'     => $payload,
-            'defaultSize' => $defaultSize,
-            'svg'         => $svg,
-        ]);
-    }
+    return view('print.preview', [
+        'aset'        => $aset,
+        'payload'     => $payload,
+        'defaultSize' => $defaultSize,
+        'svg'         => $svg,
+    ]);
+}
+
 
     /**
      * Helper internal untuk bikin QR SVG dgn ukuran tertentu

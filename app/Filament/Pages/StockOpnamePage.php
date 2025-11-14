@@ -41,6 +41,9 @@ class StockOpnamePage extends Page
     public $statusBaru = 'OK';   // dropdown status baru
     public $catatan = '';        // catatan opsional (walau di UI sekarang udah ga ditampilkan)
 
+    // debug: menyimpan variant yang match (bisa dihapus nanti)
+    public $matchedVariant = null;
+
     // === File upload untuk fitur "Unggah QR Code" ===
     public $qrFile;              // Livewire temporary file (jpg/png)
 
@@ -50,18 +53,105 @@ class StockOpnamePage extends Page
      */
     public function cariAset()
     {
-        $rawKode = trim($this->kodeAset);
+        $rawKode = trim((string) $this->kodeAset);
 
-        // 1. cari berdasarkan kode_scan (kode 9 digit yang ditempel sebagai QR)
-        $aset = Aset::where('kode_scan', $rawKode)->first();
+        // jika kosong langsung return
+        if ($rawKode === '') {
+            $this->resetScanResult();
 
-        // 2. fallback: cari by id biasa (buat testing manual / legacy)
-        if (! $aset) {
-            $aset = Aset::where('id', $rawKode)->first();
+            Notification::make()
+                ->title('Input kosong')
+                ->body('Masukkan barcode atau scan QR terlebih dahulu.')
+                ->danger()
+                ->send();
+
+            return;
         }
 
+        // -----------------------
+        // Buat kandidat pencarian dalam urutan prioritas
+        // - kandidat pertama: apa adanya (raw)
+        // - kandidat kedua: hanya digits dari raw
+        // - kandidat ketiga: digits dengan padding ke 9 digit (presets)
+        // - kandidat keempat: ltrim zeros (kemungkinan QR kehilangan leading zeros)
+        // -----------------------
+        $candidates = [];
+
+        // raw
+        $candidates[] = $rawKode;
+
+        // only digits
+        $digits = preg_replace('/\D+/', '', $rawKode);
+        if ($digits !== '') {
+            $candidates[] = $digits;
+        }
+
+        // padded to 9 (jika digits kurang dari 9)
+        if ($digits !== '') {
+            if (strlen($digits) < 9) {
+                $candidates[] = str_pad($digits, 9, '0', STR_PAD_LEFT);
+            }
+            // also try remove leading zeros (some scanners/drop leading zeros in some flows)
+            $noLeading = ltrim($digits, '0');
+            if ($noLeading === '') {
+                // if all zeros, keep single zero
+                $noLeading = '0';
+            }
+            $candidates[] = $noLeading;
+            // try padded from noLeading as well (cover case where QR had no leading zeros)
+            if (strlen($noLeading) < 9) {
+                $candidates[] = str_pad($noLeading, 9, '0', STR_PAD_LEFT);
+            }
+        }
+
+        // uniq & clean
+        $candidates = array_values(array_filter(array_unique($candidates), fn($v) => $v !== ''));
+
+        $aset = null;
+        $matched = null;
+
+        // 1) coba cocokkan setiap kandidat ke kode_scan (prioritas)
+        foreach ($candidates as $cand) {
+            $aset = Aset::where('kode_scan', $cand)->first();
+            if ($aset) {
+                $matched = $cand;
+                break;
+            }
+        }
+
+        // 2) kalau belum ketemu, coba numeric -> id
         if (! $aset) {
-            // kalau nggak ketemu: kosongkan hasil & kasih popup merah
+            foreach ($candidates as $cand) {
+                if (ctype_digit($cand)) {
+                    // cek id numeric
+                    $maybeId = (int) $cand;
+                    if ($maybeId > 0) {
+                        $aset = Aset::find($maybeId);
+                        if ($aset) {
+                            $matched = (string)$cand;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3) fallback terakhir: kalau belum ketemu, coba LIKE search (hanya jika kandidat pendek)
+        //    hati-hati: ini bisa mengembalikan banyak hasil, jadi kita hanya pakai jika semua kandidat pendek (<=4)
+        if (! $aset) {
+            foreach ($candidates as $cand) {
+                if (strlen($cand) <= 4) {
+                    $aset = Aset::where('kode_scan', 'like', "%{$cand}%")->first();
+                    if ($aset) {
+                        $matched = $cand . ' (like)';
+                        break;
+                    }
+                }
+            }
+        }
+
+        // jika tetap tidak ketemu
+        if (! $aset) {
             $this->resetScanResult();
 
             Notification::make()
@@ -70,6 +160,8 @@ class StockOpnamePage extends Page
                 ->danger()
                 ->send();
 
+            // simpan matchedVariant null untuk debug
+            $this->matchedVariant = null;
             return;
         }
 
@@ -88,6 +180,9 @@ class StockOpnamePage extends Page
 
         // reset catatan untuk aset ini
         $this->catatan    = '';
+
+        // simpan variant yang match (berguna untuk debugging; bisa dihapus nanti)
+        $this->matchedVariant = $matched;
 
         // popup hijau info ketemu
         Notification::make()
@@ -208,19 +303,20 @@ class StockOpnamePage extends Page
 
     public function refreshOpname(): void
     {
-    // kosongkan semua state halaman
-    $this->reset([
-        'kodeAset',
-        'foundAset',
-        'foundAsetId',
-        'statusBaru',
-        'catatan',
-        'qrFile',
-    ]);
+        // kosongkan semua state halaman
+        $this->reset([
+            'kodeAset',
+            'foundAset',
+            'foundAsetId',
+            'statusBaru',
+            'catatan',
+            'qrFile',
+            'matchedVariant',
+        ]);
     
-    // optional: bersihkan error/validasi kalau ada
-    $this->resetErrorBag();
-    $this->resetValidation();
+        // optional: bersihkan error/validasi kalau ada
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
 

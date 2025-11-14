@@ -40,6 +40,13 @@ class AsetResource extends Resource
                     ->label('Merk/Kode')
                     ->maxLength(150),
 
+                    Forms\Components\TextInput::make('kode_scan')
+                    ->label('Kode Scan / Barcode')
+                    ->visibleOn('edit')
+                    ->disabled() 
+                    ->dehydrated(false), 
+
+
                 Forms\Components\Select::make('kategori')
                     ->label('Kategori')
                     ->options([
@@ -70,10 +77,11 @@ class AsetResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                 ->label('Id')
-                ->getStateUsing(fn (Aset $record) => $record->id9)  // tampilkan accessor id9
+                ->getStateUsing(fn (Aset $record) => $record->id)  // tampilkan accessor id9
                 ->sortable('id')                                   // urutkan pakai id asli
                 ->searchable(false)                                // (opsional) nonaktifkan search
                 ->copyable(),                                    // (opsional) klik untuk salin
+                Tables\Columns\TextColumn::make('kode_scan')->label('Kode Scan')->copyable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('nama_aset')->label('Nama Aset')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('merk_kode'),
                 Tables\Columns\TextColumn::make('kategori'),
@@ -102,7 +110,8 @@ class AsetResource extends Resource
                         ]);
 
                         // Ini kode aset yang mau di-QR-kan. Pakai yang benar di sistemmu.
-                        $payload = (string) ($record->id9 ?? $record->id ?? '');
+                        $payload = (string) ($record->kode_scan ?? $record->id ?? '');
+
 
                         if ($payload === '') {
                             $svg = '<p style="color:red;font-size:12px">

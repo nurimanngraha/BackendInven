@@ -1,7 +1,5 @@
 <?php
 
-
-// app/Http/Controllers/StokOpnameController.php
 namespace App\Http\Controllers;
 
 use App\Models\Aset;
@@ -12,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class StokOpnameController extends Controller
 {
     /**
-     * Cari aset dari QR string (misalnya hasil kamera / input manual)
+     * Cari aset dari QR string
      */
     public function findByQr(Request $request)
     {
@@ -20,11 +18,12 @@ class StokOpnameController extends Controller
             'qr' => 'required|string',
         ]);
 
-        $qr = $request->qr;
+        $qr = trim($request->qr);
 
-        // ASUMSI: nilai QR == kolom 'id' di tabel asets (kode aset unik)
-        // Kalau kamu punya kolom lain, ganti 'id' jadi kolom itu
-        $aset = Aset::where('id', $qr)->first();
+        $aset = Aset::where('kode_scan', $qr)
+
+            ->orWhere('id', $qr)
+            ->first();
 
         if (!$aset) {
             return response()->json([
@@ -36,98 +35,97 @@ class StokOpnameController extends Controller
         return response()->json([
             'found' => true,
             'aset' => [
-                'id'         => $aset->id,             // kode aset
-                'nama_aset'  => $aset->nama_aset ?? $aset->nama ?? 'Aset',
-                'merk_kode'  => $aset->merk_kode ?? $aset->merk ?? '-',
-                'status'     => $aset->status ?? 'OK', // misal: Aktif / Rusak / Dipinjam
-            ],
-        ]);
-    }
-
-    /**
-     * Upload foto QR, server decode pakai library, lalu balikin data aset
-     */
-    public function decodeUpload(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|max:4096',
-        ]);
-
-        $imgPath = $request->file('image')->getRealPath();
-
-        $qrcode = new \Zxing\QrReader($imgPath);
-        $decodedText = $qrcode->text();
-
-        if (!$decodedText) {
-            return response()->json([
-                'found' => false,
-                'message' => 'QR tidak terbaca',
-            ], 422);
-        }
-
-        $aset = Aset::where('id', $decodedText)->first();
-
-        return response()->json([
-            'qr'    => $decodedText,
-            'found' => (bool) $aset,
-            'aset'  => $aset ? [
                 'id'         => $aset->id,
                 'nama_aset'  => $aset->nama_aset ?? $aset->nama ?? 'Aset',
                 'merk_kode'  => $aset->merk_kode ?? $aset->merk ?? '-',
                 'status'     => $aset->status ?? 'OK',
-            ] : null,
-            'message' => $aset ? null : 'Aset tidak ditemukan',
+            ],
         ]);
     }
 
     /**
-     * Simpan hasil opname (log)
-     * + opsional update status aset sekarang
+     * Decode QR dari foto upload
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'aset_id' => 'required|string|exists:asets,id',
-            'qty'     => 'required|integer|min:1',
-            'status'  => 'required|in:OK,RUSAK,HILANG,LAINNYA',
-            'note'    => 'nullable|string|max:500',
-        ]);
+    public function decodeUpload(Request $request)
+{
+    $request->validate([
+        'image' => 'required|image|max:4096',
+    ]);
 
-        $aset = Aset::findOrFail($request->aset_id);
+    $imgPath = $request->file('image')->getRealPath();
 
-        // catat log opname
-        $opname = StokOpname::create([
-            'aset_id' => $aset->id,
-            'qty'     => $request->qty,
-            'status'  => $request->status,
-            'meta'    => [
-                'note' => $request->note,
-            ],
-            'user_id' => Auth::id(),
-        ]);
+    $qrcode = new \Zxing\QrReader($imgPath);
+    $decodedText = $qrcode->text();
 
-        // opsional: update status aset langsung.
-        // jika kamu mau mapping:
-        //   OK      -> 'Aktif'
-        //   RUSAK   -> 'Rusak'
-        //   HILANG  -> 'Hilang' / 'Tidak ada'
-        //   LAINNYA -> biarkan apa adanya
-        $mapBaruKeAset = [
-            'OK'     => 'Aktif',
-            'RUSAK'  => 'Rusak',
-            'HILANG' => 'Hilang',
-        ];
-
-        if ($request->status !== 'LAINNYA') {
-            $aset->update([
-                'status' => $mapBaruKeAset[$request->status] ?? $aset->status,
-            ]);
-        }
-
+    if (!$decodedText) {
         return response()->json([
-            'ok'         => true,
-            'opname_id'  => $opname->id,
-            'message'    => 'Opname tersimpan',
-        ]);
+            'found' => false,
+            'message' => 'QR tidak terbaca',
+        ], 422);
     }
+
+    // sanitasi dasar
+    $decodedText = trim($decodedText);
+
+    // Jika QR berisi JSON, coba ambil field kode_scan atau id
+    $possibleKeys = [];
+    if ($json = json_decode($decodedText, true)) {
+        if (is_array($json)) {
+            // tambah kemungkinan langsung
+            if (isset($json['kode_scan'])) {
+                $possibleKeys[] = trim((string) $json['kode_scan']);
+            }
+            if (isset($json['code'])) {
+                $possibleKeys[] = trim((string) $json['code']);
+            }
+            if (isset($json['id'])) {
+                $possibleKeys[] = trim((string) $json['id']);
+            }
+            // ambil semua string values sebagai cadangan
+            foreach ($json as $v) {
+                if (is_scalar($v)) {
+                    $possibleKeys[] = trim((string) $v);
+                }
+            }
+        }
+    }
+
+    // selalu coba decodedText sendiri sebagai prioritas
+    array_unshift($possibleKeys, $decodedText);
+
+    // hapus duplikat & kosong
+    $possibleKeys = array_values(array_filter(array_unique($possibleKeys), fn($v) => $v !== ''));
+
+    $aset = null;
+    foreach ($possibleKeys as $key) {
+        // coba kode_scan dulu
+        $aset = Aset::where('kode_scan', $key)->first();
+        if ($aset) {
+            $matchedKey = $key;
+            break;
+        }
+        // lalu coba id (numeric)
+        if (ctype_digit($key)) {
+            $aset = Aset::where('id', $key)->first();
+            if ($aset) {
+                $matchedKey = $key;
+                break;
+            }
+        }
+    }
+
+    return response()->json([
+        'qr'    => $decodedText,
+        'found' => (bool) $aset,
+        'matched' => $matchedKey ?? null,
+        'aset'  => $aset ? [
+            'id'         => $aset->id,
+            'nama_aset'  => $aset->nama_aset ?? $aset->nama ?? 'Aset',
+            'merk_kode'  => $aset->merk_kode ?? $aset->merk ?? '-',
+            'status'     => $aset->status ?? 'OK',
+        ] : null,
+        'message' => $aset ? null : 'Aset tidak ditemukan',
+    ]);
+    }
+
 }
