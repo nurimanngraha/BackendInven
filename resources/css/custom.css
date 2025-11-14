@@ -1,0 +1,8 @@
+.fi-user-menu [data-headlessui-state="open"] {
+    position: relative !important;
+}
+
+.fi-user-menu .fi-dropdown-panel {
+    top: 100% !important;
+    margin-top: 0.5rem !important;
+}

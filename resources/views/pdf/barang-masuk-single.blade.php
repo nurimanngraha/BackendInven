@@ -1,71 +1,85 @@
-﻿<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Barang Masuk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Bukti Barang Masuk</title>
     <style>
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            margin: 40px;
-            color: #333;
+        body { 
+            font-family: 'DejaVu Sans', Arial, sans-serif; 
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
         }
-        h2 {
+        .header {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
         }
-        .info {
-            margin-bottom: 20px;
-        }
-        table {
+        .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-bottom: 20px;
         }
-        th, td {
-            border: 1px solid #555;
-            padding: 8px;
+        .info-table th {
+            background-color: #f8f9fa;
             text-align: left;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            width: 30%;
         }
-        th {
-            background: #f2f2f2;
+        .info-table td {
+            padding: 8px;
+            border: 1px solid #dee2e6;
         }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .bold { font-weight: bold; }
+        .mt-20 { margin-top: 20px; }
         .footer {
+            margin-top: 50px;
             text-align: right;
-            font-size: 12px;
-            margin-top: 30px;
+            font-size: 10px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <h2>Laporan Barang Masuk</h2>
-
-    <div class="info">
-        <p><strong>No Transaksi:</strong> {{ $record->no_transaksi }}</p>
-        <p><strong>Tanggal Masuk:</strong> {{ \Carbon\Carbon::parse($record->tanggal)->format('d M Y') }}</p>
+    <div class="header">
+        <h2>BUKTI BARANG MASUK</h2>
+        <p>No. Transaksi: {{ $record->no_transaksi }}</p>
     </div>
 
-    <table>
+    <table class="info-table">
+        <tr>
+            <th>No. Transaksi</th>
+            <td>{{ $record->no_transaksi }}</td>
+        </tr>
+        <tr>
+            <th>Tanggal Masuk</th>
+            <td>{{ \Carbon\Carbon::parse($record->tanggal)->format('d F Y') }}</td>
+        </tr>
         <tr>
             <th>Nama Barang</th>
-            <td>{{ $record->barang->nama_barang ?? '-' }}</td>
+            <td>{{ $record->barang->nama_barang }}</td>
         </tr>
         <tr>
             <th>Kategori</th>
-            <td>{{ $record->kategori ?? '-' }}</td>
+            <td>{{ $record->kategori }}</td>
         </tr>
         <tr>
-            <th>Jumlah</th>
+            <th>Jumlah Masuk</th>
             <td>{{ number_format($record->jumlah, 0, ',', '.') }} unit</td>
         </tr>
         <tr>
-            <th>User</th>
-            <td>{{ $record->user->name ?? '-' }}</td>
+            <th>Ditambahkan Oleh</th>
+            <td>{{ $record->user->name }}</td>
         </tr>
     </table>
 
     <div class="footer">
-        Dicetak pada: {{ now()->format('d F Y H:i') }}
+        <p>Dicetak pada: {{ now()->format('d F Y H:i') }}</p>
     </div>
 </body>
 </html>

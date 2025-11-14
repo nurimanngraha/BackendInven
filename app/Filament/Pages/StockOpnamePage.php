@@ -29,7 +29,7 @@ class StockOpnamePage extends Page
     protected static ?string $slug = 'stock-opname-page';
 
     // Judul halaman
-    protected static ?string $title = 'Stock Opname';
+    protected static ?string $title = '';
 
     // Blade view yg dipakai
     protected static string $view = 'filament.pages.stock-opname-page';

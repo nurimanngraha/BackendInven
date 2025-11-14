@@ -26,4 +26,7 @@ class BarangPieChart extends PieChartWidget
             'labels' => ['Barang Masuk', 'Barang Keluar'],
         ];
     }
+
+protected static ?string $maxHeight = '320px'; // 🔹 biar sama tinggi dengan line chart
+
 }

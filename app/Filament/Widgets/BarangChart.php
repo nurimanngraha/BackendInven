@@ -57,4 +57,7 @@ class BarangChart extends ChartWidget
     {
         return 'line'; // bisa juga 'bar'
     }
+
+protected static ?string $maxHeight = '320px'; // 🔹 tambahkan tinggi chart
+
 }

@@ -1,0 +1,21 @@
+/* ✅ Target hanya halaman stok opname */
+.fi-header-heading #stok-opname-heading {
+    display: block !important;
+    text-align: center !important;
+}
+
+/* Pastikan yang lain tetap rata kiri */
+body:not(.stok-opname-page) .fi-header-heading {
+    text-align: left !important;
+}
+
+.fi-topbar-user-menu {
+    position: relative !important;
+}
+
+.fi-dropdown-panel {
+    position: absolute !important;
+    top: 100% !important;
+    transform: translateY(0.5rem) !important;
+    z-index: 10000 !important;
+}

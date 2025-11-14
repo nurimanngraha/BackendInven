@@ -1,68 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login - Laravel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 flex items-center justify-center h-screen">
+@extends('layouts.auth')
 
-    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h1 class="text-xl font-semibold text-center text-gray-800 mb-2">Laravel</h1>
-        <h2 class="text-2xl font-bold text-center mb-6">Sign in</h2>
+@section('title', 'Login - Sanditel Apps')
 
-        @if (session('success'))
-            <div class="mb-4 bg-green-100 text-green-800 px-4 py-2 rounded">
-                 {{ session('success') }}
-            </div>
-        @endif
+@section('content')
+<img src="{{ asset('images/sanditel-logo.png') }}" alt="Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
 
+<h3 class="auth-title">Sanditel Apps</h3>
+<div class="auth-sub">Sistem terpadu manajemen & dokumentasi</div>
 
-        @if (session('error'))
-            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form action="{{ route('login.post') }}" method="POST">
-            @csrf
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-                <input type="email" name="email" required
-                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
-            </div>
-
-            <div class="mb-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" name="password" required
-                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
-            </div>
-
-            <div class="flex justify-between items-center mb-6">
-                <div class="flex items-center">
-                    <input id="remember" type="checkbox" name="remember" class="h-4 w-4 text-orange-600 border-gray-300 rounded">
-                    <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
-                </div>
-                <div>
-                    <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline">
-                        Lupa password?
-                    </a>
-                </div>
-            </div>
-
-            <button type="submit"
-                class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded">
-                Sign in
-            </button>
-        </form>
-
-        <p class="text-center text-sm mt-4">
-            Belum punya akun?
-            <a href="{{ route('register.form') }}" class="text-blue-600 hover:underline">Daftar di sini</a>
-        </p>
+    {{-- 🔔 Toast Notification (Benar-benar di tengah) --}}
+@if (session('success') || session('error'))
+<div class="toast-container">
+    <div id="toast"
+         class="toast-box {{ session('success') ? 'toast-success' : 'toast-error' }}">
+        {{ session('success') ?? session('error') }}
     </div>
+</div>
 
-</body>
-</html>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(-10px)";
+            setTimeout(() => {
+                toast.style.opacity = "1";
+                toast.style.transform = "translateY(0)";
+            }, 100);
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateY(-10px)";
+                setTimeout(() => toast.remove(), 500);
+            }, 5000);
+        }
+    });
+</script>
+@endif
 
+<style>
+    body {
+        background: url("{{ asset('images/gedung-sate.png') }}") no-repeat center center fixed;
+        background-size: cover;
+        background-attachment: fixed;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .auth-container {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(4px);
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    
+    /* === Toast Container === */
+    .toast-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    margin-top: 20px; /* jarak dari teks "Sistem terpadu..." */
+    margin-bottom: 10px;
+    text-align: center;
+    }
+
+    /* === Toast Box === */
+    .toast-box {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.5s ease-in-out;
+    text-align: center;
+    color: #fff;
+    min-width: 220px;
+    max-width: 80%;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .toast-success {
+        background-color: #28a745; /* hijau Bootstrap */
+    }
+
+    .toast-error {
+        background-color: #dc3545; /* merah Bootstrap */
+    }
+</style>
+
+
+<form method="POST" action="{{ route('login') }}">
+  @csrf
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="text" name="email" class="form-control" placeholder="Email" required autofocus>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" placeholder="password" required>
+  </div>
+
+  <div class="d-grid">
+    <button class="btn btn-primary">→ Login</button>
+  </div>
+
+  <a class="small-link" href="{{ route('password.request') }}">Lupa password?</a>
+  <a class="small-link" href="{{ route('register.form') }}">Buat akun baru</a>
+</form>
+@endsection

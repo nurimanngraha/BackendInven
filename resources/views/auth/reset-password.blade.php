@@ -1,61 +1,77 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Reset Password</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-green-100 to-blue-100 min-h-screen flex items-center justify-center">
-<div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-    
-    {{-- Pesan sukses jika password berhasil direset --}}
-    @if (session('success'))
-        <div class="mb-4 p-3 text-green-800 bg-green-100 border border-green-300 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
+@extends('layouts.auth')
 
-    {{-- Pesan error jika ada masalah --}}
-    @if ($errors->any())
-        <div class="mb-4 p-3 text-red-800 bg-red-100 border border-red-300 rounded">
-            <ul class="list-disc list-inside">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+@section('title','Reset Password - Sanditel Apps')
 
-    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Reset Password</h2>
+@section('content')
 
-    <form method="POST" action="{{ route('password.update') }}">
-        @csrf
-        <input type="hidden" name="token" value="{{ $token }}">
-        
-        {{-- 🔒 Email otomatis terisi dari URL, tidak bisa diubah --}}
-        <div class="mb-4">
-            <input type="hidden" name="email" value="{{ $email }}">
-            <p class="block font-semibold mb-1 text-gray-700">Email akun:</p>
-            <div class="border border-gray-300 bg-gray-100 rounded-lg px-3 py-2 text-gray-800 font-semibold">
-                {{ $email }}
-            </div>
-        </div>
+<style>
+body {
+    background: url("{{ asset('images/gedung-sate.png') }}") no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: 'Inter', sans-serif;
+}
 
-        <div class="mb-4">
-            <label class="block font-semibold mb-1 text-gray-700">Password Baru</label>
-            <input type="password" name="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none" required>
-        </div>
+.auth-container {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
-        <div class="mb-6">
-            <label class="block font-semibold mb-1 text-gray-700">Konfirmasi Password</label>
-            <input type="password" name="password_confirmation" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none" required>
-        </div>
+.alert {
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+}
 
-        <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded-lg hover:bg-green-700 transition duration-200">
-            Simpan Password Baru
-        </button>
-    </form>
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}
 
-</div>
-</body>
-</html>
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+}
+</style>
+
+<img src="{{ asset('images/sanditel-logo.png') }}" alt="Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
+<h3 class="auth-title">Atur Ulang Password</h3>
+<div class="auth-sub">Masukkan password baru untuk akunmu</div>
+
+
+{{-- Notifikasi --}}
+@if (session('status'))
+    <div class="alert alert-success text-center">{{ session('status') }}</div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger text-center">
+        @foreach ($errors->all() as $error)
+            {{ $error }}<br>
+        @endforeach
+    </div>
+@endif
+
+<form method="POST" action="{{ route('password.update') }}">
+  @csrf
+  <input type="hidden" name="token" value="{{ $token }}">
+  <input type="hidden" name="email" value="{{ $email }}">
+  <div class="mb-3">
+    <label class="form-label">Password Baru</label>
+    <input type="password" name="password" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Konfirmasi Password</label>
+    <input type="password" name="password_confirmation" class="form-control" required>
+  </div>
+
+  <div class="d-grid">
+    <button class="btn btn-primary">Simpan Password</button>
+  </div>
+</form>
+@endsection

@@ -6,6 +6,7 @@ use Filament\Pages\Dashboard as BaseDashboard;
 use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\BarangPieChart;
 use App\Filament\Widgets\BarangComparisonTable;
+use App\Filament\Widgets\BarangChart;
 
 class Dashboard extends BaseDashboard
 {
@@ -15,8 +16,18 @@ class Dashboard extends BaseDashboard
     {
         return [
             StatsOverview::class,
-            BarangPieChart::class,
             BarangComparisonTable::class,
+            BarangChart::class,
+            BarangPieChart::class,
+        ];
+    }
+
+    public function getColumns(): int|array
+    {
+        return [
+            'sm' => 1,
+            'md' => 2, // 👉 2 kolom sejajar di layar besar
+            'xl' => 2,
         ];
     }
 }

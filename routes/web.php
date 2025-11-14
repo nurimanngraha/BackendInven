@@ -3,12 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\QrLabelController;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\PublicAuthController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\AsetPrintController;
@@ -23,8 +18,8 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 // ========== ROUTE AUTH PUBLIC ==========
 Route::get('/login', [PublicAuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [PublicAuthController::class, 'login'])->name('login.post');
-Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
-Route::post('/register', [RegisterController::class, 'register'])->name('register.store');
+Route::get('/register', [PublicAuthController::class, 'showRegister'])->name('register.form');
+Route::post('/register', [PublicAuthController::class, 'register'])->name('register.store');
 
 Route::post('/admin/logout', function () {
     Auth::guard('web')->logout();

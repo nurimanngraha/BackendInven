@@ -7,50 +7,54 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\BarangMasuk;
 use App\Models\BarangKeluar;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 
 class BarangComparisonTable extends BaseWidget
 {
     protected static ?string $heading = 'Perbandingan Barang Masuk & Keluar per Bulan';
     protected int|string|array $columnSpan = 'full';
 
-    /**
-     * Tetap return Builder tapi dengan record yang aman
-     */
+    // ✅ Matikan default sort bawaan Filament
+    protected bool $hasTableDefaultSort = false;
+
+    // ✅ Tambahkan ini untuk memastikan Filament tidak menyuntik "order by id"
+    protected function applySortingToTableQuery(Builder $query): Builder
+    {
+        // kosongkan agar tidak ada ORDER BY tambahan
+        return $query;
+    }
+
     protected function getTableQuery(): Builder
     {
         return BarangMasuk::query()
-            ->selectRaw("DATE_FORMAT(created_at, '%M %Y') as bulan, MIN(id) as min_id")
+            ->reorder() // hapus order bawaan Eloquent
+            ->selectRaw("
+                DATE_FORMAT(created_at, '%M %Y') as bulan,
+                MIN(id) as min_id,
+                ANY_VALUE(id) as id
+            ")
             ->groupByRaw("DATE_FORMAT(created_at, '%M %Y')")
-            ->orderByRaw("MIN(created_at)");
+            ->orderByRaw('MIN(created_at), ANY_VALUE(id) ASC');
     }
 
-    /**
-     * Override method untuk handle record tanpa primary key
-     */
     public function getTableRecordKey($record): string
     {
-        // Gunakan kombinasi bulan + min_id sebagai key yang unique
         if (isset($record->bulan) && !empty($record->bulan)) {
             $key = 'month_' . $record->bulan;
-            
-            // Tambahkan min_id untuk memastikan uniqueness
+
             if (isset($record->min_id) && !empty($record->min_id)) {
                 $key .= '_' . $record->min_id;
             }
-            
+
             return $key;
         }
-        
-        // Fallback emergency
+
         return uniqid('comparison_', true);
     }
 
     protected function getTableColumns(): array
     {
         return [
-            Tables\Columns\TextColumn::make('bulan')
-                ->label('Bulan'),
+            Tables\Columns\TextColumn::make('bulan')->label('Bulan'),
 
             Tables\Columns\TextColumn::make('total_masuk')
                 ->label('Barang Masuk')
@@ -66,3 +70,4 @@ class BarangComparisonTable extends BaseWidget
         ];
     }
 }
+

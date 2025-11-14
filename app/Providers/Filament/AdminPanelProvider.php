@@ -2,14 +2,15 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
 use Filament\Panel;
+use Filament\Navigation\MenuItem; // <- pastikan ini ada
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Assets\Css;
 use Filament\Widgets;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -18,37 +19,34 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        // Daftarkan CSS kamu secara manual
+        FilamentAsset::register([
+            Css::make('dashboard-theme', asset('css/dashboard-theme.css')),
+        ]);
+
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
-            ->authGuard('web') // gunakan guard web saja, jangan admin
-            ->login(false) // ✅ Nonaktifkan login bawaan Filament sepenuhnya
-            ->renderHook('panels::body.end', fn () => view('filament.qr-dialog')) // <— inject dialog
+            ->authGuard('web')
+            ->login(false)
+            ->brandName('SANDITEL Apps')
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-            // TARUH STAT OVERVIEW PALING AWAL = PALING ATAS DI DASHBOARD
-            \App\Filament\Widgets\StatsOverview::class,
-            \App\Filament\Widgets\BarangChart::class,
-
-            // opsional: tampilkan/hilangkan kartu akun
-            // Widgets\AccountWidget::class,
-
-            // HAPUS FilamentInfoWidget agar kartu “filament / docs / GitHub” tidak muncul
-            // Widgets\FilamentInfoWidget::class,
+                Widgets\AccountWidget::class,
+                Widgets\FilamentInfoWidget::class,
             ])
+            ->renderHook('panels::brand', fn () => view('components.sanditel-brand'))
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -61,7 +59,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                 \App\Http\Middleware\Authenticate::class, // gunakan middleware milik Laravel, bukan Filament
+                \Filament\Http\Middleware\Authenticate::class,
             ]);
     }
 }

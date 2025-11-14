@@ -1,18 +1,16 @@
 <x-filament::page>
     <div class="max-w-5xl mx-auto w-full">
 
-        {{-- Judul halaman --}}
-        <h1 class="text-xl font-semibold text-gray-800 mb-4">
-            Stock Opname
-        </h1>
-
         {{-- CARD UTAMA --}}
         <div class="bg-white border border-gray-300 rounded-md shadow-sm">
-            {{-- Header kecil di dalam card --}}
-            <div class="px-4 py-3 border-b border-gray-200">
-                <h2 class="text-sm font-semibold text-gray-800">
+            {{-- Header kecil di dalam card (di sini kita taruh judul) --}}
+            <div class="px-4 py-6 border-b border-gray-200 text-center">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
                     Stock Opname
-                </h2>
+                </h1>
+                <p class="text-sm text-gray-500 mt-2">
+                    Silakan scan barcode atau unggah QR code untuk melanjutkan
+                </p>
             </div>
 
             {{-- Bagian input scan --}}
@@ -30,39 +28,39 @@
 
                     {{-- tombol Scan Barcode & Unggah QR --}}
                     <div class="mt-3 md:mt-0 flex-shrink-0 flex gap-2">
-                    {{-- Tombol Scan Barcode / Cari --}}
-                    <x-filament::button
-                        wire:click="cariAset"
-                        color="primary"
-                        icon="heroicon-o-qr-code"
-                    >
-                        Check QR Code
-                    </x-filament::button>
-
-                    {{-- Upload QR: input file hidden + tombol hijau --}}
-                    <div x-data>
-                        {{-- input file tersembunyi --}}
-                        <input
-                            x-ref="qrInput"
-                            id="qrUpload"
-                            type="file"
-                            accept="image/*,application/pdf"
-                            class="hidden"
-                            wire:model="qrFile"
-                        />
-
-                        {{-- tombol hijau pakai style bawaan Filament --}}
+                        {{-- Tombol Scan Barcode / Cari --}}
                         <x-filament::button
-                            color="success"
-                            icon="heroicon-o-arrow-up-tray"
-                            x-on:click="$refs.qrInput.click()"
+                            wire:click="cariAset"
+                            color="primary"
+                            icon="heroicon-o-qr-code"
                         >
-                            Unggah QR Code
+                            Check QR Code
                         </x-filament::button>
+
+                        {{-- Upload QR: input file hidden + tombol hijau --}}
+                        <div x-data>
+                            {{-- input file tersembunyi --}}
+                            <input
+                                x-ref="qrInput"
+                                id="qrUpload"
+                                type="file"
+                                accept="image/*,application/pdf"
+                                class="hidden"
+                                wire:model="qrFile"
+                            />
+
+                            {{-- tombol hijau pakai style bawaan Filament --}}
+                            <x-filament::button
+                                color="success"
+                                icon="heroicon-o-arrow-up-tray"
+                                x-on:click="$refs.qrInput.click()"
+                            >
+                                Unggah QR Code
+                            </x-filament::button>
+                        </div>
                     </div>
                 </div>
-                </div>
-                
+
                 {{-- Tombol Scan Kamera (buka modal kamera)
                 <div class="flex justify-center">
                     <x-filament::button
@@ -149,15 +147,10 @@
                                                     </span>
                                                 </div>
 
-                                                {{-- catatan
-                                                <textarea
-                                                    wire:model.defer="catatan"
-                                                    rows="2"
-                                                    class="block w-full rounded border border-gray-300 text-[11px] leading-snug px-2 py-1 focus:border-primary-500 focus:ring-primary-500 resize-none"
-                                                    placeholder="Catatan (opsional)"
-                                                ></textarea>
+                                                {{-- catatan --}}
+                                                {{-- (jika nanti aktifkan textarea, pastikan comment blok dibuka) --}}
                                             </div>
-                                        </td> --}}
+                                        </td>
 
                                         {{-- Qty --}}
                                         <td class="px-4 py-3 align-top text-gray-700">
@@ -197,7 +190,7 @@
         </div> {{-- end outer card --}}
     </div> {{-- max-w --}}
 
-        {{-- === MODAL KAMERA QR === --}}
+    {{-- === MODAL KAMERA QR === --}}
     <div
         x-data="qrScannerComponent()"
         x-show="@js($showCameraModal)"
@@ -247,7 +240,7 @@
         </div>
     </div>
 
-        {{-- JS helper untuk scan QR dari kamera --}}
+    {{-- JS helper untuk scan QR dari kamera --}}
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 
     <script>
