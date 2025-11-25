@@ -1,51 +1,60 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Tanda Terima Barang Masuk</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Bukti Barang Masuk</title>
 
     <style>
+        @page {
+            size: A4 landscape;
+            margin: 0px;
+            /* FULL BLEED */
+        }
+
         body {
             font-family: DejaVu Sans, Arial, sans-serif;
             font-size: 12px;
-            margin: 25px;
+            margin: 10px 25px;
             line-height: 1.4;
         }
+
         .header-table {
             width: 100%;
             border-bottom: 2px solid #000;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
+            padding-bottom: 4px;
+            margin-bottom: 5px;
         }
+
         .header-table td {
-        vertical-align: middle; /* BIAR NGGAK TERBANG LAGI */
+            vertical-align: middle;
         }
 
         .logo-cell {
-        width: 120px;
-        padding-top: 2px;   /* TURUNKAN LOGO */
+            width: 120px;
+            padding-top: 2px;
         }
 
         .logo-img {
-        width: 110px; /* PERKECIL DIKIT BIAR MIRIP WORD */
+            width: 110px;
         }
 
         .gov-text {
-        text-align: center;
-        font-size: 14px;
-        line-height: 1.3;
-        padding-bottom: 10px;
-        padding-left: 20px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.1;
+            padding-bottom: 10px;
+            padding-left: 20px;
         }
 
         .gov-text .title1 {
-        font-size: 22px;
-        font-weight: bold;
+            font-size: 22px;
+            font-weight: bold;
         }
 
         .gov-text .title2 {
-        font-size: 28px;
-        font-weight: bold;
+            font-size: 28px;
+            font-weight: bold;
         }
 
         .title {
@@ -56,14 +65,19 @@
             margin-top: 10px;
         }
 
-        .doc-number { text-align: center; margin-bottom: 20px; }
+        .doc-number {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
         table.info {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
-        table.info th, table.info td {
+
+        table.info th,
+        table.info td {
             border: 1px solid #000;
             padding: 8px;
         }
@@ -74,114 +88,170 @@
             text-align: center;
         }
 
-        .page-break { page-break-after: always; }
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
+
 <body>
-<?php
+
+    <?php ob_start(); ?>
+    <!-- ========================= PAGE 1 START ========================= -->
+
+    <?php
     $days = [
-        'Sunday' => 'Minggu',
-        'Monday' => 'Senin',
-        'Tuesday' => 'Selasa',
-        'Wednesday' => 'Rabu',
-        'Thursday' => 'Kamis',
-        'Friday' => 'Jumat',
-        'Saturday' => 'Sabtu'
+    'Sunday' => 'Minggu',
+    'Monday' => 'Senin',
+    'Tuesday' => 'Selasa',
+    'Wednesday' => 'Rabu',
+    'Thursday' => 'Kamis',
+    'Friday' => 'Jumat',
+    'Saturday' => 'Sabtu'
     ];
 
     $months = [
-        'January'   => 'Januari',
-        'February'  => 'Februari',
-        'March'     => 'Maret',
-        'April'     => 'April',
-        'May'       => 'Mei',
-        'June'      => 'Juni',
-        'July'      => 'Juli',
-        'August'    => 'Agustus',
-        'September' => 'September',
-        'October'   => 'Oktober',
-        'November'  => 'November',
-        'December'  => 'Desember'
+    'January' => 'Januari',
+    'February' => 'Februari',
+    'March' => 'Maret',
+    'April' => 'April',
+    'May' => 'Mei',
+    'June' => 'Juni',
+    'July' => 'Juli',
+    'August' => 'Agustus',
+    'September' => 'September',
+    'October' => 'Oktober',
+    'November' => 'November',
+    'December' => 'Desember'
     ];
 
     $hari = $days[date('l')];
     $tanggal = date('d');
     $bulan = $months[date('F')];
     $tahun = date('Y');
-?>
+    ?>
 
-    <!-- HEADER -->
-<table class="header-table" style="width:100%; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:15px;">
-    <tr>
+    <table class="header-table" style="width:100%; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:15px;">
+        <tr>
+            <td class="logo-cell">
+                <img src="<?php echo e(public_path('logojawabarat.png')); ?>" class="logo-img">
+            </td>
 
-        <!-- LOGO – Sejajar tinggi dengan teks -->
-        <td class="logo-cell">
-            <img src="<?php echo e(public_path('logojawabarat.png')); ?>" class="logo-img">
-        </td>
-        <!-- TEKS HEADER -->
-        <td class="gov-text">
-            <div class="title1">PEMERINTAH PROVINSI JAWA BARAT</div>
-            <div class="title2">SEKRETARIAT DAERAH</div>
-            Jalan Diponegoro No.22 Telepon (022) 4232448 – 4233347 – 4230963<br>
-            Faksimili (022) 4203450 Web : www.jabarprov.go.id<br>
-            Email : info@jabarprov.go.id
-        </td>
-    </tr>
-</table>
+            <td class="gov-text">
+                <div class="title1">PEMERINTAH PROVINSI JAWA BARAT</div>
+                <div class="title2">SEKRETARIAT DAERAH</div>
+                Jalan Diponegoro No.22 Telepon (022) 4232448 – 4233347 – 4230963<br>
+                Faksimili (022) 4203450 Web : www.jabarprov.go.id<br>
+                Email : info@jabarprov.go.id
+            </td>
+        </tr>
+    </table>
 
 
     <div class="title">BUKTI BARANG MASUK</div>
 
     <div class="doc-number">
-        NO : .................. /  /PAMPMD/<?php echo e(date('Y')); ?>
+        NO :0<?php echo e($tanggal); ?>/020/PAMPMD/<?php echo e(date('Y')); ?>
 
     </div>
 
     <p>Pada hari ini <?php echo e($hari); ?> tanggal <?php echo e($tanggal); ?> bulan <?php echo e($bulan); ?> tahun <?php echo e($tahun); ?>.<br>
-    Telah diterima dari Bagian Rumah Tangga, Peralatan sebagai berikut:</p>
+        Telah diterima sebagai berikut:</p>
 
     <table class="info">
         <tr>
-            <th width="5%">No</th>
-            <th>Jenis Barang</th>
-            <th>Merk</th>
+            <th>No Transaksi</th>
+            <th>Nama Barang</th>
             <th>Jumlah</th>
-            <th>Keterangan</th>
+            <th>Tanggal Masuk</th>
         </tr>
         <tr>
-            <td>1</td>
+            <td><?php echo e($record->no_transaksi); ?></td>
             <td><?php echo e($record->barang->nama_barang); ?></td>
-            <td>-</td>
             <td><?php echo e(number_format($record->jumlah, 0, ',', '.')); ?> Unit</td>
-            <td>-</td>
+            <td><?php echo e($record->tanggal); ?></td>
         </tr>
     </table>
 
     <p>
-        Barang tersebut digunakan untuk : Pemasangan / Pergantian<br>
-        ......................................................................................................................................................<br>
-        Sebagai Barang Inventaris Milik Pemda Provinsi Jawa Barat.
+    Barang tersebut digunakan untuk : <?php echo e($keterangan); ?><br>
+    <?php echo e($deskripsi); ?><br>
+    Sebagai Barang Inventaris Milik Pemda Provinsi Jawa Barat.
     </p>
 
-    <table class="sign">
+
+    <table class="sign" style="width:100%;">
         <tr>
-            <td>Yang Menyerahkan:</td>
-            <td>Yang Menerima:</td>
+        <td style="width:60%;"></td>
+        <td style="text-align:center;">Yang Menerima:</td>
         </tr>
-        <tr><td height="80"></td><td></td></tr>
         <tr>
-            <td>( <?php echo e($record->user->name); ?> )</td>
-            <td>( ............................................. )</td>
+            <td height="80"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>(<?php echo e($record->user->name); ?>)</td>
         </tr>
     </table>
 
-    <div class="page-break"></div>
+    <!-- ========================= PAGE 1 END ========================= -->
+    <?php $page1 = ob_get_clean(); ?>
 
-    <h3>Lampiran Kegiatan:</h3>
-    <p><strong>Sebelum :</strong></p>
-    <br><br><br><br><br>
-    <p><strong>Sesudah :</strong></p>
+
+
+    <?php ob_start(); ?>
+    <!-- ========================= PAGE 2 START ========================= -->
+
+    <h3>Berikut kegiatannya  Lampirannya :</h3>
+
+    <table style="width:100%; border-collapse:collapse; margin-top:5px;">
+
+    <!-- BARIS 1: Sebelum - Sesudah -->
+    <tr>
+        <td style="width:50%; border:1px solid #000; height:200px; vertical-align:top; padding:5px;">
+            <strong>Sebelum :</strong>
+        </td>
+
+        <td style="width:50%; border:1px solid #000; height:200px; vertical-align:top; padding:5px;">
+            <strong>Sesudah :</strong>
+        </td>
+    </tr>
+
+    <!-- BARIS 2: Sebelum - Sesudah -->
+    <tr>
+        <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
+        <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
+    </tr>
+
+    </table>
+
+
+    <!-- ========================= PAGE 2 END ========================= -->
+    <?php $page2 = ob_get_clean(); ?>
+
+
+
+    <!-- ========================= MERGE 2 HALAMAN MENJADI 1 LANDSCAPE ========================= -->
+
+    <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+        <tr>
+            <!-- Page 1 lebih lebar: 55% -->
+            <td style="width:60%; vertical-align:top; padding-right:15px;">
+                <?php echo $page1; ?>
+
+            </td>
+
+            <!-- Page 2 sedikit lebih kecil: 45% -->
+            <td style="width:40%; vertical-align:top; padding-left:15px; padding-top:100px;">
+                <?php echo $page2; ?>
+
+            </td>
+        </tr>
+    </table>
+
+
 
 </body>
-</html>
-<?php /**PATH C:\xampp\htdocs\BackendInven\resources\views/pdf/barang-masuk-single.blade.php ENDPATH**/ ?>
+
+</html><?php /**PATH C:\xampp\htdocs\BackendInven\resources\views/pdf/barang-masuk-single.blade.php ENDPATH**/ ?>

@@ -111,7 +111,7 @@ class BarangMasukResource extends Resource
                     ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.') . ' unit'),
 
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('User')
+                    ->label('Petugas')
                     ->searchable()
                     ->sortable(),
 
@@ -143,16 +143,33 @@ class BarangMasukResource extends Resource
                     ->label('Cetak')
                     ->icon('heroicon-o-printer')
                     ->color('success')
-                    ->action(function (BarangMasuk $record) {
+                    ->form([
+                        Forms\Components\TextInput::make('ket_cetak')
+                            ->label('Barang digunakan untuk')
+                            ->placeholder('Pemasangan / Pergantian'),
+
+                        Forms\Components\Textarea::make('desk_cetak')
+                            ->label('Deskripsi Tambahan')
+                            ->placeholder('Masukan deskripsi...'),
+                    ])
+
+                    ->action(function (BarangMasuk $record, array $data) {
                         $pdf = Pdf::loadHTML(view('pdf.barang-masuk-single', [
                             'record' => $record,
-                        ]));
+                            'keterangan' => $data['ket_cetak'] ?? '',
+                            'deskripsi' => $data['desk_cetak'] ?? '',
+                        ]))
+                            ->setPaper('a4', 'landscape');
+
                         return response()->streamDownload(
                             fn() => print($pdf->output()),
                             "barang-masuk-{$record->no_transaksi}.pdf"
                         );
                     }),
+
             ])
+
+
 
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
