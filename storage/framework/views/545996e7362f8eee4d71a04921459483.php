@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Tanda Terima Barang Masuk</title>
+    <title>Tanda Terima Barang Keluar</title>
 
     <style>
         body {
@@ -78,7 +78,7 @@
     </style>
 </head>
 <body>
-@php
+<?php
     $days = [
         'Sunday' => 'Minggu',
         'Monday' => 'Senin',
@@ -108,15 +108,15 @@
     $tanggal = date('d');
     $bulan = $months[date('F')];
     $tahun = date('Y');
-@endphp
+?>
 
     <!-- HEADER -->
-<table class="header-table" style="width:100%; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:15px;">
+    <table class="header-table" style="width:100%; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:15px;">
     <tr>
 
         <!-- LOGO – Sejajar tinggi dengan teks -->
         <td class="logo-cell">
-            <img src="{{ public_path('logojawabarat.png') }}" class="logo-img">
+            <img src="<?php echo e(public_path('logojawabarat.png')); ?>" class="logo-img">
         </td>
         <!-- TEKS HEADER -->
         <td class="gov-text">
@@ -130,14 +130,15 @@
 </table>
 
 
-    <div class="title">BUKTI BARANG MASUK</div>
+    <div class="title">DATA BARANG KELUAR</div>
 
     <div class="doc-number">
-        NO : .................. /  /PAMPMD/{{ date('Y') }}
+        NO : .................. /  /PAMPMD/<?php echo e(date('Y')); ?>
+
     </div>
 
-    <p>Pada hari ini {{ $hari }} tanggal {{ $tanggal }} bulan {{ $bulan }} tahun {{ $tahun }}.<br>
-    Telah diterima dari Bagian Rumah Tangga, Peralatan sebagai berikut:</p>
+    <p>Pada hari ini <?php echo e($hari); ?> tanggal <?php echo e($tanggal); ?> bulan <?php echo e($bulan); ?> tahun <?php echo e($tahun); ?>.<br>
+    Telah diserahkan dengan rincian sebagai berikut:</p>
 
     <table class="info">
         <tr>
@@ -149,9 +150,9 @@
         </tr>
         <tr>
             <td>1</td>
-            <td>{{ $record->barang->nama_barang }}</td>
+            <td><?php echo e($nama_barang); ?></td>
             <td>-</td>
-            <td>{{ number_format($record->jumlah, 0, ',', '.') }} Unit</td>
+            <td><?php echo e($jumlah); ?></td>
             <td>-</td>
         </tr>
     </table>
@@ -169,7 +170,7 @@
         </tr>
         <tr><td height="80"></td><td></td></tr>
         <tr>
-            <td>( {{ $record->user->name }} )</td>
+            <td>( <?php echo e($petugas); ?> )</td>
             <td>( ............................................. )</td>
         </tr>
     </table>
@@ -178,8 +179,9 @@
 
     <h3>Lampiran Kegiatan:</h3>
     <p><strong>Sebelum :</strong></p>
-    <br><br><br><br><br>
+    <br><br><br><br>
     <p><strong>Sesudah :</strong></p>
 
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\BackendInven\resources\views/pdf/barang-keluar-single.blade.php ENDPATH**/ ?>

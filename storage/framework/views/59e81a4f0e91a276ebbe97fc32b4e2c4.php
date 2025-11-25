@@ -78,7 +78,7 @@
     </style>
 </head>
 <body>
-@php
+<?php
     $days = [
         'Sunday' => 'Minggu',
         'Monday' => 'Senin',
@@ -108,7 +108,7 @@
     $tanggal = date('d');
     $bulan = $months[date('F')];
     $tahun = date('Y');
-@endphp
+?>
 
     <!-- HEADER -->
 <table class="header-table" style="width:100%; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:15px;">
@@ -116,7 +116,7 @@
 
         <!-- LOGO – Sejajar tinggi dengan teks -->
         <td class="logo-cell">
-            <img src="{{ public_path('logojawabarat.png') }}" class="logo-img">
+            <img src="<?php echo e(public_path('logojawabarat.png')); ?>" class="logo-img">
         </td>
         <!-- TEKS HEADER -->
         <td class="gov-text">
@@ -133,10 +133,11 @@
     <div class="title">BUKTI BARANG MASUK</div>
 
     <div class="doc-number">
-        NO : .................. /  /PAMPMD/{{ date('Y') }}
+        NO : .................. /  /PAMPMD/<?php echo e(date('Y')); ?>
+
     </div>
 
-    <p>Pada hari ini {{ $hari }} tanggal {{ $tanggal }} bulan {{ $bulan }} tahun {{ $tahun }}.<br>
+    <p>Pada hari ini <?php echo e($hari); ?> tanggal <?php echo e($tanggal); ?> bulan <?php echo e($bulan); ?> tahun <?php echo e($tahun); ?>.<br>
     Telah diterima dari Bagian Rumah Tangga, Peralatan sebagai berikut:</p>
 
     <table class="info">
@@ -149,9 +150,9 @@
         </tr>
         <tr>
             <td>1</td>
-            <td>{{ $record->barang->nama_barang }}</td>
+            <td><?php echo e($record->barang->nama_barang); ?></td>
             <td>-</td>
-            <td>{{ number_format($record->jumlah, 0, ',', '.') }} Unit</td>
+            <td><?php echo e(number_format($record->jumlah, 0, ',', '.')); ?> Unit</td>
             <td>-</td>
         </tr>
     </table>
@@ -169,7 +170,7 @@
         </tr>
         <tr><td height="80"></td><td></td></tr>
         <tr>
-            <td>( {{ $record->user->name }} )</td>
+            <td>( <?php echo e($record->user->name); ?> )</td>
             <td>( ............................................. )</td>
         </tr>
     </table>
@@ -183,3 +184,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\BackendInven\resources\views/pdf/barang-masuk-single.blade.php ENDPATH**/ ?>

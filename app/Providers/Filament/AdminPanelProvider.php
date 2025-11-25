@@ -46,7 +46,7 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
-            ->renderHook('panels::brand', fn () => view('components.sanditel-brand'))
+            ->renderHook('panels::sidebar.brand', fn () => view('components.sanditel-brand'))
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

@@ -211,3 +211,19 @@ body:not(.stok-opname-page) .fi-header-heading {
     text-align: center !important;
     width: 100%;
 }
+
+/* Backdrop Filament V3 - full screen */
+.fi-modal-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    z-index: 9990 !important;
+}
+
+/* Modal container juga harus fixed biar ikut backdrop */
+.fi-modal {
+    position: fixed !important;
+    z-index: 9991 !important;
+}

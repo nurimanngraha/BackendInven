@@ -1,19 +1,18 @@
-@extends('layouts.auth')
+<?php $__env->startSection('title', 'Login - Sanditel Apps'); ?>
 
-@section('title', 'Login - Sanditel Apps')
-
-@section('content')
-<img src="{{ asset('images/sanditel-logo.png') }}" alt="Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
+<?php $__env->startSection('content'); ?>
+<img src="<?php echo e(asset('images/sanditel-logo.png')); ?>" alt="Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
 
 <h3 class="auth-title">Sanditel Apps</h3>
 <div class="auth-sub">Sistem terpadu manajemen & dokumentasi</div>
 
-    {{-- 🔔 Toast Notification (Benar-benar di tengah) --}}
-@if (session('success') || session('error'))
+    
+<?php if(session('success') || session('error')): ?>
 <div class="toast-container">
     <div id="toast"
-         class="toast-box {{ session('success') ? 'toast-success' : 'toast-error' }}">
-        {{ session('success') ?? session('error') }}
+         class="toast-box <?php echo e(session('success') ? 'toast-success' : 'toast-error'); ?>">
+        <?php echo e(session('success') ?? session('error')); ?>
+
     </div>
 </div>
 
@@ -35,11 +34,11 @@
         }
     });
 </script>
-@endif
+<?php endif; ?>
 
 <style>
     body {
-        background: url("{{ asset('images/gedung-sate.png') }}") no-repeat center center fixed;
+        background: url("<?php echo e(asset('images/gedung-sate.png')); ?>") no-repeat center center fixed;
         background-size: cover;
         background-attachment: fixed;
         font-family: 'Inter', sans-serif;
@@ -90,8 +89,8 @@
 </style>
 
 
-<form method="POST" action="{{ route('login') }}">
-  @csrf
+<form method="POST" action="<?php echo e(route('login')); ?>">
+  <?php echo csrf_field(); ?>
   <div class="mb-3">
     <label class="form-label">Email</label>
     <input type="text" name="email" class="form-control" placeholder="Email" required autofocus>
@@ -105,6 +104,8 @@
     <button class="btn btn-primary">→ Login</button>
   </div>
 
-  <a class="small-link" href="{{ route('password.request') }}">Lupa password?</a>
+  <a class="small-link" href="<?php echo e(route('password.request')); ?>">Lupa password?</a>
 </form>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.auth', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\BackendInven\resources\views/public/login.blade.php ENDPATH**/ ?>

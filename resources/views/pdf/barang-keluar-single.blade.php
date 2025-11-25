@@ -1,62 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Barang Keluar - {{ $no_transaksi }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Tanda Terima Barang Keluar</title>
+
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 20px;
+        body {
+            font-family: DejaVu Sans, Arial, sans-serif;
+            font-size: 12px;
+            margin: 25px;
+            line-height: 1.4;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+        .header-table {
+            width: 100%;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
         }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-bottom: 20px;
+        .header-table td {
+        vertical-align: middle; /* BIAR NGGAK TERBANG LAGI */
         }
-        th, td { 
-            border: 1px solid #000; 
-            padding: 12px; 
-            text-align: left; 
+
+        .logo-cell {
+        width: 120px;
+        padding-top: 2px;   /* TURUNKAN LOGO */
         }
-        th { 
-            background-color: #f2f2f2; 
+
+        .logo-img {
+        width: 110px; /* PERKECIL DIKIT BIAR MIRIP WORD */
+        }
+
+        .gov-text {
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.3;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        }
+
+        .gov-text .title1 {
+        font-size: 22px;
+        font-weight: bold;
+        }
+
+        .gov-text .title2 {
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+        .title {
+            font-size: 18px;
             font-weight: bold;
+            text-align: center;
+            text-decoration: underline;
+            margin-top: 10px;
         }
+
+        .doc-number { text-align: center; margin-bottom: 20px; }
+
+        table.info {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table.info th, table.info td {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+        table.sign {
+            width: 100%;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .page-break { page-break-after: always; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>DATA BARANG KELUAR</h2>
+@php
+    $days = [
+        'Sunday' => 'Minggu',
+        'Monday' => 'Senin',
+        'Tuesday' => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday' => 'Kamis',
+        'Friday' => 'Jumat',
+        'Saturday' => 'Sabtu'
+    ];
+
+    $months = [
+        'January'   => 'Januari',
+        'February'  => 'Februari',
+        'March'     => 'Maret',
+        'April'     => 'April',
+        'May'       => 'Mei',
+        'June'      => 'Juni',
+        'July'      => 'Juli',
+        'August'    => 'Agustus',
+        'September' => 'September',
+        'October'   => 'Oktober',
+        'November'  => 'November',
+        'December'  => 'Desember'
+    ];
+
+    $hari = $days[date('l')];
+    $tanggal = date('d');
+    $bulan = $months[date('F')];
+    $tahun = date('Y');
+@endphp
+
+    <!-- HEADER -->
+    <table class="header-table" style="width:100%; border-bottom:2px solid #000; padding-bottom:5px; margin-bottom:15px;">
+    <tr>
+
+        <!-- LOGO – Sejajar tinggi dengan teks -->
+        <td class="logo-cell">
+            <img src="{{ public_path('logojawabarat.png') }}" class="logo-img">
+        </td>
+        <!-- TEKS HEADER -->
+        <td class="gov-text">
+            <div class="title1">PEMERINTAH PROVINSI JAWA BARAT</div>
+            <div class="title2">SEKRETARIAT DAERAH</div>
+            Jalan Diponegoro No.22 Telepon (022) 4232448 – 4233347 – 4230963<br>
+            Faksimili (022) 4203450 Web : www.jabarprov.go.id<br>
+            Email : info@jabarprov.go.id
+        </td>
+    </tr>
+</table>
+
+
+    <div class="title">DATA BARANG KELUAR</div>
+
+    <div class="doc-number">
+        NO : .................. /  /PAMPMD/{{ date('Y') }}
     </div>
-    
-    <table>
+
+    <p>Pada hari ini {{ $hari }} tanggal {{ $tanggal }} bulan {{ $bulan }} tahun {{ $tahun }}.<br>
+    Telah diserahkan dengan rincian sebagai berikut:</p>
+
+    <table class="info">
         <tr>
-            <th width="30%">No Transaksi</th>
-            <td>{{ $no_transaksi }}</td>
-        </tr>
-        <tr>
-            <th>Tgl Keluar</th>
-            <td>{{ $tanggal_keluar }}</td>
-        </tr>
-        <tr>
-            <th>Nama Barang</th>
-            <td>{{ $nama_barang }}</td>
-        </tr>
-        <tr>
+            <th width="5%">No</th>
+            <th>Jenis Barang</th>
+            <th>Merk</th>
             <th>Jumlah</th>
+            <th>Keterangan</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>{{ $nama_barang }}</td>
+            <td>-</td>
             <td>{{ $jumlah }}</td>
-        </tr>
-        <tr>
-            <th>Bagian</th>
-            <td>{{ $bagian }}</td>
-        </tr>
-        <tr>
-            <th>Petugas</th>
-            <td>{{ $petugas }}</td>
+            <td>-</td>
         </tr>
     </table>
+
+    <p>
+        Barang tersebut digunakan untuk : Pemasangan / Pergantian<br>
+        ......................................................................................................................................................<br>
+        Sebagai Barang Inventaris Milik Pemda Provinsi Jawa Barat.
+    </p>
+
+    <table class="sign">
+        <tr>
+            <td>Yang Menyerahkan:</td>
+            <td>Yang Menerima:</td>
+        </tr>
+        <tr><td height="80"></td><td></td></tr>
+        <tr>
+            <td>( {{ $petugas }} )</td>
+            <td>( ............................................. )</td>
+        </tr>
+    </table>
+
+    <div class="page-break"></div>
+
+    <h3>Lampiran Kegiatan:</h3>
+    <p><strong>Sebelum :</strong></p>
+    <br><br><br><br>
+    <p><strong>Sesudah :</strong></p>
+
 </body>
 </html>
