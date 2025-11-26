@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title','Reset Password - Sanditel Apps')
+@section('title','Reset Password - SIMBAS')
 
 @section('content')
 

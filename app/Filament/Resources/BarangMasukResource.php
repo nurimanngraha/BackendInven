@@ -146,20 +146,76 @@ class BarangMasukResource extends Resource
                     ->form([
                         Forms\Components\TextInput::make('ket_cetak')
                             ->label('Barang digunakan untuk')
-                            ->placeholder('Pemasangan / Pergantian'),
+                            ->placeholder('Pemasangan / Pergantian / Pemeliharaan'),
 
                         Forms\Components\Textarea::make('desk_cetak')
                             ->label('Deskripsi Tambahan')
                             ->placeholder('Masukan deskripsi...'),
+
+                        Forms\Components\FileUpload::make('foto_sebelum')
+                            ->label('Foto Sebelum')
+                            ->directory('lampiran-barang-masuk')
+                            ->image()
+                            ->preserveFilenames(),
+
+                        Forms\Components\FileUpload::make('foto_sesudah')
+                            ->label('Foto Sesudah')
+                            ->directory('lampiran-barang-masuk')
+                            ->image()
+                            ->preserveFilenames(),
+
+                        Forms\Components\FileUpload::make('foto_sebelum_2')
+                            ->label('Foto Sebelum (Tambahan)')
+                            ->directory('lampiran-barang-keluar')
+                            ->image()
+                            ->preserveFilenames(),
+
+                        Forms\Components\FileUpload::make('foto_sesudah_2')
+                            ->label('Foto Sesudah (Tambahan)')
+                            ->directory('lampiran-barang-keluar')
+                            ->image()
+                            ->preserveFilenames(),
+
                     ])
 
                     ->action(function (BarangMasuk $record, array $data) {
-                        $pdf = Pdf::loadHTML(view('pdf.barang-masuk-single', [
-                            'record' => $record,
-                            'keterangan' => $data['ket_cetak'] ?? '',
-                            'deskripsi' => $data['desk_cetak'] ?? '',
-                        ]))
-                            ->setPaper('a4', 'landscape');
+
+                        // Resolver FILE PATH ABSOLUT
+                        $resolve = function ($value) {
+
+                            if (!$value) return null;
+
+                            if (is_array($value) && isset($value[0]['path'])) {
+                                $path = storage_path('app/public/' . $value[0]['path']);
+                            } elseif (is_array($value) && isset($value['path'])) {
+                                $path = storage_path('app/public/' . $value['path']);
+                            } elseif (is_string($value)) {
+                                $path = storage_path('app/public/' . $value);
+                            } else {
+                                return null;
+                            }
+
+                            $path = realpath($path);
+
+                            if (!$path || !file_exists($path)) return null;
+
+                            return $path;
+                        };
+
+                        $fotoSebelum = $resolve($data['foto_sebelum'] ?? null);
+                        $fotoSesudah = $resolve($data['foto_sesudah'] ?? null);
+                        $fotoSebelum2 = $resolve($data['foto_sebelum_2'] ?? null);
+                        $fotoSesudah2 = $resolve($data['foto_sesudah_2'] ?? null);
+
+                        $pdf = Pdf::loadView('pdf.barang-masuk-single', [
+                            'record'        => $record,
+                            'keterangan'    => $data['ket_cetak'] ?? '',
+                            'deskripsi'     => $data['desk_cetak'] ?? '',
+                            'foto_sebelum'  => $fotoSebelum,
+                            'foto_sesudah'  => $fotoSesudah,
+                            'foto_sebelum_2' => $fotoSebelum2,
+                            'foto_sesudah_2' => $fotoSesudah2,
+                        ])->setPaper('a4', 'landscape');
 
                         return response()->streamDownload(
                             fn() => print($pdf->output()),

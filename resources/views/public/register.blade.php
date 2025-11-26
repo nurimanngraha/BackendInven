@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Register - Sanditel Apps')
+@section('title', 'Register - SIMBAS')
 
 @section('content')
 
@@ -8,7 +8,7 @@
      style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
 
 <h3 class="auth-title">Sign Up</h3>
-<div class="auth-sub">Buat akun untuk mengakses Sanditel Apps</div>
+<div class="auth-sub">Buat akun untuk mengakses SIMBAS</div>
 
 {{-- 🔔 Alert Notifikasi (Opsi 1 - Tanpa animasi, langsung tampil di bawah subtitle) --}}
 @if (session('success'))

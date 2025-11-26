@@ -31,11 +31,12 @@ class AdminPanelProvider extends PanelProvider
 
         return $panel
             ->default()
+            ->darkMode(false)
             ->id('admin')
             ->path('admin')
             ->authGuard('web')
             ->login(false)
-            ->brandName('SANDITEL Apps')
+            ->brandName('SIMBAS')
             ->colors([
                 'primary' => Color::Amber,
             ])

@@ -174,16 +174,16 @@
     </table>
 
     <p>
-    Barang tersebut digunakan untuk : <?php echo e($keterangan); ?><br>
-    <?php echo e($deskripsi); ?><br>
-    Sebagai Barang Inventaris Milik Pemda Provinsi Jawa Barat.
+        Barang tersebut digunakan untuk : <?php echo e($keterangan); ?><br>
+        <?php echo e($deskripsi); ?><br>
+        Sebagai Barang Inventaris Milik Pemda Provinsi Jawa Barat.
     </p>
 
 
     <table class="sign" style="width:100%;">
         <tr>
-        <td style="width:60%;"></td>
-        <td style="text-align:center;">Yang Menerima:</td>
+            <td style="width:60%;"></td>
+            <td style="text-align:center;">Yang Menerima:</td>
         </tr>
         <tr>
             <td height="80"></td>
@@ -203,26 +203,47 @@
     <?php ob_start(); ?>
     <!-- ========================= PAGE 2 START ========================= -->
 
-    <h3>Berikut kegiatannya  Lampirannya :</h3>
+    <h3>Berikut kegiatannya Lampirannya :</h3>
 
     <table style="width:100%; border-collapse:collapse; margin-top:5px;">
 
-    <!-- BARIS 1: Sebelum - Sesudah -->
-    <tr>
-        <td style="width:50%; border:1px solid #000; height:200px; vertical-align:top; padding:5px;">
-            <strong>Sebelum :</strong>
-        </td>
+        <!-- BARIS 1: Sebelum - Sesudah -->
+        <!-- BARIS 1 -->
+        <tr>
+            <td style="border:1px solid #000; padding:5px;">
+                <strong></strong><br>
+                <?php if($foto_sebelum): ?>
+                <img src="file://<?php echo e($foto_sebelum); ?>" style="width:100%; height:180px; object-fit:cover;">
+                <?php endif; ?>
+            </td>
 
-        <td style="width:50%; border:1px solid #000; height:200px; vertical-align:top; padding:5px;">
-            <strong>Sesudah :</strong>
-        </td>
-    </tr>
+            <td style="border:1px solid #000; padding:5px;">
+                <strong></strong><br>
+                <?php if($foto_sesudah): ?>
+                <img src="file://<?php echo e($foto_sesudah); ?>" style="width:100%; height:180px; object-fit:cover;">
+                <?php endif; ?>
+            </td>
+        </tr>
 
-    <!-- BARIS 2: Sebelum - Sesudah -->
-    <tr>
-        <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
-        <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
-    </tr>
+
+        <!-- BARIS 2: Sebelum - Sesudah -->
+        <tr>
+            <td style="border:1px solid #000; height:200px; padding:5px;">
+                <strong></strong><br>
+
+                <?php if($foto_sebelum_2): ?>
+                <img src="file://<?php echo e($foto_sebelum_2); ?>" style="width:100%; height:180px; object-fit:cover;">
+                <?php endif; ?>
+            </td>
+
+            <td style="border:1px solid #000; height:200px; padding:5px;">
+                <strong></strong><br>
+
+                <?php if($foto_sesudah_2): ?>
+                <img src="file://<?php echo e($foto_sesudah_2); ?>" style="width:100%; height:180px; object-fit:cover;">
+                <?php endif; ?>
+            </td>
+        </tr>
 
     </table>
 

@@ -189,45 +189,63 @@ class BarangKeluarResource extends Resource
                             ->directory('lampiran-barang-keluar')
                             ->image()
                             ->preserveFilenames(),
+
+                        Forms\Components\FileUpload::make('foto_sebelum_2')
+                            ->label('Foto Sebelum (Tambahan)')
+                            ->directory('lampiran-barang-keluar')
+                            ->image()
+                            ->preserveFilenames(),
+
+                        Forms\Components\FileUpload::make('foto_sesudah_2')
+                            ->label('Foto Sesudah (Tambahan)')
+                            ->directory('lampiran-barang-keluar')
+                            ->image()
+                            ->preserveFilenames(),
+
                     ])
 
                     ->action(function (BarangKeluar $record, array $data) {
 
-                        // -----------------------------------------
-                        //  FIX FOTO → AUTO BASE64 (100% MUNCUL DI PDF)
-                        // -----------------------------------------
-                        $encode = function ($value) {
-                            // Jika tidak ada file
+                        // =====================================================
+                        //  FIX FOTO UNTUK DOMPDF → PAKAI FILE PATH ABSOLUT
+                        // =====================================================
+                        $resolve = function ($value) {
+
                             if (!$value) return null;
 
-                            // Jika array [0]['path']
+                            // Format Filament 1: [0]['path']
                             if (is_array($value) && isset($value[0]['path'])) {
-                                $path = public_path('storage/' . $value[0]['path']);
+                                $path = storage_path('app/public/' . $value[0]['path']);
                             }
-                            // Jika array ['path']
+                            // Format Filament 2: ['path']
                             elseif (is_array($value) && isset($value['path'])) {
-                                $path = public_path('storage/' . $value['path']);
+                                $path = storage_path('app/public/' . $value['path']);
                             }
-                            // Jika string
+                            // Format string biasa
                             elseif (is_string($value)) {
-                                $path = public_path('storage/' . $value);
+                                $path = storage_path('app/public/' . $value);
                             } else {
                                 return null;
                             }
 
-                            // Jika file tidak ditemukan
-                            if (!file_exists($path)) return null;
+                            // Ubah ke absolute realpath
+                            $path = realpath($path);
 
-                            // Konversi ke Base64 agar DomPDF bisa membaca
-                            $type = pathinfo($path, PATHINFO_EXTENSION);
-                            $data = file_get_contents($path);
+                            // File tidak ada → return null
+                            if (!$path || !file_exists($path)) {
+                                return null;
+                            }
 
-                            return "data:image/{$type};base64," . base64_encode($data);
+                            return $path; // DomPDF sangat stabil dengan path absolut ini
                         };
 
-                        // Encode foto
-                        $fotoSebelum = $encode($data['foto_sebelum'] ?? null);
-                        $fotoSesudah = $encode($data['foto_sesudah'] ?? null);
+                        // Ambil & konversi foto
+                        $fotoSebelum = $resolve($data['foto_sebelum'] ?? null);
+                        $fotoSesudah = $resolve($data['foto_sesudah'] ?? null);
+                        $fotoSebelum2 = $resolve($data['foto_sebelum_2'] ?? null);
+                        $fotoSesudah2 = $resolve($data['foto_sesudah_2'] ?? null);
+
+
 
                         // Normalisasi tanggal
                         $tanggal_keluar = is_string($record->tanggal_keluar)
@@ -245,11 +263,14 @@ class BarangKeluarResource extends Resource
                             'petugas'        => $record->petugas,
                             'kategori'       => $record->barangMasuk->kategori ?? '-',
 
-                            // Tambahan form
+                            // Tambahan dari form
                             'keterangan'     => $data['keterangan'] ?? '',
                             'deskripsi'      => $data['deskripsi'] ?? '',
                             'foto_sebelum'   => $fotoSebelum,
                             'foto_sesudah'   => $fotoSesudah,
+                            'foto_sebelum_2' => $fotoSebelum2,
+                            'foto_sesudah_2' => $fotoSesudah2,
+
                         ];
 
                         // Generate PDF
@@ -260,7 +281,9 @@ class BarangKeluarResource extends Resource
                             fn() => print($pdf->output()),
                             "barang-keluar-{$record->no_transaksi}.pdf"
                         );
-                    }),
+                    })
+
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

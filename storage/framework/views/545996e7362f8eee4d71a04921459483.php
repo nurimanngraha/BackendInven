@@ -218,9 +218,7 @@
                 <strong>Sebelum :</strong><br>
 
                 <?php if($foto_sebelum): ?>
-                <img src="<?php echo e($foto_sebelum); ?>" style="width: 300px;">
-                <?php else: ?>
-                <div style="width:100%; height:180px; border:1px solid #555;"></div>
+                <img src="file://<?php echo e($foto_sebelum); ?>" style="width:100%; height:180px; object-fit:cover;">
                 <?php endif; ?>
             </td>
 
@@ -228,20 +226,29 @@
                 <strong>Sesudah :</strong><br>
 
                 <?php if($foto_sesudah): ?>
-                <img src="<?php echo e($foto_sesudah); ?>" style="width:100%; height:180px; object-fit:cover;">
-                <?php else: ?>
-                <div style="width:100%; height:180px; border:1px solid #555;"></div>
+                <img src="file://<?php echo e($foto_sesudah); ?>" style="width:100%; height:180px; object-fit:cover;">
                 <?php endif; ?>
             </td>
-
         </tr>
 
         <!-- BARIS 2: Sebelum - Sesudah -->
         <tr>
-            <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
-            <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
-        </tr>
+            <td style="border:1px solid #000; height:200px; padding:5px;">
+                <strong>Sebelum :</strong><br>
 
+                <?php if($foto_sebelum_2): ?>
+                <img src="file://<?php echo e($foto_sebelum_2); ?>" style="width:100%; height:180px; object-fit:cover;">
+                <?php endif; ?>
+            </td>
+
+            <td style="border:1px solid #000; height:200px; padding:5px;">
+                <strong>Sesudah :</strong><br>
+
+                <?php if($foto_sesudah_2): ?>
+                <img src="file://<?php echo e($foto_sesudah_2); ?>" style="width:100%; height:180px; object-fit:cover;">
+                <?php endif; ?>
+            </td>
+        </tr>
     </table>
 
     <!-- ========================= PAGE 2 END ========================= -->

@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title','Forgot Password - Sanditel Apps')
+@section('title','Forgot Password - SIMBAS')
 
 @section('content')
 <img src="{{ asset('images/sanditel-logo.png') }}" alt="Logo" 

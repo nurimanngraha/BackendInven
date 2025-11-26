@@ -217,9 +217,7 @@
                 <strong>Sebelum :</strong><br>
 
                 @if($foto_sebelum)
-                <img src="{{ $foto_sebelum }}" style="width: 300px;">
-                @else
-                <div style="width:100%; height:180px; border:1px solid #555;"></div>
+                <img src="file://{{ $foto_sebelum }}" style="width:100%; height:180px; object-fit:cover;">
                 @endif
             </td>
 
@@ -227,20 +225,29 @@
                 <strong>Sesudah :</strong><br>
 
                 @if($foto_sesudah)
-                <img src="{{ $foto_sesudah }}" style="width:100%; height:180px; object-fit:cover;">
-                @else
-                <div style="width:100%; height:180px; border:1px solid #555;"></div>
+                <img src="file://{{ $foto_sesudah }}" style="width:100%; height:180px; object-fit:cover;">
                 @endif
             </td>
-
         </tr>
 
         <!-- BARIS 2: Sebelum - Sesudah -->
         <tr>
-            <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
-            <td style="width:50%; border:1px solid #000; height:200px; padding:5px;"></td>
-        </tr>
+            <td style="border:1px solid #000; height:200px; padding:5px;">
+                <strong>Sebelum :</strong><br>
 
+                @if($foto_sebelum_2)
+                <img src="file://{{$foto_sebelum_2}}" style="width:100%; height:180px; object-fit:cover;">
+                @endif
+            </td>
+
+            <td style="border:1px solid #000; height:200px; padding:5px;">
+                <strong>Sesudah :</strong><br>
+
+                @if($foto_sesudah_2)
+                <img src="file://{{$foto_sesudah_2}}" style="width:100%; height:180px; object-fit:cover;">
+                @endif
+            </td>
+        </tr>
     </table>
 
     <!-- ========================= PAGE 2 END ========================= -->

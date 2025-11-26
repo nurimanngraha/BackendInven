@@ -1,10 +1,10 @@
-<?php $__env->startSection('title', 'Login - Sanditel Apps'); ?>
+<?php $__env->startSection('title', 'Login - SIMBAS'); ?>
 
 <?php $__env->startSection('content'); ?>
 <img src="<?php echo e(asset('images/sanditel-logo.png')); ?>" alt="Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
 
-<h3 class="auth-title">Sanditel Apps</h3>
-<div class="auth-sub">Sistem terpadu manajemen & dokumentasi</div>
+<h3 class="auth-title">SIMBAS</h3>
+<div class="auth-sub">Sistem Informasi Manajemen Barang Sanditel</div>
 
     
 <?php if(session('success') || session('error')): ?>
