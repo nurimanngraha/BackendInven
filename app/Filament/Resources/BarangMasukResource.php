@@ -230,20 +230,20 @@ class BarangMasukResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
 
-                Tables\Actions\BulkAction::make('print')
-                    ->label('Cetak Terpilih')
-                    ->icon('heroicon-o-printer')
-                    ->color('success')
-                    ->action(function (Collection $records) {
-                        $pdf = Pdf::loadHTML(view('pdf.barang-masuk-bulk', [
-                            'records' => $records,
-                            'tanggal' => now()->format('d F Y'),
-                        ]));
-                        return response()->streamDownload(
-                            fn() => print($pdf->output()),
-                            'laporan-barang-masuk.pdf'
-                        );
-                    }),
+                // Tables\Actions\BulkAction::make('print')
+                //     ->label('Cetak Terpilih')
+                //     ->icon('heroicon-o-printer')
+                //     ->color('success')
+                //     ->action(function (Collection $records) {
+                //         $pdf = Pdf::loadHTML(view('pdf.barang-masuk-bulk', [
+                //             'records' => $records,
+                //             'tanggal' => now()->format('d F Y'),
+                //         ]));
+                //         return response()->streamDownload(
+                //             fn() => print($pdf->output()),
+                //             'laporan-barang-masuk.pdf'
+                //         );
+                //     }),
             ])
 
             ->emptyStateActions([

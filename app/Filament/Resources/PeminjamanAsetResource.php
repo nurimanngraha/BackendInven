@@ -108,6 +108,7 @@ class PeminjamanAsetResource extends Resource
                     ])),
             ])
             ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
                 Tables\Actions\BulkAction::make('kembalikan')
                     ->label('Kembalikan')
                     ->icon('heroicon-o-arrow-uturn-left')

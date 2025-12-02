@@ -29,3 +29,57 @@ html, body {
   width: 100% !important;
 }
 
+/* ============================================
+   FIX RESPONSIVE FILAMENT UNTUK ANDROID & MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+
+    /* Perbaiki lebar layout biar tidak melar */
+    .fi-layout,
+    .fi-main,
+    body,
+    html {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Hapus max-width yang bikin ke-cut */
+    .fi-main {
+        padding: 1rem !important; /* padding kecil biar muat */
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Widget statistik jadi 1 kolom */
+    .fi-wi-stats-overview {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Semua card agar full width */
+    .fi-wi-stats-overview-stat,
+    .fi-wi-chart,
+    .fi-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 1rem 0 !important;
+    }
+
+    /* Topbar rapat & tidak overflow */
+    .fi-topbar {
+        padding: 0.5rem 1rem !important;
+    }
+
+    /* Perbaiki dropdown user agar tidak mental keluar */
+    .fi-dropdown-panel {
+        right: 0 !important;
+        left: auto !important;
+        width: 180px !important;
+    }
+
+    /* Sidebar agar penuh dan tidak overlap */
+    .fi-sidebar {
+        width: 220px !important;
+    }
+
+}

@@ -286,46 +286,46 @@ class BarangKeluarResource extends Resource
 
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+                // Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
 
-                    Tables\Actions\BulkAction::make('print')
-                        ->label('Cetak Selected')
-                        ->icon('heroicon-o-printer')
-                        ->action(function (Collection $records) {
+                //     Tables\Actions\BulkAction::make('print')
+                //         ->label('Cetak Selected')
+                //         ->icon('heroicon-o-printer')
+                //         ->action(function (Collection $records) {
 
-                            $totalKeluar = $records->sum('jumlah');
+                //             $totalKeluar = $records->sum('jumlah');
 
-                            $data = [
-                                'records' => $records->map(function ($record) {
+                //             $data = [
+                //                 'records' => $records->map(function ($record) {
 
-                                    $tanggal_keluar = is_string($record->tanggal_keluar)
-                                        ? \Carbon\Carbon::parse($record->tanggal_keluar)->format('Y-m-d')
-                                        : $record->tanggal_keluar->format('Y-m-d');
+                //                     $tanggal_keluar = is_string($record->tanggal_keluar)
+                //                         ? \Carbon\Carbon::parse($record->tanggal_keluar)->format('Y-m-d')
+                //                         : $record->tanggal_keluar->format('Y-m-d');
 
-                                    return [
-                                        'no_transaksi'   => $record->no_transaksi,
-                                        'tanggal_keluar' => $tanggal_keluar,
-                                        'nama_barang'    => $record->barang->nama_barang,
-                                        'jumlah'         => number_format($record->jumlah, 0, ',', '.') . ' ' . ($record->barang->satuan ?? 'Unit'),
-                                        'penerima'       => $record->penerima,
-                                        'bagian'         => $record->bagian,
-                                        'petugas'        => $record->petugas,
-                                        'kategori'       => $record->barangMasuk->kategori ?? '-',
-                                    ];
-                                }),
-                                'total_keluar' => number_format($totalKeluar, 0, ',', '.') . ' Unit',
-                                'tanggal_cetak' => now()->format('Y-m-d H:i'),
-                            ];
+                //                     return [
+                //                         'no_transaksi'   => $record->no_transaksi,
+                //                         'tanggal_keluar' => $tanggal_keluar,
+                //                         'nama_barang'    => $record->barang->nama_barang,
+                //                         'jumlah'         => number_format($record->jumlah, 0, ',', '.') . ' ' . ($record->barang->satuan ?? 'Unit'),
+                //                         'penerima'       => $record->penerima,
+                //                         'bagian'         => $record->bagian,
+                //                         'petugas'        => $record->petugas,
+                //                         'kategori'       => $record->barangMasuk->kategori ?? '-',
+                //                     ];
+                //                 }),
+                //                 'total_keluar' => number_format($totalKeluar, 0, ',', '.') . ' Unit',
+                //                 'tanggal_cetak' => now()->format('Y-m-d H:i'),
+                //             ];
 
-                            $pdf = Pdf::loadView('pdf.barang-keluar-bulk', $data);
+                //             $pdf = Pdf::loadView('pdf.barang-keluar-bulk', $data);
 
-                            return response()->streamDownload(
-                                fn() => print($pdf->output()),
-                                'laporan-barang-keluar.pdf'
-                            );
-                        }),
-                ]),
+                //             return response()->streamDownload(
+                //                 fn() => print($pdf->output()),
+                //                 'laporan-barang-keluar.pdf'
+                //             );
+                //         }),
+                // ]),
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
