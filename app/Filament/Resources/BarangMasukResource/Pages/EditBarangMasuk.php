@@ -16,4 +16,9 @@ class EditBarangMasuk extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        // Setelah create, balik ke halaman list/index
+        return static::getResource()::getUrl('index');
+        }
 }

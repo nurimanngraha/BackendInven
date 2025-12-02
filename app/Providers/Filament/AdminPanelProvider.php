@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use Filament\Panel;
-use Filament\Navigation\MenuItem; // <- pastikan ini ada
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentAsset;
@@ -35,8 +34,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('web')
-            ->login(false)
-            ->brandName('SIMBAS')
+            ->login()
+            ->brandName('SIBANGSAT')
             ->colors([
                 'primary' => Color::Amber,
             ])

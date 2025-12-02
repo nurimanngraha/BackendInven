@@ -26,15 +26,6 @@ class PublicAuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             // ✅ Regenerasi & simpan session segera
             $request->session()->regenerate();
-            $request->session()->save();
-
-            // ✅ Sinkronkan sesi Filament (tanpa duplikasi)
-            if (class_exists(\Filament\Facades\Filament::class)) {
-                $user = Auth::user();
-                if ($user && !$user->wasRecentlyCreated) {
-                    \Filament\Facades\Filament::auth()->login($user);
-                }
-            }
 
             // ✅ Langsung ke dashboard
             return redirect()->intended('/admin');
@@ -72,12 +63,19 @@ class PublicAuthController extends Controller
             Log::error('Gagal mengirim email registrasi: ' . $e->getMessage());
         }
 
-        // ✅ Regenerasi dan simpan session (mencegah sisa session lama)
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        Auth::logout();
-
         // ✅ Arahkan ke login (tidak langsung masuk dashboard)
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login terlebih dahulu.');
     }
+
+    // ====== LOGOUT TAMBAHAN (FIX TANPA MENGGANGGU LOGIC LAIN) ======
+    public function logout(Request $request)
+{
+    Auth::logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/login');
+}
+
 }

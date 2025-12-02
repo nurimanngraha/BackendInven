@@ -34,7 +34,10 @@ class BarangKeluar extends Model
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
     }
-
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     /**
      * Auto generate No Transaksi
      * Format: T-BK-YYMMDD0001

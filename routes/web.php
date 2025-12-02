@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicAuthController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -20,15 +19,24 @@ Route::get('/login', [PublicAuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [PublicAuthController::class, 'login'])->name('login.post');
 Route::get('/register', [PublicAuthController::class, 'showRegister'])->name('register.form');
 Route::post('/register', [PublicAuthController::class, 'register'])->name('register.store');
+Route::post('/logout', function () {
+    Auth::guard('web')->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
 
 Route::post('/admin/logout', function () {
     Auth::guard('web')->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
     return redirect('/login');
 })->name('filament.admin.auth.logout');
 
 Route::any('/admin/login', function () {
     return redirect('/login');
 });
+
 
 
 // ========== ROOT TEST ==========
@@ -59,19 +67,3 @@ Route::get('/admin/asets/{aset}/print-direct', [AsetPrintController::class, 'sho
 Route::get('/admin/asets/print-current', [AsetPrintController::class, 'preview'])
     ->name('assets.print')
     ->middleware(['auth']);
-
-
-
-// ========== TEST KIRIM EMAIL ==========
-Route::get('/test-mail', function () {
-    try {
-        Mail::raw('Ini adalah email percobaan dari Laravel!', function ($message) {
-            $message->to('dihsan1818@gmail.com') // ⬅️ Ganti dengan email kamu
-                    ->subject('Tes Kirim Email Laravel');
-        });
-
-        return '✅ Email berhasil dikirim. Cek inbox (atau folder spam).';
-    } catch (\Exception $e) {
-        return '❌ Gagal mengirim email: ' . $e->getMessage();
-    }
-});

@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Register - SIMBAS')
+@section('title', 'Register - SIBANGSAT')
 
 @section('content')
 

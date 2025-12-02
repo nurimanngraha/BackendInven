@@ -85,16 +85,16 @@ class BarangKeluarResource extends Resource
                             ->placeholder('Masukkan bagian penerima'),
                     ]),
 
-                Forms\Components\Section::make('Petugas')
-                    ->schema([
-                        Forms\Components\TextInput::make('petugas')
-                            ->label('Petugas')
-                            ->required()
-                            ->maxLength(255)
-                            ->default(auth()->user()->name ?? 'Administrator')
-                            ->columnSpanFull()
-                            ->placeholder('Masukkan nama petugas'),
-                    ]),
+               Forms\Components\Section::make('Informasi User')
+                ->schema([
+                    Forms\Components\Select::make('user_id')
+                        ->label('User')
+                        ->relationship('user', 'name')
+                        ->default(fn() => auth()->id())
+                        ->searchable()
+                        ->required()
+                        ->columnSpanFull(),
+                ]),
             ]);
     }
 
@@ -126,13 +126,8 @@ class BarangKeluarResource extends Resource
 
                 Tables\Columns\TextColumn::make('jumlah')
                     ->label('Jumlah')
-                    ->formatStateUsing(fn($state, $record) => number_format($state, 0, ',', '.') . ' ' . ($record->barang->satuan ?? 'Unit'))
                     ->sortable()
-                    ->summarize([
-                        Tables\Columns\Summarizers\Sum::make()
-                            ->label('Total Keluar')
-                            ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.') . ' Unit')
-                    ]),
+                    ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.') . ' unit'),
 
                 Tables\Columns\TextColumn::make('penerima')
                     ->label('Penerima')

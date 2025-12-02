@@ -54,7 +54,12 @@ return [
     'panel_providers' => [
     App\Providers\Filament\AdminPanelProvider::class,
 ],
-
+    'auth' => [
+    'guard' => 'web',
+    'pages' => [
+        'login' => \Filament\Pages\Auth\Login::class,
+    ],
+],
 
     'appearance' => [
         'theme' => 'light',

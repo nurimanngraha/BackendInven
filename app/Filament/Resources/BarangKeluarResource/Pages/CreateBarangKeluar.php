@@ -8,4 +8,11 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateBarangKeluar extends CreateRecord
 {
     protected static string $resource = BarangKeluarResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        // Setelah create, balik ke halaman list/index
+        return static::getResource()::getUrl('index');
+        }
 }
+
