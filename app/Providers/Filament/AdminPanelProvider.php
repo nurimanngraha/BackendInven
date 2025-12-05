@@ -35,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->authGuard('web')
             ->login()
-            ->brandName('SIBANGSAT')
+            ->brandName('SINTEL')
             ->colors([
                 'primary' => Color::Amber,
             ])

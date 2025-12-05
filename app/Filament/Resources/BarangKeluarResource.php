@@ -115,7 +115,7 @@ class BarangKeluarResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('tanggal_keluar')
-                    ->label('Tgl Keluar')
+                    ->label('Tanggal Keluar')
                     ->date('Y-m-d')
                     ->sortable(),
 
@@ -144,22 +144,45 @@ class BarangKeluarResource extends Resource
                     ->searchable()
                     ->sortable(),
             ])
-            ->filters([
-                Tables\Filters\Filter::make('tanggal_keluar')
-                    ->form([
-                        Forms\Components\DatePicker::make('dari_tanggal')->label('Dari Tanggal'),
-                        Forms\Components\DatePicker::make('sampai_tanggal')->label('Sampai Tanggal'),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query
-                            ->when($data['dari_tanggal'], fn($q) => $q->whereDate('tanggal_keluar', '>=', $data['dari_tanggal']))
-                            ->when($data['sampai_tanggal'], fn($q) => $q->whereDate('tanggal_keluar', '<=', $data['sampai_tanggal']));
+
+                ->filters([
+                Tables\Filters\SelectFilter::make('barang.nama_barang')
+                    ->label('Filter Nama Barang')
+                    ->options(function () {
+                        // Ambil daftar barang.nama_barang unik dari data barang masuk
+                        return BarangKeluar::query()
+                            ->select('barang.nama_barang')
+                            ->distinct()
+                            ->pluck('barang.nama_barang', 'barang.nama_barang')
+                            ->toArray();
                     }),
             ])
+
+
+            // ->filters([
+            //     Tables\Filters\Filter::make('tanggal_keluar')
+            //         ->form([
+            //             Forms\Components\DatePicker::make('dari_tanggal')->label('Dari Tanggal'),
+            //             Forms\Components\DatePicker::make('sampai_tanggal')->label('Sampai Tanggal'),
+            //         ])
+            //         ->query(function ($query, array $data) {
+            //             return $query
+            //                 ->when($data['dari_tanggal'], fn($q) => $q->whereDate('tanggal_keluar', '>=', $data['dari_tanggal']))
+            //                 ->when($data['sampai_tanggal'], fn($q) => $q->whereDate('tanggal_keluar', '<=', $data['sampai_tanggal']));
+            //         }),
+            // ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
+                ->label('Lihat'),
+                Tables\Actions\EditAction::make()
+                ->label('Ubah'),
+                Tables\Actions\DeleteAction::make()
+                ->label('Hapus')
+                ->requiresConfirmation()
+                ->modalHeading('Hapus Data')
+                ->modalSubheading('Yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.')
+                ->modalButton('Ya, hapus')
+                ->modalCancelActionLabel('Batal'),
 
                 Tables\Actions\Action::make('print')
                     ->label('Cetak')

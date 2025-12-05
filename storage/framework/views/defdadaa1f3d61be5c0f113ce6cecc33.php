@@ -1,9 +1,9 @@
-<?php $__env->startSection('title', 'Login - SIBANGSAT'); ?>
+<?php $__env->startSection('title', 'Login - SINTEL'); ?>
 
 <?php $__env->startSection('content'); ?>
 <img src="<?php echo e(asset('images/sanditel-logo.png')); ?>" alt="Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
 
-<h3 class="auth-title">SIBANGSAT</h3>
+<h3 class="auth-title">SINTEL</h3>
 <div class="auth-sub">Sistem Invetaris Barang Sanditel</div>
 
     

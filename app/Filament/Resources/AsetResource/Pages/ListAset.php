@@ -14,7 +14,8 @@ class ListAset extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Tambah Aset'),
+                ->label('Aset')
+                ->icon('heroicon-o-plus'),
         ];
     }
 

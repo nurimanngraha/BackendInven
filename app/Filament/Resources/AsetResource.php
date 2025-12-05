@@ -40,11 +40,11 @@ class AsetResource extends Resource
                     ->label('Merk/Kode')
                     ->maxLength(150),
 
-                    Forms\Components\TextInput::make('kode_scan')
-                    ->label('Kode Scan / Barcode')
-                    ->visibleOn('edit')
-                    ->disabled() 
-                    ->dehydrated(false), 
+                    // Forms\Components\TextInput::make('kode_scan')
+                    // ->label('Kode Scan / Barcode')
+                    // ->visibleOn('edit')
+                    // ->disabled() 
+                    // ->dehydrated(false), 
 
 
                 Forms\Components\Select::make('kategori')
@@ -75,23 +75,24 @@ class AsetResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                ->label('Id')
-                ->getStateUsing(fn (Aset $record) => $record->id)  // tampilkan accessor id9
-                ->sortable('id')                                   // urutkan pakai id asli
-                ->searchable(false)                                // (opsional) nonaktifkan search
-                ->copyable(),                                    // (opsional) klik untuk salin
-                Tables\Columns\TextColumn::make('kode_scan')->label('Kode Scan')->copyable()->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('id')
+                // ->label('No')
+                // ->getStateUsing(fn (Aset $record) => $record->id)  // tampilkan accessor id9
+                // ->sortable('id')                                   // urutkan pakai id asli
+                // ->searchable(false)                                // (opsional) nonaktifkan search
+                // ->copyable(),                                    // (opsional) klik untuk salin
+                Tables\Columns\TextColumn::make('kode_scan')->label('Nomor Barcode'),
                 Tables\Columns\TextColumn::make('nama_aset')->label('Nama Aset')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('merk_kode'),
                 Tables\Columns\TextColumn::make('kategori'),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('log_pembaruan_barcode')->date(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->label('Tanggal dibuat')
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->label('Ubah'),
                             // 🟧 Tombol BARCODE (di tengah, antara Edit dan Delete)
                 Tables\Actions\Action::make('barcode')
                     ->label('Barcode')
@@ -157,12 +158,19 @@ class AsetResource extends Resource
                     ])
                     ->action(fn () => null),
                 Tables\Actions\DeleteAction::make()
+                ->label('Hapus')
+                ->requiresConfirmation()
+                ->modalHeading('Hapus Data')
+                ->modalSubheading('Yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.')
+                ->modalButton('Ya, hapus')
+                ->modalCancelActionLabel('Batal')
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 // ]),
             ]);
+            // ->searchPlaceholder('Cari Barang Keluar'); // <— tambahkan ini
     }
 
     public static function getRelations(): array

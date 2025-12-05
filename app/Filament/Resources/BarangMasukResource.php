@@ -2,15 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BarangMasukResource\Pages;
-use App\Models\BarangMasuk;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Barang;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\BarangMasuk;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Collection;
+use App\Filament\Resources\BarangMasukResource\Pages;
+use Filament\Forms\Set;
 
 class BarangMasukResource extends Resource
 {
@@ -36,7 +38,7 @@ class BarangMasukResource extends Resource
                 ->schema([
                     Forms\Components\TextInput::make('no_transaksi')
                         ->label('No Transaksi')
-                        ->default(fn() => 'T-BK-' . now()->format('Ymd') . rand(1000, 9999))
+                        ->default(fn() => 'T-BM-' . now()->format('Ymd') . rand(1000, 9999))
                         ->disabled()
                         ->dehydrated()
                         ->columnSpanFull(),
@@ -55,6 +57,19 @@ class BarangMasukResource extends Resource
                         ->relationship('barang', 'nama_barang')
                         ->searchable()
                         ->required()
+                            ->live() // supaya tiap ganti nilai langsung trigger
+                        ->afterStateUpdated(function (Set $set, $state) {
+                            // $state = nilai barang_id yang dipilih
+                            if (! $state) {
+                                $set('kategori', null);
+                                return;
+                            }
+
+                            $barang = Barang::find($state);
+
+                            // sesuaikan dengan nama kolom kategori di tabel barang
+                            $set('kategori', $barang?->kategori);
+                        })
                         ->columnSpanFull(),
 
                     Forms\Components\TextInput::make('jumlah')
@@ -65,12 +80,17 @@ class BarangMasukResource extends Resource
                         ->columnSpanFull(),
 
                     // ✅ Ubah dari relasi ke input manual
-                    Forms\Components\TextInput::make('kategori')
+                   Forms\Components\Select::make('kategori')
                         ->label('Kategori')
-                        ->placeholder('Contoh: Elektronik, Alat Tulis, dll')
-                        ->required()
-                        ->maxLength(100)
-                        ->columnSpanFull(),
+                        ->options([
+                            'Elektronik'        => 'Elektronik',
+                            'Furniture'         => 'Furniture',
+                            'Perlengkapan Kantor' => 'Perlengkapan Kantor',
+                            'Aksesoris'         => 'Aksesoris',
+                            'Alat'              => 'Alat',
+                            'Bahan'             => 'Bahan',
+                        ])
+                    ->required()
                 ]),
 
             Forms\Components\Section::make('Informasi User')
@@ -135,9 +155,17 @@ class BarangMasukResource extends Resource
             ])
 
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
+                ->label('Lihat'),
+                Tables\Actions\EditAction::make()
+                ->label('Ubah'),
+                Tables\Actions\DeleteAction::make()
+                ->label('Hapus')
+                ->requiresConfirmation()
+                ->modalHeading('Hapus Data')
+                ->modalSubheading('Yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.')
+                ->modalButton('Ya, hapus')
+                ->modalCancelActionLabel('Batal'),
 
                 Tables\Actions\Action::make('print')
                     ->label('Cetak')
@@ -225,8 +253,6 @@ class BarangMasukResource extends Resource
 
             ])
 
-
-
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
 
@@ -247,7 +273,7 @@ class BarangMasukResource extends Resource
             ])
 
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
             ]);
     }
 

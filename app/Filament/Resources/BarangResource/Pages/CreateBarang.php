@@ -4,6 +4,7 @@ namespace App\Filament\Resources\BarangResource\Pages;
 
 use App\Filament\Resources\BarangResource;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Notifications\Notification;
 
 class CreateBarang extends CreateRecord
 {
@@ -13,4 +14,12 @@ class CreateBarang extends CreateRecord
         // Setelah create, balik ke halaman list/index
         return static::getResource()::getUrl('index');
         }
+    protected function getCreatedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->success()
+            ->title('Berhasil')
+            ->body('Data Barang berhasil disimpan.')
+            ->duration(3000);
+    }
 }

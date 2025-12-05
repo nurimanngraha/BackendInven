@@ -18,7 +18,7 @@ class ListBarang extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('Tambah Barang')
+                ->label('Barang')
                 ->icon('heroicon-o-plus'),
         ];
     }

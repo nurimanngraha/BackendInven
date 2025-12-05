@@ -73,7 +73,7 @@ class PeminjamanAsetResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('aset.nama_aset')->label('Aset')->searchable(),
+                Tables\Columns\TextColumn::make('aset.nama_aset')->label('Nama Aset')->searchable(),
                 Tables\Columns\TextColumn::make('peminjam')->searchable(),
                 Tables\Columns\TextColumn::make('bagian')->label('Bagian'),
                 Tables\Columns\TextColumn::make('jumlah'),
@@ -108,7 +108,13 @@ class PeminjamanAsetResource extends Resource
                     ])),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                ->label('Hapus')
+                ->requiresConfirmation()
+                ->modalHeading('Hapus Semua Data')
+                ->modalSubheading('Yakin ingin menghapus semua data ini? Tindakan ini tidak dapat dibatalkan.')
+                ->modalButton('Ya, hapus')
+                ->modalCancelActionLabel('Batal'),
                 Tables\Actions\BulkAction::make('kembalikan')
                     ->label('Kembalikan')
                     ->icon('heroicon-o-arrow-uturn-left')

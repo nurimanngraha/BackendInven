@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Lang;
+use PhpParser\Node\Stmt\Label;
 
 class BarangResource extends Resource
 {
@@ -38,7 +40,7 @@ class BarangResource extends Resource
                     ->maxLength(255),
 
                 Forms\Components\Select::make('jenis_barang')
-                    ->label('Jenis Barang')
+                    ->label('Kategori')
                     ->options([
                         'Elektronik' => 'Elektronik',
                         'Furniture' => 'Furniture',
@@ -75,14 +77,34 @@ class BarangResource extends Resource
                 Tables\Columns\TextColumn::make('id')->label('No')->sortable(),
                 Tables\Columns\TextColumn::make('kode_barang')->label('ID Barang')->sortable(),
                 Tables\Columns\TextColumn::make('nama_barang')->label('Nama Barang')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('jenis_barang')->label('Jenis Barang'),
+                Tables\Columns\TextColumn::make('jenis_barang')->label('Kategori'),
                 Tables\Columns\TextColumn::make('stok')->label('Stok'),
                 Tables\Columns\TextColumn::make('satuan')->label('Satuan'),
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal Input')->dateTime('d/m/Y H:i'),
             ])
+                ->filters([
+                Tables\Filters\SelectFilter::make('jenis_barang')
+                    ->label('Jenis Barang')
+                    ->options(function () {
+                        // Ambil daftar barang.nama_barang unik dari data barang masuk
+                        return barang::query()
+                            ->select('jenis_barang')                       
+                            ->distinct()
+                            ->pluck('jenis_barang','jenis_barang')
+                            ->toArray();
+                    }),
+            ])
+
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                ->label('Ubah'),
+                Tables\Actions\DeleteAction::make()
+                ->label('Hapus')
+                ->requiresConfirmation()
+                ->modalHeading('Hapus Data')
+                ->modalSubheading('Yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.')
+                ->modalButton('Ya, hapus')
+                 ->modalCancelActionLabel('Batal')
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([

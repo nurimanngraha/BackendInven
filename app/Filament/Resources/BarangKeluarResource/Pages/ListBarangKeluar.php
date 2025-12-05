@@ -13,7 +13,9 @@ class ListBarangKeluar extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->label('Barang Keluar')
+            ->icon('heroicon-o-plus'),
         ];
     }
 }

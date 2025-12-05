@@ -13,7 +13,10 @@ class ListPeminjamanAset extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->label('Barang Masuk')
+            ->icon('heroicon-o-plus'),
+
         ];
     }
 }

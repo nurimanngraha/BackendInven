@@ -1,11 +1,11 @@
 @extends('layouts.auth')
 
-@section('title', 'Login - SIBANGSAT')
+@section('title', 'Login - SINTEL')
 
 @section('content')
 <img src="{{ asset('images/sanditel-logo.png') }}" alt="Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 10px;">
 
-<h3 class="auth-title">SIBANGSAT</h3>
+<h3 class="auth-title">SINTEL</h3>
 <div class="auth-sub">Sistem Invetaris Barang Sanditel</div>
 
     {{-- 🔔 Toast Notification (Benar-benar di tengah) --}}
